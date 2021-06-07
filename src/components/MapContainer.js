@@ -7,10 +7,10 @@ import ReactMapGL, {
     FlyToInterpolator,
     Layer,
     Source,
+    GeolocateControl,
 } from "react-map-gl";
 import LocationContext from "../store/location-context";
 import { ReactComponent as Icon } from "../assets/images/parcelIcon.svg";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
 import FlagIcon from "@material-ui/icons/Flag";
 import { easeCubic } from "d3-ease";
 
@@ -23,49 +23,28 @@ function Map(props) {
         height: "100%",
         latitude: 0,
         longitude: 0,
-        zoom: 14,
+        zoom: 12,
     });
     const viewportRef = useRef(viewport);
-    const locationCtxRef = useRef(locationCtx);
 
     const navControlStyle = {
+        right: 10,
+        top: 50,
+    };
+
+    const geolocateControlStyle = {
         right: 10,
         top: 10,
     };
 
-    useEffect(() => {
-        viewportRef.current = viewport;
-        locationCtxRef.current = locationCtx;
-    });
+    const updateLocation = (data) => {
+        locationCtx.lat = data.coords.latitude;
+        locationCtx.lng = data.coords.longitude;
+    };
 
     useEffect(() => {
-        const id = navigator.geolocation.watchPosition(
-            function (position) {
-                setViewport((prevViewport) => {
-                    return {
-                        ...prevViewport,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    };
-                });
-                locationCtxRef.current.setCurrent(
-                    position.coords.latitude,
-                    position.coords.longitude
-                );
-                if (position.coords.accuracy < 2000) {
-                    navigator.geolocation.clearWatch(id);
-                }
-            },
-            (err) => {
-                console.warn(`ERROR(${err.code}): ${err.message}`);
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 200,
-            }
-        );
-    }, []);
+        viewportRef.current = viewport;
+    });
 
     if (!props.view && !markers) {
         setMarkers(
@@ -159,18 +138,13 @@ function Map(props) {
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
             mapStyle="mapbox://styles/sknai/ckpgcbh93197s18th45qf7azy"
         >
-            <NavigationControl style={navControlStyle} />
-            {locationCtx.lat && (
-                <Marker
-                    latitude={locationCtx.lat}
-                    longitude={locationCtx.lng}
-                    key="currentPosition"
-                    offsetLeft={-20}
-                    offsetTop={-10}
-                >
-                    <LocationOnIcon fontSize="large" />
-                </Marker>
-            )}
+            <NavigationControl style={navControlStyle} showCompass={false} />
+            <GeolocateControl
+                style={geolocateControlStyle}
+                positionOptions={{ enableHighAccuracy: true }}
+                onGeolocate={updateLocation}
+                auto
+            />
             {markers}
             {route}
         </ReactMapGL>
