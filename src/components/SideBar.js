@@ -3,12 +3,13 @@ import React, { Fragment, useState } from "react";
 import NavPills from "../UI/NavPills/NavPills";
 import RequestForm from "./RequestForm";
 import Item from "./Item";
+import Deliveries from "./Deliveries";
 
 const SideBar = (props) => {
     const [clicked, setClicked] = useState("");
     const viewHandler = (data) => {
         props.view(data);
-        setClicked(data.name);
+        setClicked(data.identifier);
     };
 
     const items = (
@@ -16,10 +17,18 @@ const SideBar = (props) => {
             {props.data.map((item) => (
                 <Item
                     data={item}
-                    key={item.name}
+                    key={item.identifier}
                     view={viewHandler}
                     clicked={clicked}
                 />
+            ))}
+        </Fragment>
+    );
+
+    const deliveries = (
+        <Fragment>
+            {props.myData.map((item) => (
+                <Deliveries myData={item} key={item.identifier} />
             ))}
         </Fragment>
     );
@@ -35,6 +44,10 @@ const SideBar = (props) => {
                 {
                     tabButton: "Deliver",
                     tabContent: { ...items },
+                },
+                {
+                    tabButton: "My Deliveries",
+                    tabContent: { ...deliveries },
                 },
             ]}
             horizontal={{}}

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 // core components
 import GridContainer from "../UI/Grid/GridContainer.js";
 import GridItem from "../UI/Grid/GridItem.js";
@@ -6,6 +6,7 @@ import CustomInput from "../UI/CustomInput/CustomInput";
 import Button from "../UI/CustomButtons/Button";
 import Card from "../UI/Card/Card";
 import AutoComplete from "./AutoComplete";
+import Web3Context from "../store/Web3-context";
 
 const fetchLatLng = async (location) => {
     const locationResponse = await fetch(
@@ -14,22 +15,42 @@ const fetchLatLng = async (location) => {
     return await locationResponse.json();
 };
 
-export default function RequestForm(props) {
+export default function RequestForm() {
+    let name = useRef("");
+    let pickup = useRef("");
+    let destination = useRef("");
+    let value = useRef(0);
+    let fees = useRef(0);
+    const web3Ctx = useContext(Web3Context);
+
     const handleSubmit = async () => {
-        let output = { name: "", pickup: {}, destination: {}, value: 0 };
+        let output = {
+            name: "",
+            pickup_lat: 0,
+            pickup_lng: 0,
+            destination_lat: 0,
+            destination_lng: 0,
+            value: 0,
+            fees: 0,
+        };
         output.name = name.current.value;
         output.value = value.current.value;
+        output.fees = fees.current.value;
         const pickupData = await fetchLatLng(pickup.current.value);
-        output.pickup = {
-            lat: pickupData.features[0].center[1],
-            lng: pickupData.features[0].center[0],
-        };
+        output.pickup_lat = Math.trunc(
+            pickupData.features[0].center[1] * Math.pow(10, 15)
+        ).toString();
+        output.pickup_lng = Math.trunc(
+            pickupData.features[0].center[0] * Math.pow(10, 15)
+        ).toString();
         const destinationData = await fetchLatLng(destination.current.value);
-        output.destination = {
-            lat: destinationData.features[0].center[1],
-            lng: destinationData.features[0].center[0],
-        };
-        await props.updateData(output);
+        output.destination_lat = Math.trunc(
+            destinationData.features[0].center[1] * Math.pow(10, 15)
+        ).toString();
+        output.destination_lng = Math.trunc(
+            destinationData.features[0].center[0] * Math.pow(10, 15)
+        ).toString();
+        await web3Ctx.handleSubmitRequest(output);
         await clearForm();
     };
 
@@ -38,12 +59,8 @@ export default function RequestForm(props) {
         pickup.current.value = "";
         destination.current.value = "";
         value.current.value = "";
+        fees.current.value = "";
     };
-
-    let name = useRef("");
-    let pickup = useRef("");
-    let destination = useRef("");
-    let value = useRef(0);
 
     return (
         <Card>
@@ -84,6 +101,17 @@ export default function RequestForm(props) {
                             }}
                             inputProps={{
                                 inputRef: value,
+                            }}
+                        />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={8}>
+                        <CustomInput
+                            labelText="Fees"
+                            formControlProps={{
+                                fullWidth: true,
+                            }}
+                            inputProps={{
+                                inputRef: fees,
                             }}
                         />
                     </GridItem>

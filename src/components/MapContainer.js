@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useRef } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import { useState } from "react";
 import ReactMapGL, {
     Marker,
@@ -9,15 +9,13 @@ import ReactMapGL, {
     Source,
     GeolocateControl,
 } from "react-map-gl";
-import LocationContext from "../store/location-context";
 import { ReactComponent as Icon } from "../assets/images/parcelIcon.svg";
 import FlagIcon from "@material-ui/icons/Flag";
 import { easeCubic } from "d3-ease";
 
 function Map(props) {
-    const locationCtx = useContext(LocationContext);
     const [route, setRoute] = useState();
-    const [markers, setMarkers] = useState();
+    const [markers, setMarkers] = useState("");
     const [viewport, setViewport] = useState({
         width: "100%",
         height: "100%",
@@ -38,21 +36,21 @@ function Map(props) {
     };
 
     const updateLocation = (data) => {
-        locationCtx.lat = data.coords.latitude;
-        locationCtx.lng = data.coords.longitude;
+        viewportRef.current.latitiude = data.coords.latitude;
+        viewportRef.current.longitude = data.coords.longitude;
     };
 
     useEffect(() => {
         viewportRef.current = viewport;
     });
 
-    if (!props.view && !markers) {
+    if (!props.view && props.data.length !== 0 && markers === "") {
         setMarkers(
             props.data.map((parcel) => (
                 <Marker
-                    latitude={parcel.pickup.lat}
-                    longitude={parcel.pickup.lng}
-                    key={parcel.name}
+                    latitude={parcel.pickup_lat}
+                    longitude={parcel.pickup_lng}
+                    key={parcel.identifier}
                     offsetLeft={-20}
                     offsetTop={-10}
                 >
@@ -68,8 +66,8 @@ function Map(props) {
                 viewportRef.current
             ).fitBounds(
                 [
-                    [props.view.pickup.lng, props.view.pickup.lat],
-                    [props.view.destination.lng, props.view.destination.lat],
+                    [props.view.pickup_lng, props.view.pickup_lat],
+                    [props.view.destination_lng, props.view.destination_lat],
                 ],
                 {
                     padding: 20,
@@ -86,7 +84,7 @@ function Map(props) {
                 transitionEasing: easeCubic,
             });
             fetch(
-                `https://api.mapbox.com/directions/v5/mapbox/walking/${props.view.pickup.lng},${props.view.pickup.lat};${props.view.destination.lng},${props.view.destination.lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+                `https://api.mapbox.com/directions/v5/mapbox/walking/${props.view.pickup_lng},${props.view.pickup_lat};${props.view.destination_lng},${props.view.destination_lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
             )
                 .then((resp) => resp.json())
                 .then((data) => {
@@ -109,8 +107,8 @@ function Map(props) {
             setMarkers(
                 <Fragment>
                     <Marker
-                        latitude={props.view.pickup.lat}
-                        longitude={props.view.pickup.lng}
+                        latitude={props.view.pickup_lat}
+                        longitude={props.view.pickup_lng}
                         key={props.view.name + " Pickup"}
                         offsetLeft={-20}
                         offsetTop={-10}
@@ -118,9 +116,9 @@ function Map(props) {
                         <Icon />
                     </Marker>
                     <Marker
-                        latitude={props.view.destination.lat}
-                        longitude={props.view.destination.lng}
-                        key={props.view.name + " Destination"}
+                        latitude={props.view.destination_lat}
+                        longitude={props.view.destination_lng}
+                        key={props.view.identifier + " Destination"}
                         offsetLeft={-20}
                         offsetTop={-10}
                     >

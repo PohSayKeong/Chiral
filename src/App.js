@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import "./App.css";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -8,18 +8,20 @@ import GridContainer from "./UI/Grid/GridContainer";
 import GridItem from "./UI/Grid/GridItem";
 import Header from "./UI/Header/Header";
 import HeaderLinks from "./UI/Header/HeaderLinks";
-import LocationProvider from "./store/LocationProvider";
-import data from "./data.json";
+import Web3Context from "./store/Web3-context";
 
 const App = () => {
     const [view, setView] = useState({ on: false });
-    const [requests, setRequests] = useState(data);
     const viewHandler = (data) => {
         setView({ data: data, on: !view.on });
     };
-    const updateData = (newRequest) => {
-        setRequests(requests.concat([newRequest]));
-    };
+    const web3Ctx = useContext(Web3Context);
+    useEffect(() => {
+        web3Ctx.web3Setup();
+        web3Ctx.getItems();
+    }, [web3Ctx]);
+    const createdItems = web3Ctx.getCreatedItems() || [];
+    const acceptedItem = web3Ctx.getAcceptedItems() || [];
 
     return (
         <div className="App">
@@ -28,24 +30,22 @@ const App = () => {
                 rightLinks={<HeaderLinks />}
                 brand="Chiral"
             />
-            <LocationProvider>
-                <GridContainer className="Grid">
-                    <GridItem xs={6}>
-                        <SideBar
-                            data={requests}
-                            view={viewHandler}
-                            updateData={updateData}
-                        />
-                    </GridItem>
-                    <GridItem item xs={6}>
-                        <Map
-                            data={requests}
-                            view={view.data}
-                            resetZoom={view.on}
-                        />
-                    </GridItem>
-                </GridContainer>
-            </LocationProvider>
+            <GridContainer className="Grid">
+                <GridItem xs={6}>
+                    <SideBar
+                        data={createdItems}
+                        myData={acceptedItem}
+                        view={viewHandler}
+                    />
+                </GridItem>
+                <GridItem item xs={6}>
+                    <Map
+                        data={createdItems}
+                        view={view.data}
+                        resetZoom={view.on}
+                    />
+                </GridItem>
+            </GridContainer>
         </div>
     );
 };
