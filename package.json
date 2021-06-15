@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
+    "@opengsn/provider": "^2.2.2",
     "classnames": "^2.3.1",
     "d3-ease": "^2.0.0",
     "react": "16.11.0",
