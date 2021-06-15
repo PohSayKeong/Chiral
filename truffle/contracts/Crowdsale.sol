@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity 0.8.4;
 
-import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
 
 /**
  * @title Crowdsale
@@ -19,7 +19,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
  * the methods to add functionality. Consider using 'super' where appropriate to concatenate
  * behavior.
  */
-contract Crowdsale is Context, ReentrancyGuard {
+contract Crowdsale is ERC2771Context, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -55,8 +55,9 @@ contract Crowdsale is Context, ReentrancyGuard {
     constructor(
         uint256 newrate,
         address payable newwallet,
-        IERC20 newtoken
-    ) {
+        IERC20 newtoken,
+        address _forwarder
+    ) ERC2771Context(_forwarder) {
         require(newrate > 0, "Crowdsale: rate is 0");
         require(
             newwallet != address(0),
@@ -78,9 +79,7 @@ contract Crowdsale is Context, ReentrancyGuard {
      * of 2300, which is not enough to call buyTokens. Consider calling
      * buyTokens directly when purchasing tokens from a contract.
      */
-    receive() external payable {
-        buyTokens(_msgSender());
-    }
+    receive() external payable {}
 
     /**
      * @return the token being sold.
@@ -116,23 +115,26 @@ contract Crowdsale is Context, ReentrancyGuard {
      * another `nonReentrant` function.
      * @param beneficiary Recipient of the token purchase
      */
-    function buyTokens(address beneficiary) public payable nonReentrant {
-        uint256 weiAmount = msg.value;
-        _preValidatePurchase(beneficiary, weiAmount);
+    function buyTokens(address beneficiary, uint256 amount)
+        public
+        payable
+        nonReentrant
+    {
+        _preValidatePurchase(beneficiary, amount);
 
         // calculate token amount to be created
-        uint256 tokens = _getTokenAmount(weiAmount);
+        uint256 tokens = _getTokenAmount(amount);
 
         // update state
-        _weiRaised = _weiRaised.add(weiAmount);
+        _weiRaised = _weiRaised.add(amount);
 
         _processPurchase(beneficiary, tokens);
-        emit TokensPurchased(_msgSender(), beneficiary, weiAmount, tokens);
+        emit TokensPurchased(_msgSender(), beneficiary, amount, tokens);
 
-        _updatePurchasingState(beneficiary, weiAmount);
+        _updatePurchasingState(beneficiary, amount);
 
         _forwardFunds();
-        _postValidatePurchase(beneficiary, weiAmount);
+        _postValidatePurchase(beneficiary, amount);
     }
 
     /**

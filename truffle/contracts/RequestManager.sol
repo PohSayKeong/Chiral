@@ -3,11 +3,14 @@ pragma solidity ^0.8.4;
 
 import "./Request.sol";
 import "./ChiralToken.sol";
+import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
 
-contract RequestManager {
+contract RequestManager is ERC2771Context {
     ChiralToken tokenContract;
 
-    constructor(ChiralToken newtoken) {
+    constructor(ChiralToken newtoken, address _forwarder)
+        ERC2771Context(_forwarder)
+    {
         tokenContract = newtoken;
     }
 
@@ -47,7 +50,7 @@ contract RequestManager {
         uint256 fees
     ) public {
         require(
-            tokenContract.balanceOf(msg.sender) > fees,
+            tokenContract.balanceOf(_msgSender()) > fees,
             "Not enough tokens in wallet"
         );
         Request request =
@@ -65,8 +68,8 @@ contract RequestManager {
         requests[index].request = request;
         requests[index].step = SupplyChainSteps.Created;
         requests[index].identifier = identifier;
-        tokenContract.transferFrom(msg.sender, address(request), fees);
-        requests[index].pickupAddress = msg.sender;
+        tokenContract.transferFrom(_msgSender(), address(request), fees);
+        requests[index].pickupAddress = _msgSender();
         emit DisplayStep(
             requests[index].pickupAddress,
             requests[index].deliveryAddress,
@@ -90,15 +93,19 @@ contract RequestManager {
             "Request is not available"
         );
         require(
-            tokenContract.balanceOf(msg.sender) > request.value(),
+            tokenContract.balanceOf(_msgSender()) > request.value(),
             "Please deposit full stake"
         );
+        require(
+            _msgSender() != requests[_index].pickupAddress,
+            "This is your own request"
+        );
         tokenContract.transferFrom(
-            msg.sender,
+            _msgSender(),
             address(request),
             request.value()
         );
-        requests[_index].deliveryAddress = msg.sender;
+        requests[_index].deliveryAddress = _msgSender();
         requests[_index].step = SupplyChainSteps.Accepted;
         emit DisplayStep(
             requests[_index].pickupAddress,
@@ -122,7 +129,7 @@ contract RequestManager {
             "Request not on delivery"
         );
         require(
-            msg.sender == requests[_index].deliveryAddress,
+            _msgSender() == requests[_index].deliveryAddress,
             "This is not your delivery"
         );
         requests[_index].step = SupplyChainSteps.Delivered;
@@ -148,7 +155,7 @@ contract RequestManager {
             "Request not delivered"
         );
         require(
-            msg.sender == requests[_index].pickupAddress,
+            _msgSender() == requests[_index].pickupAddress,
             "This is not your item"
         );
         requests[_index].step = SupplyChainSteps.Received;

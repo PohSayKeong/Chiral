@@ -4,6 +4,8 @@ import ChiralToken from "../contracts/ChiralToken.json";
 import Crowdsale from "../contracts/Crowdsale.json";
 import RequestManager from "../contracts/RequestManager.json";
 import getWeb3 from "../getWeb3";
+import { RelayProvider } from "@opengsn/provider";
+import Web3 from "web3";
 
 const Web3Provider = (props) => {
     const [web3State, setWeb3State] = useState({
@@ -16,28 +18,41 @@ const Web3Provider = (props) => {
     });
     const [requests, setRequests] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const paymasterAddress = "0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016";
+    const config = {
+        paymasterAddress,
+        loggerConfiguration: {
+            logLevel: "debug",
+            // loggerUrl: 'logger.opengsn.org',
+        },
+    };
 
     const web3Setup = async () => {
         try {
             // Get network provider and web3 instance.
             const newWeb3 = await getWeb3();
+            const provider = await RelayProvider.newProvider({
+                provider: newWeb3.currentProvider,
+                config,
+            }).init();
+            const GSNWeb3 = new Web3(provider);
 
             // Use web3 to get the user's accounts.
-            const newAccounts = await newWeb3.eth.getAccounts();
+            const newAccounts = await GSNWeb3.eth.getAccounts();
 
             // Get the contract instance.
-            const networkId = await newWeb3.eth.net.getId();
-            const newTokenInstance = new newWeb3.eth.Contract(
+            const networkId = await GSNWeb3.eth.net.getId();
+            const newTokenInstance = new GSNWeb3.eth.Contract(
                 ChiralToken.abi,
                 ChiralToken.networks[networkId] &&
                     ChiralToken.networks[networkId].address
             );
-            const newTokenSaleInstance = new newWeb3.eth.Contract(
+            const newTokenSaleInstance = new GSNWeb3.eth.Contract(
                 Crowdsale.abi,
                 Crowdsale.networks[networkId] &&
                     Crowdsale.networks[networkId].address
             );
-            const newRequestManagerInstance = new newWeb3.eth.Contract(
+            const newRequestManagerInstance = new GSNWeb3.eth.Contract(
                 RequestManager.abi,
                 RequestManager.networks[networkId] &&
                     RequestManager.networks[networkId].address
@@ -45,7 +60,7 @@ const Web3Provider = (props) => {
             await setWeb3State((prevState) => {
                 return {
                     ...prevState,
-                    web3: newWeb3,
+                    web3: GSNWeb3,
                     accounts: newAccounts,
                     tokenInstance: newTokenInstance,
                     tokenSaleInstance: newTokenSaleInstance,
@@ -78,10 +93,9 @@ const Web3Provider = (props) => {
 
     const handleBuyTokens = async (amount) => {
         await web3State.tokenSaleInstance.methods
-            .buyTokens(web3State.accounts[0])
+            .buyTokens(web3State.accounts[0], amount)
             .send({
                 from: web3State.accounts[0],
-                value: web3State.web3.utils.toWei(amount, "wei"),
             });
         await updateUserTokens();
     };
