@@ -31,14 +31,14 @@ const App = () => {
                 brand="Chiral"
             />
             <GridContainer className="Grid">
-                <GridItem xs={6}>
+                <GridItem xs={12} md={6}>
                     <SideBar
                         data={createdItems}
                         myData={acceptedItem}
                         view={viewHandler}
                     />
                 </GridItem>
-                <GridItem item xs={6}>
+                <GridItem item xs={false} md={6}>
                     <Map
                         data={createdItems}
                         view={view.data}
