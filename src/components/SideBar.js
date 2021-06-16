@@ -8,7 +8,9 @@ import Deliveries from "./Deliveries";
 const SideBar = (props) => {
     const [clicked, setClicked] = useState("");
     const viewHandler = (data) => {
-        props.view(data);
+        if (window.screen.innerWidth > 960) {
+            props.view(data);
+        }
         setClicked(data.identifier);
     };
 

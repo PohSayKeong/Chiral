@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Web3Context from "./Web3-context";
 import ChiralToken from "../contracts/ChiralToken.json";
-import Crowdsale from "../contracts/Crowdsale.json";
 import RequestManager from "../contracts/RequestManager.json";
 import getWeb3 from "../getWeb3";
 import { RelayProvider } from "@opengsn/provider";
@@ -47,11 +46,6 @@ const Web3Provider = (props) => {
                 ChiralToken.networks[networkId] &&
                     ChiralToken.networks[networkId].address
             );
-            const newTokenSaleInstance = new GSNWeb3.eth.Contract(
-                Crowdsale.abi,
-                Crowdsale.networks[networkId] &&
-                    Crowdsale.networks[networkId].address
-            );
             const newRequestManagerInstance = new GSNWeb3.eth.Contract(
                 RequestManager.abi,
                 RequestManager.networks[networkId] &&
@@ -63,7 +57,6 @@ const Web3Provider = (props) => {
                     web3: GSNWeb3,
                     accounts: newAccounts,
                     tokenInstance: newTokenInstance,
-                    tokenSaleInstance: newTokenSaleInstance,
                     requestManagerInstance: newRequestManagerInstance,
                 };
             });
@@ -92,45 +85,30 @@ const Web3Provider = (props) => {
     }, [web3State.accounts, updateUserTokens]);
 
     const handleBuyTokens = async (amount) => {
-        await web3State.tokenSaleInstance.methods
-            .buyTokens(web3State.accounts[0], amount)
-            .send({
-                from: web3State.accounts[0],
-            });
+        await web3State.tokenInstance.methods.mint(amount).send({
+            from: web3State.accounts[0],
+            gas: 30000,
+        });
         await updateUserTokens();
     };
 
     const handleSubmitRequest = async (data) => {
-        await web3State.tokenInstance.methods
-            .increaseAllowance(
-                web3State.requestManagerInstance._address,
-                data.fees
-            )
-            .send({
-                from: web3State.accounts[0],
-            });
         await web3State.requestManagerInstance.methods
             .createRequest(...Object.values(data))
             .send({
                 from: web3State.accounts[0],
+                gas: 600000,
             });
         await updateUserTokens();
         setLoaded(false);
     };
 
     const handleAcceptRequest = async (data) => {
-        await web3State.tokenInstance.methods
-            .increaseAllowance(
-                web3State.requestManagerInstance._address,
-                data.value
-            )
-            .send({
-                from: web3State.accounts[0],
-            });
         await web3State.requestManagerInstance.methods
             .triggerAccepted(data.index)
             .send({
                 from: web3State.accounts[0],
+                gas: 150000,
             });
         await updateUserTokens();
         setLoaded(false);
@@ -141,6 +119,7 @@ const Web3Provider = (props) => {
             .triggerDelivery(data.index)
             .send({
                 from: web3State.accounts[0],
+                gas: 80000,
             });
         setLoaded(false);
     };
@@ -150,6 +129,7 @@ const Web3Provider = (props) => {
             .triggerReceive(data.index)
             .send({
                 from: web3State.accounts[0],
+                gas: 100000,
             });
         setLoaded(false);
     };

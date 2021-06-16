@@ -16261,18 +16261,18 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x50D3a6E687566FfcA334c66DA189Ff10eAF20f16",
-      "transactionHash": "0x906f0768c12fdf1d20ed2450ef987a30d3d0565d39b6bad1b0f11478001c8491"
+      "address": "0x5062a098ff33D0783C251e812a4bAC28337747a5",
+      "transactionHash": "0x993b2fde639523042362a520d6a289ed541a5b9c15aca65055144b32f42e7133"
     },
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x2F82bC8166C9843245503995d08728f4070B8C2f",
-      "transactionHash": "0x0c8b4c3035b50e035fbd8b5f5668d124d18051ae6f7295c51a1844bf49621907"
+      "address": "0xfE62D2d565767f4E53c00d131BB486F3573CBc83",
+      "transactionHash": "0x4ba937a3798385b5ad65263ae82ddea7e7cdfc79309c0ba01f880eb0450f0ca1"
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-06-15T07:19:09.794Z",
+  "updatedAt": "2021-06-16T06:49:02.991Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Crowdsale is a base contract for managing a token crowdsale, allowing investors to purchase tokens with ether. This contract implements such functionality in its most fundamental form and can be extended to provide additional functionality and/or custom behavior. The external interface represents the basic interface for purchasing tokens, and conforms the base architecture for crowdsales. It is *not* intended to be modified / overridden. The internal interface conforms the extensible and modifiable surface of crowdsales. Override the methods to add functionality. Consider using 'super' where appropriate to concatenate behavior.",

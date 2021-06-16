@@ -96,11 +96,12 @@ export default function NavPills(props) {
     );
     return horizontal !== undefined ? (
         <GridContainer spacing={3}>
-            <GridItem xs={3} {...horizontal.tabsGrid}>
+            <GridItem xs={4} md={3} {...horizontal.tabsGrid}>
                 {tabButtons}
             </GridItem>
             <GridItem
-                xs={9}
+                xs={8}
+                md={9}
                 {...horizontal.contentGrid}
                 forward={tabContentWrapperRef}
             >
