@@ -38,7 +38,6 @@ contract Request {
         value = _value;
         fees = _fees;
         index = _index;
-        tokenContract.increaseAllowance(address(parentContract), value + fees);
     }
 
     receive() external payable {}
