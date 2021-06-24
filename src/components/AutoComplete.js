@@ -19,7 +19,10 @@ export default class AutocompletePlace extends Component {
             );
         }
     }
+
     handleSearchChange(e) {
+        this.props.onInputChange(e);
+        this.props.buttonChange();
         this.setState({
             ...this.state,
             search: e.target.value,
@@ -44,7 +47,7 @@ export default class AutocompletePlace extends Component {
             return;
         }
         fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.state.search}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.state.search}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}&country=SG`
         )
             .then((resp) => resp.json())
             .then((data) => {
@@ -63,6 +66,7 @@ export default class AutocompletePlace extends Component {
             results: [],
             selected: true,
         });
+        this.props.onInputChange({ target: { value: place } });
     }
 
     render() {
@@ -73,13 +77,17 @@ export default class AutocompletePlace extends Component {
                         ...this.props.inputProps,
                         onChange: this.handleSearchChange,
                         type: "text",
-                        value: this.state.search,
+                        value:
+                            this.props.valuereset === ""
+                                ? ""
+                                : this.state.search,
                     }}
                     formControlProps={{
                         fullWidth: true,
                         margin: "none",
                     }}
                     labelText={this.props.labelText}
+                    error={this.props.error}
                 />
                 {this.state.search !== "" && !this.state.selected && (
                     <ul className="AutocompletePlace-results">

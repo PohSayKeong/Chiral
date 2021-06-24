@@ -84,7 +84,6 @@ export default function NavPills(props) {
                             className={classes.tabContent}
                             key={key}
                             ref={tabContentRef}
-                            style={{ paddingRight: offset }}
                         >
                             {prop.tabContent}
                         </div>
@@ -96,12 +95,11 @@ export default function NavPills(props) {
     );
     return horizontal !== undefined ? (
         <GridContainer spacing={3}>
-            <GridItem xs={4} md={3} {...horizontal.tabsGrid}>
+            <GridItem xs={3} {...horizontal.tabsGrid}>
                 {tabButtons}
             </GridItem>
             <GridItem
-                xs={8}
-                md={9}
+                xs={9}
                 {...horizontal.contentGrid}
                 forward={tabContentWrapperRef}
             >

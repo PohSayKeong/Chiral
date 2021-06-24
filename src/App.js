@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import "./App.css";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -9,6 +10,7 @@ import GridItem from "./UI/Grid/GridItem";
 import Header from "./UI/Header/Header";
 import HeaderLinks from "./UI/Header/HeaderLinks";
 import Web3Context from "./store/Web3-context";
+import Notification from "./UI/Notification/Notification";
 
 const App = () => {
     const [view, setView] = useState({ on: false });
@@ -18,13 +20,15 @@ const App = () => {
     const web3Ctx = useContext(Web3Context);
     useEffect(() => {
         web3Ctx.web3Setup();
-        web3Ctx.getItems();
+        web3Ctx.getRequests();
     }, [web3Ctx]);
-    const createdItems = web3Ctx.getCreatedItems() || [];
-    const acceptedItem = web3Ctx.getAcceptedItems() || [];
+    const createdRequests = web3Ctx.getCreatedRequests() || [];
+    const acceptedRequests = web3Ctx.getAcceptedRequests() || [];
+    const notification = useSelector((state) => state.ui.notification);
 
     return (
         <div className="App">
+            {notification && <Notification status={notification.status} />}
             <Header
                 color="primary"
                 rightLinks={<HeaderLinks />}
@@ -33,14 +37,14 @@ const App = () => {
             <GridContainer className="Grid">
                 <GridItem xs={12} md={6}>
                     <SideBar
-                        data={createdItems}
-                        myData={acceptedItem}
+                        data={createdRequests}
+                        myData={acceptedRequests}
                         view={viewHandler}
                     />
                 </GridItem>
                 <GridItem item xs={false} md={6}>
                     <Map
-                        data={createdItems}
+                        data={createdRequests}
                         view={view.data}
                         resetZoom={view.on}
                     />

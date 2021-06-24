@@ -86,7 +86,7 @@ export default function Modal(props) {
                         />{" "}
                         tokens
                     </h5>
-                    <h4>Total cost: {amount !== 0 && amount + " wei"}</h4>
+                    <h4>Total cost: {amount !== 0 && amount + " SGD"}</h4>
                 </DialogContent>
                 <DialogActions
                     className={

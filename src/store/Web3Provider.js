@@ -5,12 +5,13 @@ import RequestManager from "../contracts/RequestManager.json";
 import getWeb3 from "../getWeb3";
 import { RelayProvider } from "@opengsn/provider";
 import Web3 from "web3";
+import { uiActions } from "../store/ui-slice";
+import { useDispatch } from "react-redux";
 
 const Web3Provider = (props) => {
     const [web3State, setWeb3State] = useState({
         accounts: [],
         tokenInstance: {},
-        tokenSaleInstance: {},
         requestManagerInstance: {},
         web3: {},
         userTokens: 0,
@@ -20,10 +21,28 @@ const Web3Provider = (props) => {
     const paymasterAddress = "0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016";
     const config = {
         paymasterAddress,
-        loggerConfiguration: {
-            logLevel: "debug",
-            // loggerUrl: 'logger.opengsn.org',
-        },
+    };
+    const dispatch = useDispatch();
+    const pending = () => {
+        dispatch(
+            uiActions.showNotification({
+                status: "pending",
+            })
+        );
+    };
+    const success = () => {
+        dispatch(
+            uiActions.showNotification({
+                status: "success",
+            })
+        );
+    };
+    const failed = () => {
+        dispatch(
+            uiActions.showNotification({
+                status: "failed",
+            })
+        );
     };
 
     const web3Setup = async () => {
@@ -85,57 +104,88 @@ const Web3Provider = (props) => {
     }, [web3State.accounts, updateUserTokens]);
 
     const handleBuyTokens = async (amount) => {
-        await web3State.tokenInstance.methods.mint(amount).send({
-            from: web3State.accounts[0],
-            gas: 30000,
-        });
-        await updateUserTokens();
+        pending();
+        try {
+            await web3State.tokenInstance.methods.mint(amount).send({
+                from: web3State.accounts[0],
+                gas: 30000,
+            });
+            await updateUserTokens();
+            success();
+        } catch {
+            failed();
+        }
     };
 
     const handleSubmitRequest = async (data) => {
-        await web3State.requestManagerInstance.methods
-            .createRequest(...Object.values(data))
-            .send({
-                from: web3State.accounts[0],
-                gas: 600000,
-            });
-        await updateUserTokens();
-        setLoaded(false);
+        pending();
+        try {
+            await web3State.requestManagerInstance.methods
+                .createRequest(...Object.values(data))
+                .send({
+                    from: web3State.accounts[0],
+                    gas: 600000,
+                });
+            await updateUserTokens();
+            setLoaded(false);
+            success();
+        } catch {
+            failed();
+        }
     };
 
     const handleAcceptRequest = async (data) => {
-        await web3State.requestManagerInstance.methods
-            .triggerAccepted(data.index)
-            .send({
-                from: web3State.accounts[0],
-                gas: 150000,
-            });
-        await updateUserTokens();
-        setLoaded(false);
+        pending();
+        try {
+            await web3State.requestManagerInstance.methods
+                .triggerAccepted(data.index)
+                .send({
+                    from: web3State.accounts[0],
+                    gas: 150000,
+                });
+            await updateUserTokens();
+            setLoaded(false);
+            success();
+        } catch {
+            failed();
+        }
     };
 
     const handleDelivered = async (data) => {
-        await web3State.requestManagerInstance.methods
-            .triggerDelivery(data.index)
-            .send({
-                from: web3State.accounts[0],
-                gas: 80000,
-            });
-        setLoaded(false);
+        pending();
+        try {
+            await web3State.requestManagerInstance.methods
+                .triggerDelivery(data.index)
+                .send({
+                    from: web3State.accounts[0],
+                    gas: 80000,
+                });
+            setLoaded(false);
+            success();
+        } catch {
+            failed();
+        }
     };
 
     const handleReceived = async (data) => {
-        await web3State.requestManagerInstance.methods
-            .triggerReceive(data.index)
-            .send({
-                from: web3State.accounts[0],
-                gas: 100000,
-            });
-        setLoaded(false);
+        pending();
+        try {
+            await web3State.requestManagerInstance.methods
+                .triggerReceive(data.index)
+                .send({
+                    from: web3State.accounts[0],
+                    gas: 100000,
+                });
+            setLoaded(false);
+            success();
+        } catch {
+            failed();
+        }
     };
 
-    const getItems = async () => {
+    const getRequests = async () => {
         if (web3State.requestManagerInstance.events && !loaded) {
+            const toCoord = Math.pow(10, 15).toFixed(10);
             let result = [];
             await web3State.requestManagerInstance
                 .getPastEvents("allEvents", {
@@ -146,18 +196,10 @@ const Web3Provider = (props) => {
                 })
                 .then((response) =>
                     response.map((item) => {
-                        item.returnValues.pickup_lng =
-                            item.returnValues.pickup_lng /
-                            Math.pow(10, 15).toFixed(10);
-                        item.returnValues.pickup_lat =
-                            item.returnValues.pickup_lat /
-                            Math.pow(10, 15).toFixed(10);
-                        item.returnValues.destination_lng =
-                            item.returnValues.destination_lng /
-                            Math.pow(10, 15).toFixed(10);
-                        item.returnValues.destination_lat =
-                            item.returnValues.destination_lat /
-                            Math.pow(10, 15).toFixed(10);
+                        item.returnValues.pickup_lng /= toCoord;
+                        item.returnValues.pickup_lat /= toCoord;
+                        item.returnValues.destination_lng /= toCoord;
+                        item.returnValues.destination_lat /= toCoord;
                         if (!result[item.returnValues.index]) {
                             result.push(item.returnValues);
                         } else {
@@ -171,12 +213,11 @@ const Web3Provider = (props) => {
         }
     };
 
-    const getCreatedItems = () => {
-        const created = requests.filter((request) => request._step === "0");
-        return created;
+    const getCreatedRequests = () => {
+        return requests.filter((request) => request._step === "0");
     };
 
-    const getAcceptedItems = () => {
+    const getAcceptedRequests = () => {
         const created = requests.filter(
             (request) =>
                 request.pickupAddress === web3State.accounts[0] &&
@@ -190,22 +231,18 @@ const Web3Provider = (props) => {
         return accepted.concat(created);
     };
 
-    const getDeliveredItems = () => {};
-
     const web3Context = {
         userAccount: web3State.accounts[0],
         userTokens: web3State.userTokens,
-        requests: requests,
-        handleBuyTokens: handleBuyTokens,
-        handleSubmitRequest: handleSubmitRequest,
-        handleAcceptRequest: handleAcceptRequest,
-        handleDelivered: handleDelivered,
-        handleReceived: handleReceived,
-        getItems: getItems,
-        getCreatedItems: getCreatedItems,
-        getAcceptedItems: getAcceptedItems,
-        getDeliveredItems: getDeliveredItems,
-        web3Setup: web3Setup,
+        handleBuyTokens,
+        handleSubmitRequest,
+        handleAcceptRequest,
+        handleDelivered,
+        handleReceived,
+        getRequests,
+        getCreatedRequests,
+        getAcceptedRequests,
+        web3Setup,
     };
 
     return (

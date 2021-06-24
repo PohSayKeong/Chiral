@@ -5,11 +5,15 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Web3Provider from "./store/Web3Provider";
+import { Provider } from "react-redux";
+import store from "./store/index";
 
 ReactDOM.render(
-    <Web3Provider>
-        <App />
-    </Web3Provider>,
+    <Provider store={store}>
+        <Web3Provider>
+            <App />
+        </Web3Provider>
+    </Provider>,
     document.getElementById("root")
 );
 

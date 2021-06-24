@@ -84,7 +84,7 @@ function Map(props) {
                 transitionEasing: easeCubic,
             });
             fetch(
-                `https://api.mapbox.com/directions/v5/mapbox/walking/${props.view.pickup_lng},${props.view.pickup_lat};${props.view.destination_lng},${props.view.destination_lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+                `https://api.mapbox.com/directions/v5/mapbox/driving/${props.view.pickup_lng},${props.view.pickup_lat};${props.view.destination_lng},${props.view.destination_lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
             )
                 .then((resp) => resp.json())
                 .then((data) => {

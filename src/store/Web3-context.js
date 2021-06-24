@@ -1,19 +1,17 @@
 import React from "react";
 
-const LocationContext = React.createContext({
+const Web3Context = React.createContext({
     userAccount: 0,
     userTokens: 0,
-    requests: [],
     handleBuyTokens: () => {},
     handleSubmitRequest: () => {},
     handleAcceptRequest: () => {},
     handleDelivered: () => {},
     handleReceived: () => {},
-    getItems: () => {},
-    getCreatedItems: () => {},
-    getAcceptedItems: () => {},
-    getDeliveredItems: () => {},
+    getRequests: () => {},
+    getCreatedRequests: () => {},
+    getAcceptedRequests: () => {},
     web3Setup: () => {},
 });
 
-export default LocationContext;
+export default Web3Context;

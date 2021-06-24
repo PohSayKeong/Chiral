@@ -8,7 +8,7 @@ import Deliveries from "./Deliveries";
 const SideBar = (props) => {
     const [clicked, setClicked] = useState("");
     const viewHandler = (data) => {
-        if (window.screen.innerWidth > 960) {
+        if (window.innerWidth > 960) {
             props.view(data);
         }
         setClicked(data.identifier);
@@ -41,7 +41,7 @@ const SideBar = (props) => {
             tabs={[
                 {
                     tabButton: "New Request",
-                    tabContent: <RequestForm updateData={props.updateData} />,
+                    tabContent: <RequestForm view={viewHandler} />,
                 },
                 {
                     tabButton: "Deliver",
