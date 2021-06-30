@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 // core components
-import GridContainer from "../UI/Grid/GridContainer.js";
-import GridItem from "../UI/Grid/GridItem.js";
-import CustomInput from "../UI/CustomInput/CustomInput";
-import Button from "../UI/CustomButtons/Button";
-import Card from "../UI/Card/Card";
+import GridContainer from "../../UI/Grid/GridContainer.js";
+import GridItem from "../../UI/Grid/GridItem.js";
+import CustomInput from "../../UI/CustomInput/CustomInput";
+import Button from "../../UI/CustomButtons/Button";
+import Card from "../../UI/Card/Card";
 import AutoComplete from "./AutoComplete";
-import Web3Context from "../store/Web3-context";
-import useInput from "../hooks/use-input.js";
+import Web3Context from "../../store/Web3-context";
+import useInput from "../../hooks/use-input.js";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
@@ -36,6 +36,7 @@ const calculateFees = (distance) => {
 };
 
 export default function RequestForm(props) {
+    const { view, save, values } = props;
     const {
         value: enteredName,
         isValid: enteredNameIsValid,
@@ -43,7 +44,9 @@ export default function RequestForm(props) {
         valueChangeHandler: nameChangedHandler,
         inputBlurHandler: nameBlurHandler,
         reset: resetNameInput,
-    } = useInput((value) => value.trim() !== "");
+    } = useInput((value) => value.trim() !== "", values ? values.name : "");
+    const nameRef = useRef();
+    nameRef.current = enteredName;
     const {
         value: enteredPickup,
         isValid: enteredPickupIsValid,
@@ -51,7 +54,9 @@ export default function RequestForm(props) {
         valueChangeHandler: pickupChangeHandler,
         inputBlurHandler: pickupBlurHandler,
         reset: resetPickupInput,
-    } = useInput((value) => value.trim() !== "");
+    } = useInput((value) => value.trim() !== "", values ? values.pickup : "");
+    const pickupRef = useRef();
+    pickupRef.current = enteredPickup;
     const {
         value: enteredDestination,
         isValid: enteredDestinationIsValid,
@@ -59,7 +64,12 @@ export default function RequestForm(props) {
         valueChangeHandler: destinationChangeHandler,
         inputBlurHandler: destinationBlurHandler,
         reset: resetDestinationInput,
-    } = useInput((value) => value.trim() !== "");
+    } = useInput(
+        (value) => value.trim() !== "",
+        values ? values.destination : ""
+    );
+    const destinationRef = useRef();
+    destinationRef.current = enteredDestination;
     const {
         value: enteredValue,
         isValid: enteredValueIsValid,
@@ -67,7 +77,12 @@ export default function RequestForm(props) {
         valueChangeHandler,
         inputBlurHandler: valueBlurHandler,
         reset: resetValueInput,
-    } = useInput((value) => value.trim() !== "" && !isNaN(value));
+    } = useInput(
+        (value) => value.trim() !== "" && !isNaN(value),
+        values ? values.value : ""
+    );
+    const valueRef = useRef();
+    valueRef.current = enteredValue;
     const {
         value: enteredFees,
         isValid: enteredFeesIsValid,
@@ -75,12 +90,19 @@ export default function RequestForm(props) {
         valueChangeHandler: feesChangeHandler,
         inputBlurHandler: feesBlurHandler,
         reset: resetFeesInput,
-    } = useInput((value) => value.trim() !== "" && !isNaN(value));
+    } = useInput(
+        (value) => value.trim() !== "" && !isNaN(value),
+        values ? values.fees : ""
+    );
+    const feesRef = useRef();
+    feesRef.current = enteredFees;
     const [buttonProps, setButtonProps] = useState({
-        text: "Submit",
+        text: "Show on map",
         color: "primary",
         clicked: false,
     });
+    const clickedRef = useRef();
+    clickedRef.current = buttonProps.clicked;
     const [estimatedFees, setEstimatedFees] = useState(0);
     const web3Ctx = useContext(Web3Context);
 
@@ -96,10 +118,25 @@ export default function RequestForm(props) {
         formIsValid = true;
     }
 
+    useEffect(() => {
+        if (values) {
+            if (values.requestSubmit) {
+                setButtonProps((prevButtonProps) => {
+                    return {
+                        ...prevButtonProps,
+                        text: "Confirm",
+                        color: "warning",
+                        clicked: true,
+                    };
+                });
+            }
+        }
+    }, [values]);
+
     const resetClicked = () => {
         setButtonProps({
             ...buttonProps,
-            text: "Submit",
+            text: "Show on map",
             color: "primary",
             clicked: false,
         });
@@ -120,13 +157,13 @@ export default function RequestForm(props) {
         const processCoord = (coord) =>
             Math.trunc(coord * Math.pow(10, 15)).toString();
         if (buttonProps.clicked === false) {
-            props.view(query);
             setButtonProps({
                 ...buttonProps,
                 text: "Confirm",
                 color: "warning",
                 clicked: true,
             });
+            view(query);
         } else {
             let output = {
                 name: enteredName,
@@ -137,6 +174,7 @@ export default function RequestForm(props) {
                 value: enteredValue,
                 fees: enteredFees,
             };
+            view(query);
             await web3Ctx.handleSubmitRequest(output);
             await clearForm();
         }
@@ -150,8 +188,24 @@ export default function RequestForm(props) {
         resetFeesInput();
     };
 
+    useEffect(() => {
+        return async () => {
+            if (save) {
+                save({
+                    ...values,
+                    name: nameRef.current,
+                    pickup: pickupRef.current,
+                    destination: destinationRef.current,
+                    value: valueRef.current,
+                    fees: feesRef.current,
+                    requestSubmit: clickedRef.current ? true : false,
+                });
+            }
+        };
+    }, [save, values]);
+
     return (
-        <Card style={{ width: "95%" }}>
+        <Card>
             <form>
                 <GridContainer alignItems="center" direction="column">
                     <GridItem xs={10} md={8}>
@@ -182,7 +236,7 @@ export default function RequestForm(props) {
                             error={pickupInputHasError}
                             onInputChange={pickupChangeHandler}
                             buttonChange={resetClicked}
-                            valuereset={enteredPickup}
+                            value={enteredPickup}
                         />
                         {pickupInputHasError && (
                             <FormHelperText error>
@@ -199,7 +253,7 @@ export default function RequestForm(props) {
                             error={destinationInputHasError}
                             onInputChange={destinationChangeHandler}
                             buttonChange={resetClicked}
-                            valuereset={enteredDestination}
+                            value={enteredDestination}
                         />
                         {destinationInputHasError && (
                             <FormHelperText error>
@@ -257,6 +311,11 @@ export default function RequestForm(props) {
                         {estimatedFees !== 0 && (
                             <FormHelperText>
                                 Suggested Fees: {estimatedFees} tokens
+                            </FormHelperText>
+                        )}
+                        {values && values.fees && (
+                            <FormHelperText>
+                                Suggested Fees: {values.fees} tokens
                             </FormHelperText>
                         )}
                         <FormHelperText>1 Token → 1SGD</FormHelperText>

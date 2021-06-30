@@ -4,11 +4,11 @@ import React, { useContext, useState } from "react";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 
 // core components
-import InfoArea from "../UI/InfoArea/InfoArea";
-import Card from "../UI/Card/Card";
-import Button from "../UI/CustomButtons/Button";
-import GridContainer from "../UI/Grid/GridContainer";
-import Web3Context from "../store/Web3-context";
+import InfoArea from "../../UI/InfoArea/InfoArea";
+import Card from "../../UI/Card/Card";
+import Button from "../../UI/CustomButtons/Button";
+import GridContainer from "../../UI/Grid/GridContainer";
+import Web3Context from "../../store/Web3-context";
 
 const Deliveries = (props) => {
     const [origin, setOrigin] = useState("Loading");
@@ -37,6 +37,7 @@ const Deliveries = (props) => {
         if (web3Ctx.userAccount === props.myData.deliveryAddress) {
             web3Ctx.handleDelivered(props.myData);
         }
+        props.view(props.myData);
     };
 
     return (

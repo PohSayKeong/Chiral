@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import CustomInput from "../UI/CustomInput/CustomInput";
+import CustomInput from "../../UI/CustomInput/CustomInput";
 import "./Autocomplete.css";
 
 export default class AutocompletePlace extends Component {
@@ -77,10 +77,7 @@ export default class AutocompletePlace extends Component {
                         ...this.props.inputProps,
                         onChange: this.handleSearchChange,
                         type: "text",
-                        value:
-                            this.props.valuereset === ""
-                                ? ""
-                                : this.state.search,
+                        value: this.props.value,
                     }}
                     formControlProps={{
                         fullWidth: true,

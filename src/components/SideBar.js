@@ -1,16 +1,14 @@
 import React, { Fragment, useState } from "react";
 
 import NavPills from "../UI/NavPills/NavPills";
-import RequestForm from "./RequestForm";
-import Item from "./Item";
-import Deliveries from "./Deliveries";
+import RequestForm from "./Request/RequestForm";
+import Item from "./AvailableDeliveries/Item";
+import Deliveries from "./MyDeliveries/Deliveries";
 
 const SideBar = (props) => {
     const [clicked, setClicked] = useState("");
     const viewHandler = (data) => {
-        if (window.innerWidth > 960) {
-            props.view(data);
-        }
+        props.view(data);
         setClicked(data.identifier);
     };
 

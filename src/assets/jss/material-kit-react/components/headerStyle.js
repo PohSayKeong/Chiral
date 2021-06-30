@@ -16,7 +16,6 @@ const headerStyle = {
     appBar: {
         display: "flex",
         border: "0",
-        borderRadius: "3px",
         padding: "0.625rem 0",
         marginBottom: "20px",
         color: "#555",
@@ -146,6 +145,11 @@ const headerStyle = {
         paddingRight: "0px",
         paddingLeft: "0",
         ...transition,
+    },
+    "@media (max-width: 1023px)": {
+        appBar: {
+            margin: "0",
+        },
     },
 };
 

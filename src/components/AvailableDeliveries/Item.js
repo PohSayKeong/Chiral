@@ -4,11 +4,11 @@ import React, { useContext, useState } from "react";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 
 // core components
-import InfoArea from "../UI/InfoArea/InfoArea";
-import Card from "../UI/Card/Card";
-import Button from "../UI/CustomButtons/Button";
-import GridContainer from "../UI/Grid/GridContainer";
-import Web3Context from "../store/Web3-context";
+import InfoArea from "../../UI/InfoArea/InfoArea";
+import Card from "../../UI/Card/Card";
+import Button from "../../UI/CustomButtons/Button";
+import GridContainer from "../../UI/Grid/GridContainer";
+import Web3Context from "../../store/Web3-context";
 
 const Item = (props) => {
     const [origin, setOrigin] = useState("Loading");
@@ -28,6 +28,17 @@ const Item = (props) => {
             text: props.data.fees + " Tokens",
             color: "primary",
             clicked: false,
+        });
+    }
+    if (
+        props.clicked === props.data.identifier &&
+        buttonProps.clicked === false
+    ) {
+        setButtonProps({
+            ...buttonProps,
+            text: "Accept",
+            color: "warning",
+            clicked: true,
         });
     }
 

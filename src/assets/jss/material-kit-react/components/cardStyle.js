@@ -1,7 +1,6 @@
 const cardStyle = {
     card: {
         border: "0",
-        marginBottom: "30px",
         borderRadius: "6px",
         color: "rgba(0, 0, 0, 0.87)",
         background: "#fff",
@@ -22,6 +21,12 @@ const cardStyle = {
     },
     cardCarousel: {
         overflow: "hidden",
+    },
+    "@media (min-width: 1024px)": {
+        card: {
+            width: "95%",
+            marginBottom: "30px",
+        },
     },
 };
 
