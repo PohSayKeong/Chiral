@@ -9,9 +9,11 @@ import ReactMapGL, {
     Source,
     GeolocateControl,
 } from "react-map-gl";
+import Geocoder from "react-map-gl-geocoder";
 import { ReactComponent as Icon } from "../assets/images/parcelIcon.svg";
 import FlagIcon from "@material-ui/icons/Flag";
 import { easeCubic } from "d3-ease";
+import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 function Map(props) {
     const [route, setRoute] = useState();
@@ -19,11 +21,12 @@ function Map(props) {
     const [viewport, setViewport] = useState({
         width: "100%",
         height: "100%",
-        latitude: 0,
-        longitude: 0,
-        zoom: 12,
+        latitude: 1.352083,
+        longitude: 103.819839,
+        zoom: 10,
     });
     const viewportRef = useRef(viewport);
+    const mapRef = useRef();
 
     const navControlStyle = {
         right: 10,
@@ -132,6 +135,7 @@ function Map(props) {
     return (
         <ReactMapGL
             {...viewport}
+            ref={mapRef}
             onViewportChange={(nextViewport) => setViewport(nextViewport)}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
             mapStyle="mapbox://styles/sknai/ckpgcbh93197s18th45qf7azy"
@@ -142,6 +146,13 @@ function Map(props) {
                 positionOptions={{ enableHighAccuracy: true }}
                 onGeolocate={updateLocation}
                 auto
+            />
+            <Geocoder
+                mapRef={mapRef}
+                onViewportChange={(nextViewport) => setViewport(nextViewport)}
+                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                position="top-left"
+                countries="SG"
             />
             {markers}
             {route}

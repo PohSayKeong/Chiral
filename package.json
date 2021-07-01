@@ -12,6 +12,7 @@
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-map-gl": "^6.1.15",
+    "react-map-gl-geocoder": "^2.1.6",
     "react-redux": "^7.2.4",
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",
