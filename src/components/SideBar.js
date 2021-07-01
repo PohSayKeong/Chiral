@@ -28,7 +28,11 @@ const SideBar = (props) => {
     const deliveries = (
         <Fragment>
             {props.myData.map((item) => (
-                <Deliveries myData={item} key={item.identifier} />
+                <Deliveries
+                    myData={item}
+                    key={item.identifier}
+                    view={viewHandler}
+                />
             ))}
         </Fragment>
     );
