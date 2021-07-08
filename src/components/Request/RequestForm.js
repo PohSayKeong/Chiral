@@ -10,6 +10,7 @@ import Web3Context from "../../store/Web3-context";
 import useInput from "../../hooks/use-input.js";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import WeightRadio from "./WeightRadio";
 
 const fetchLatLng = async (location) => {
     const locationResponse = await fetch(
@@ -96,6 +97,16 @@ export default function RequestForm(props) {
     );
     const feesRef = useRef();
     feesRef.current = enteredFees;
+    const pickupFloor = useRef();
+    const pickupUnit = useRef();
+    const destinationFloor = useRef();
+    const destinationUnit = useRef();
+    const [selectedWeight, setSelectedWeight] = useState(
+        values && values.weight ? values.weight : ""
+    );
+    const selectedWeightRef = useRef();
+    selectedWeightRef.current = selectedWeight;
+
     const [buttonProps, setButtonProps] = useState({
         text: "Show on map",
         color: "primary",
@@ -113,7 +124,8 @@ export default function RequestForm(props) {
         enteredPickupIsValid &&
         enteredDestinationIsValid &&
         enteredValueIsValid &&
-        enteredFeesIsValid
+        enteredFeesIsValid &&
+        selectedWeight !== ""
     ) {
         formIsValid = true;
     }
@@ -154,8 +166,6 @@ export default function RequestForm(props) {
         };
         const distance = await fetchDistance(query);
         setEstimatedFees(calculateFees(distance));
-        const processCoord = (coord) =>
-            Math.trunc(coord * Math.pow(10, 15)).toString();
         if (buttonProps.clicked === false) {
             setButtonProps({
                 ...buttonProps,
@@ -165,18 +175,33 @@ export default function RequestForm(props) {
             });
             view(query);
         } else {
+            const processCoord = (coord) =>
+                Math.trunc(coord * Math.pow(10, 15)).toString();
             let output = {
                 name: enteredName,
-                pickup_lat: processCoord(query.pickup_lat),
-                pickup_lng: processCoord(query.pickup_lng),
-                destination_lat: processCoord(query.destination_lat),
-                destination_lng: processCoord(query.destination_lng),
+                pickup: [
+                    processCoord(query.pickup_lat),
+                    processCoord(query.pickup_lng),
+                    pickupFloor.current.value ? pickupFloor.current.value : 0,
+                    pickupUnit.current.value ? pickupUnit.current.value : 0,
+                ],
+                destination: [
+                    processCoord(query.destination_lat),
+                    processCoord(query.destination_lng),
+                    destinationFloor.current.value
+                        ? destinationFloor.current.value
+                        : 0,
+                    destinationUnit.current.value
+                        ? destinationUnit.current.value
+                        : 0,
+                ],
                 value: enteredValue,
                 fees: enteredFees,
+                weight: selectedWeight,
             };
+            await clearForm();
             view(query);
             await web3Ctx.handleSubmitRequest(output);
-            await clearForm();
         }
     };
 
@@ -186,6 +211,12 @@ export default function RequestForm(props) {
         resetDestinationInput();
         resetValueInput();
         resetFeesInput();
+        resetClicked();
+        pickupFloor.current.value = "";
+        pickupUnit.current.value = "";
+        destinationFloor.current.value = "";
+        destinationUnit.current.value = "";
+        setSelectedWeight("");
     };
 
     useEffect(() => {
@@ -199,6 +230,15 @@ export default function RequestForm(props) {
                     value: valueRef.current,
                     fees: feesRef.current,
                     requestSubmit: clickedRef.current ? true : false,
+                    // eslint-disable-next-line
+                    pickupFloor: pickupFloor.current.value,
+                    // eslint-disable-next-line
+                    pickupUnit: pickupUnit.current.value,
+                    // eslint-disable-next-line
+                    destinationFloor: destinationFloor.current.value,
+                    // eslint-disable-next-line
+                    destinationUnit: destinationUnit.current.value,
+                    weight: selectedWeightRef.current,
                 });
             }
         };
@@ -245,6 +285,35 @@ export default function RequestForm(props) {
                         )}
                     </GridItem>
                     <GridItem xs={10} md={8}>
+                        <GridContainer>
+                            <GridItem xs={5}>
+                                <CustomInput
+                                    labelText="Floor Number"
+                                    inputProps={{
+                                        type: "number",
+                                        inputRef: pickupFloor,
+                                        defaultValue: values
+                                            ? values.pickupFloor
+                                            : "",
+                                    }}
+                                />
+                            </GridItem>
+                            <GridItem xs={2} />
+                            <GridItem xs={5}>
+                                <CustomInput
+                                    labelText="Unit Number"
+                                    inputProps={{
+                                        type: "number",
+                                        inputRef: pickupUnit,
+                                        defaultValue: values
+                                            ? values.pickupUnit
+                                            : "",
+                                    }}
+                                />
+                            </GridItem>
+                        </GridContainer>
+                    </GridItem>
+                    <GridItem xs={10} md={8}>
                         <AutoComplete
                             labelText="Deliver To"
                             inputProps={{
@@ -260,6 +329,41 @@ export default function RequestForm(props) {
                                 Destination location cannot be empty
                             </FormHelperText>
                         )}
+                    </GridItem>
+                    <GridItem xs={10} md={8}>
+                        <GridContainer>
+                            <GridItem xs={5}>
+                                <CustomInput
+                                    labelText="Floor Number"
+                                    inputProps={{
+                                        type: "number",
+                                        inputRef: destinationFloor,
+                                        defaultValue: values
+                                            ? values.destinationFloor
+                                            : "",
+                                    }}
+                                />
+                            </GridItem>
+                            <GridItem xs={2} />
+                            <GridItem xs={5}>
+                                <CustomInput
+                                    labelText="Unit Number"
+                                    inputProps={{
+                                        type: "number",
+                                        inputRef: destinationUnit,
+                                        defaultValue: values
+                                            ? values.destinationUnit
+                                            : "",
+                                    }}
+                                />
+                            </GridItem>
+                        </GridContainer>
+                    </GridItem>
+                    <GridItem xs={10} md={8}>
+                        <WeightRadio
+                            selectedEnabled={selectedWeight}
+                            setSelectedEnabled={setSelectedWeight}
+                        />
                     </GridItem>
                     <GridItem xs={10} md={8}>
                         <CustomInput

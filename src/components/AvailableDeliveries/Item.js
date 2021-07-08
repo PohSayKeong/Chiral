@@ -1,6 +1,8 @@
 import React, { useContext, useState } from "react";
 
 // @material-ui/icons
+import DirectionsWalkIcon from "@material-ui/icons/DirectionsWalk";
+import MotorcycleIcon from "@material-ui/icons/Motorcycle";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 
 // core components
@@ -9,6 +11,7 @@ import Card from "../../UI/Card/Card";
 import Button from "../../UI/CustomButtons/Button";
 import GridContainer from "../../UI/Grid/GridContainer";
 import Web3Context from "../../store/Web3-context";
+import useAsync from "hooks/use-async";
 
 const Item = (props) => {
     const [origin, setOrigin] = useState("Loading");
@@ -19,10 +22,7 @@ const Item = (props) => {
         clicked: false,
     });
     const web3Ctx = useContext(Web3Context);
-    if (
-        props.clicked !== props.data.identifier &&
-        buttonProps.clicked === true
-    ) {
+    if (props.clicked !== props.data && buttonProps.clicked === true) {
         setButtonProps({
             ...buttonProps,
             text: props.data.fees + " Tokens",
@@ -30,10 +30,7 @@ const Item = (props) => {
             clicked: false,
         });
     }
-    if (
-        props.clicked === props.data.identifier &&
-        buttonProps.clicked === false
-    ) {
+    if (props.clicked === props.data && buttonProps.clicked === false) {
         setButtonProps({
             ...buttonProps,
             text: "Accept",
@@ -42,20 +39,26 @@ const Item = (props) => {
         });
     }
 
-    fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${props.data.pickup_lng},${props.data.pickup_lat}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
-    )
-        .then((resp) => resp.json())
-        .then((data) => setOrigin(data.features[0].place_name));
+    const fetchPickup = () =>
+        fetch(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${props.data.pickup_lng},${props.data.pickup_lat}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+        )
+            .then((resp) => resp.json())
+            .then((data) => data.features[0].place_name);
 
-    fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${props.data.destination_lng},${props.data.destination_lat}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
-    )
-        .then((resp) => resp.json())
-        .then((data) => setDestination(data.features[0].place_name));
+    const fetchDestination = () =>
+        fetch(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${props.data.destination_lng},${props.data.destination_lat}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+        )
+            .then((resp) => resp.json())
+            .then((data) => data.features[0].place_name);
+
+    useAsync(fetchPickup, setOrigin);
+
+    useAsync(fetchDestination, setDestination);
 
     const viewHandler = () => {
-        props.view(props.data);
+        props.view(props.data, props.id);
         if (buttonProps.clicked === false) {
             setButtonProps({
                 ...buttonProps,
@@ -69,8 +72,26 @@ const Item = (props) => {
     };
 
     const acceptHandler = () => {
+        if (props.clearItems) {
+            props.clearItems();
+        }
         web3Ctx.handleAcceptRequest(props.data);
     };
+
+    let icon;
+    switch (props.data._weight) {
+        case "0":
+            icon = DirectionsWalkIcon;
+            break;
+        case "1":
+            icon = MotorcycleIcon;
+            break;
+        case "2":
+            icon = LocalShippingIcon;
+            break;
+        default:
+            icon = LocalShippingIcon;
+    }
 
     return (
         <Card>
@@ -78,7 +99,7 @@ const Item = (props) => {
                 <InfoArea
                     title={props.data.identifier}
                     description={`${origin} -> ${destination}`}
-                    icon={LocalShippingIcon}
+                    icon={icon}
                     iconColor="primary"
                     value={props.data.value}
                 />

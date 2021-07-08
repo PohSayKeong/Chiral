@@ -121,10 +121,17 @@ const Web3Provider = (props) => {
         pending();
         try {
             await web3State.requestManagerInstance.methods
-                .createRequest(...Object.values(data))
+                .createRequest(
+                    data.name,
+                    data.pickup,
+                    data.destination,
+                    data.value,
+                    data.fees,
+                    data.weight
+                )
                 .send({
                     from: web3State.accounts[0],
-                    gas: 600000,
+                    gas: 1000000,
                 });
             await updateUserTokens();
             setLoaded(false);
@@ -183,27 +190,46 @@ const Web3Provider = (props) => {
         }
     };
 
+    const handleCancelled = async (data) => {
+        pending();
+        try {
+            await web3State.requestManagerInstance.methods
+                .triggerCancel(data.index)
+                .send({
+                    from: web3State.accounts[0],
+                    gas: 100000,
+                });
+            await updateUserTokens();
+            setLoaded(false);
+            success();
+        } catch {
+            failed();
+        }
+    };
+
     const getRequests = async () => {
         if (web3State.requestManagerInstance.events && !loaded) {
             const toCoord = Math.pow(10, 15).toFixed(10);
             let result = [];
             await web3State.requestManagerInstance
                 .getPastEvents("allEvents", {
-                    filter: {
-                        pickupAddress: web3State.accounts[0],
-                    },
                     fromBlock: 1,
                 })
                 .then((response) =>
                     response.map((item) => {
-                        item.returnValues.pickup_lng /= toCoord;
-                        item.returnValues.pickup_lat /= toCoord;
-                        item.returnValues.destination_lng /= toCoord;
-                        item.returnValues.destination_lat /= toCoord;
+                        const temp = {
+                            ...item.returnValues,
+                            ...item.returnValues.pickup,
+                            ...item.returnValues.destination,
+                        };
+                        temp.pickup_lng /= toCoord;
+                        temp.pickup_lat /= toCoord;
+                        temp.destination_lng /= toCoord;
+                        temp.destination_lat /= toCoord;
                         if (!result[item.returnValues.index]) {
-                            result.push(item.returnValues);
+                            result.push(temp);
                         } else {
-                            result[item.returnValues.index] = item.returnValues;
+                            result[item.returnValues.index] = temp;
                         }
                         return true;
                     })
@@ -239,6 +265,7 @@ const Web3Provider = (props) => {
         handleAcceptRequest,
         handleDelivered,
         handleReceived,
+        handleCancelled,
         getRequests,
         getCreatedRequests,
         getAcceptedRequests,

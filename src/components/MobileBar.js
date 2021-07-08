@@ -16,6 +16,7 @@ import CreateIcon from "@material-ui/icons/Create";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 import PersonIcon from "@material-ui/icons/Person";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles({ ...styles, ...barStyles });
 
@@ -30,7 +31,7 @@ export default function MobileBar(props) {
         if (data !== null) {
             let sortedItems = props.data;
             for (let i = 0; i < sortedItems.length; i++) {
-                if (sortedItems[i].identifier === data.identifier) {
+                if (sortedItems[i] === data) {
                     const temp = sortedItems[0];
                     sortedItems[0] = sortedItems[i];
                     sortedItems[i] = temp;
@@ -39,7 +40,7 @@ export default function MobileBar(props) {
             setItems(sortedItems);
             setNewRequest(null);
             setDeliver(null);
-            setClicked(data.identifier);
+            setClicked(data);
         }
         props.view(data);
     };
@@ -48,9 +49,10 @@ export default function MobileBar(props) {
         return items.map((item) => (
             <Item
                 data={item}
-                key={item.identifier}
+                key={uuidv4()}
                 view={viewHandler}
                 clicked={clicked}
+                clearItems={setItems}
             />
         ));
     };
@@ -159,7 +161,7 @@ export default function MobileBar(props) {
                         {props.myData.map((item) => (
                             <Deliveries
                                 myData={item}
-                                key={item.identifier}
+                                key={uuidv4()}
                                 view={viewHandler}
                             />
                         ))}

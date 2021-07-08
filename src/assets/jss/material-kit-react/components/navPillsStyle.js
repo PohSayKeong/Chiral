@@ -136,7 +136,7 @@ const navPillsStyle = (theme) => ({
     },
     contentWrapper: {
         overflow: "hidden",
-        height: "80vh",
+        height: "calc(100vh - 102px)",
     },
     tabContent: {
         overflow: "auto",

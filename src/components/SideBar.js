@@ -4,12 +4,13 @@ import NavPills from "../UI/NavPills/NavPills";
 import RequestForm from "./Request/RequestForm";
 import Item from "./AvailableDeliveries/Item";
 import Deliveries from "./MyDeliveries/Deliveries";
+import { v4 as uuidv4 } from "uuid";
 
 const SideBar = (props) => {
     const [clicked, setClicked] = useState("");
     const viewHandler = (data) => {
         props.view(data);
-        setClicked(data.identifier);
+        setClicked(data);
     };
 
     const items = (
@@ -17,7 +18,7 @@ const SideBar = (props) => {
             {props.data.map((item) => (
                 <Item
                     data={item}
-                    key={item.identifier}
+                    key={uuidv4()}
                     view={viewHandler}
                     clicked={clicked}
                 />
@@ -28,11 +29,7 @@ const SideBar = (props) => {
     const deliveries = (
         <Fragment>
             {props.myData.map((item) => (
-                <Deliveries
-                    myData={item}
-                    key={item.identifier}
-                    view={viewHandler}
-                />
+                <Deliveries myData={item} key={uuidv4()} view={viewHandler} />
             ))}
         </Fragment>
     );

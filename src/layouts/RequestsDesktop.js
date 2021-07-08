@@ -10,6 +10,7 @@ import Header from "UI/Header/Header";
 import HeaderLinks from "UI/Header/HeaderLinks";
 import Web3Context from "store/Web3-context";
 import Notification from "UI/Notification/Notification";
+import { ReactComponent as Icon } from "assets/images/chiralIcon.svg";
 
 const RequestsDesktop = () => {
     const [view, setView] = useState({ on: false });
@@ -32,6 +33,7 @@ const RequestsDesktop = () => {
                 color="primary"
                 rightLinks={<HeaderLinks />}
                 brand="Chiral"
+                icon={<Icon />}
             />
             <GridContainer className="Grid">
                 <GridItem xs={12} md={6}>
@@ -44,7 +46,8 @@ const RequestsDesktop = () => {
                 <GridItem item xs={false} md={6}>
                     <Map
                         data={createdRequests}
-                        view={view.data}
+                        viewData={view.data}
+                        view={viewHandler}
                         resetZoom={view.on}
                     />
                 </GridItem>

@@ -14,13 +14,13 @@ import { ReactComponent as Icon } from "../assets/images/parcelIcon.svg";
 import FlagIcon from "@material-ui/icons/Flag";
 import { easeCubic } from "d3-ease";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import { v4 as uuidv4 } from "uuid";
+import { useCallback } from "react";
 
 function Map(props) {
     const [route, setRoute] = useState();
     const [markers, setMarkers] = useState("");
     const [viewport, setViewport] = useState({
-        width: "100%",
-        height: "100%",
         latitude: 1.352083,
         longitude: 103.819839,
         zoom: 10,
@@ -47,30 +47,36 @@ function Map(props) {
         viewportRef.current = viewport;
     });
 
-    if (!props.view && props.data.length !== 0 && markers === "") {
+    if (!props.viewData && props.data.length !== 0 && markers === "") {
         setMarkers(
             props.data.map((parcel) => (
                 <Marker
                     latitude={parcel.pickup_lat}
                     longitude={parcel.pickup_lng}
-                    key={parcel.identifier}
+                    key={uuidv4()}
                     offsetLeft={-20}
                     offsetTop={-10}
                 >
-                    <Icon />
+                    <Icon
+                        onClick={() => props.view(parcel)}
+                        style={{ cursor: "pointer" }}
+                    />
                 </Marker>
             ))
         );
     }
 
     useEffect(() => {
-        if (props.view) {
+        if (props.viewData) {
             const { longitude, latitude, zoom } = new WebMercatorViewport(
                 viewportRef.current
             ).fitBounds(
                 [
-                    [props.view.pickup_lng, props.view.pickup_lat],
-                    [props.view.destination_lng, props.view.destination_lat],
+                    [props.viewData.pickup_lng, props.viewData.pickup_lat],
+                    [
+                        props.viewData.destination_lng,
+                        props.viewData.destination_lat,
+                    ],
                 ],
                 {
                     padding: 20,
@@ -87,7 +93,7 @@ function Map(props) {
                 transitionEasing: easeCubic,
             });
             fetch(
-                `https://api.mapbox.com/directions/v5/mapbox/driving/${props.view.pickup_lng},${props.view.pickup_lat};${props.view.destination_lng},${props.view.destination_lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+                `https://api.mapbox.com/directions/v5/mapbox/driving/${props.viewData.pickup_lng},${props.viewData.pickup_lat};${props.viewData.destination_lng},${props.viewData.destination_lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
             )
                 .then((resp) => resp.json())
                 .then((data) => {
@@ -110,18 +116,18 @@ function Map(props) {
             setMarkers(
                 <Fragment>
                     <Marker
-                        latitude={props.view.pickup_lat}
-                        longitude={props.view.pickup_lng}
-                        key={props.view.name + " Pickup"}
+                        latitude={props.viewData.pickup_lat}
+                        longitude={props.viewData.pickup_lng}
+                        key={uuidv4()}
                         offsetLeft={-20}
                         offsetTop={-10}
                     >
                         <Icon />
                     </Marker>
                     <Marker
-                        latitude={props.view.destination_lat}
-                        longitude={props.view.destination_lng}
-                        key={props.view.identifier + " Destination"}
+                        latitude={props.viewData.destination_lat}
+                        longitude={props.viewData.destination_lng}
+                        key={uuidv4()}
                         offsetLeft={-20}
                         offsetTop={-10}
                     >
@@ -130,15 +136,22 @@ function Map(props) {
                 </Fragment>
             );
         }
-    }, [props.view, props.resetZoom]);
+    }, [props.viewData, props.resetZoom]);
+
+    const handleViewportChange = useCallback(
+        (newViewport) => setViewport(newViewport),
+        []
+    );
 
     return (
         <ReactMapGL
             {...viewport}
             ref={mapRef}
-            onViewportChange={(nextViewport) => setViewport(nextViewport)}
+            onViewportChange={handleViewportChange}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
             mapStyle="mapbox://styles/sknai/ckpgcbh93197s18th45qf7azy"
+            width="100%"
+            height="100%"
         >
             <NavigationControl style={navControlStyle} showCompass={false} />
             <GeolocateControl
@@ -149,7 +162,7 @@ function Map(props) {
             />
             <Geocoder
                 mapRef={mapRef}
-                onViewportChange={(nextViewport) => setViewport(nextViewport)}
+                onViewportChange={handleViewportChange}
                 mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
                 position="top-left"
                 countries="SG"

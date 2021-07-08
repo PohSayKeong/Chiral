@@ -10,6 +10,7 @@ import HeaderLinks from "UI/Header/HeaderLinks";
 import Web3Context from "store/Web3-context";
 import Notification from "UI/Notification/Notification";
 import MobileBar from "components/MobileBar";
+import { ReactComponent as Icon } from "assets/images/chiralIcon.svg";
 
 const RequestsMobile = () => {
     const [view, setView] = useState({ on: false });
@@ -34,14 +35,17 @@ const RequestsMobile = () => {
                         color="primary"
                         rightLinks={<HeaderLinks />}
                         brand="Chiral"
+                        icon={<Icon />}
                     />
                 </GridItem>
                 <GridItem>
                     <div style={{ height: `calc(0.9 * (100vh - 70px))` }}>
                         <Map
                             data={createdRequests}
-                            view={view.data}
+                            viewData={view.data}
+                            view={viewHandler}
                             resetZoom={view.on}
+                            width="100%"
                         />
                     </div>
                 </GridItem>

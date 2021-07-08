@@ -88,14 +88,6 @@ export default class AutocompletePlace extends Component {
                 />
                 {this.state.search !== "" && !this.state.selected && (
                     <ul className="AutocompletePlace-results">
-                        <li
-                            className="AutocompletePlace-items"
-                            onClick={() =>
-                                this.handleItemClicked(this.state.search)
-                            }
-                        >
-                            {this.state.search}
-                        </li>
                         {this.state.results.slice(0, 3).map((place) => (
                             <li
                                 key={place.id}
