@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
+pragma experimental ABIEncoderV2;
 
 import "./Request.sol";
 import "./ChiralToken.sol";
@@ -21,50 +22,67 @@ contract RequestManager is ERC2771Context {
         address pickupAddress;
         address deliveryAddress;
     }
-    mapping(uint256 => S_Request) public requests;
-    uint256 index;
+    mapping(uint64 => S_Request) public requests;
+    uint64 index;
+    
+    struct S_pickup {
+    uint64 pickup_lat;
+    uint64 pickup_lng;
+    uint8 pickup_floor;
+    uint16 pickup_unit;
+    }
+    S_pickup public pickup;
 
-    enum SupplyChainSteps {Created, Accepted, Delivered, Received}
+    struct S_destination {
+        uint64 destination_lat;
+        uint64 destination_lng;
+        uint8 destination_floor;
+        uint16 destination_unit;
+    }
+    S_destination public destination;
+
+    enum SupplyChainSteps {
+        Created,
+        Accepted,
+        Delivered,
+        Received
+    }
 
     event DisplayStep(
         address indexed pickupAddress,
         address indexed deliveryAddress,
         string identifier,
-        uint256 index,
-        uint256 pickup_lat,
-        uint256 pickup_lng,
-        uint256 destination_lat,
-        uint256 destination_lng,
-        uint256 value,
-        uint256 fees,
-        uint256 indexed _step
+        uint64 index,
+        S_pickup pickup,
+        S_destination destination,
+        uint64 value,
+        uint64 fees,
+        uint8 indexed _step,
+        uint8 _weight
     );
 
     function createRequest(
         string memory identifier,
-        uint256 pickup_lat,
-        uint256 pickup_lng,
-        uint256 destination_lat,
-        uint256 destination_lng,
-        uint256 value,
-        uint256 fees
+        S_pickup memory _pickup,
+        S_destination memory _destination,
+        uint64 value,
+        uint64 fees,
+        Request.weights weight
     ) public {
         require(
             tokenContract.balanceOf(_msgSender()) > fees,
             "Not enough tokens in wallet"
         );
-        Request request =
-            new Request(
-                this,
-                tokenContract,
-                pickup_lat,
-                pickup_lng,
-                destination_lat,
-                destination_lng,
-                value,
-                fees,
-                index
-            );
+        Request request = new Request(
+            this,
+            tokenContract,
+            value,
+            fees,
+            index,
+            weight
+        );
+        pickup = _pickup;
+        destination = _destination;
         requests[index].request = request;
         requests[index].step = SupplyChainSteps.Created;
         requests[index].identifier = identifier;
@@ -75,18 +93,17 @@ contract RequestManager is ERC2771Context {
             requests[index].deliveryAddress,
             identifier,
             index,
-            pickup_lat,
-            pickup_lng,
-            destination_lat,
-            destination_lng,
+            pickup,
+            destination,
             value,
             fees,
-            uint256(requests[index].step)
+            uint8(requests[index].step),
+            uint8(request.weight())
         );
         index++;
     }
 
-    function triggerAccepted(uint256 _index) public {
+    function triggerAccepted(uint64 _index) public {
         Request request = requests[_index].request;
         require(
             requests[_index].step == SupplyChainSteps.Created,
@@ -112,17 +129,16 @@ contract RequestManager is ERC2771Context {
             requests[_index].deliveryAddress,
             requests[_index].identifier,
             _index,
-            request.pickup_lat(),
-            request.pickup_lng(),
-            request.destination_lat(),
-            request.destination_lng(),
+            pickup,
+            destination,
             request.value(),
             request.fees(),
-            uint256(requests[_index].step)
+            uint8(requests[_index].step),
+            uint8(request.weight())
         );
     }
 
-    function triggerDelivery(uint256 _index) public {
+    function triggerDelivery(uint64 _index) public {
         Request request = requests[_index].request;
         require(
             requests[_index].step == SupplyChainSteps.Accepted,
@@ -138,17 +154,16 @@ contract RequestManager is ERC2771Context {
             requests[_index].deliveryAddress,
             requests[_index].identifier,
             _index,
-            request.pickup_lat(),
-            request.pickup_lng(),
-            request.destination_lat(),
-            request.destination_lng(),
+            pickup,
+            destination,
             request.value(),
             request.fees(),
-            uint256(requests[_index].step)
+            uint8(requests[_index].step),
+            uint8(request.weight())
         );
     }
 
-    function triggerReceive(uint256 _index) public {
+    function triggerReceive(uint64 _index) public {
         Request request = requests[_index].request;
         require(
             requests[_index].step == SupplyChainSteps.Delivered,
@@ -169,13 +184,42 @@ contract RequestManager is ERC2771Context {
             requests[_index].deliveryAddress,
             requests[_index].identifier,
             _index,
-            request.pickup_lat(),
-            request.pickup_lng(),
-            request.destination_lat(),
-            request.destination_lng(),
+            pickup,
+            destination,
             request.value(),
             request.fees(),
-            uint256(requests[_index].step)
+            uint8(requests[_index].step),
+            uint8(request.weight())
+        );
+    }
+
+    function triggerCancel(uint64 _index) public {
+        Request request = requests[_index].request;
+        require(
+            requests[_index].step == SupplyChainSteps.Created,
+            "Request already accepted"
+        );
+        require(
+            _msgSender() == requests[_index].pickupAddress,
+            "This is not your item"
+        );
+        requests[_index].step = SupplyChainSteps.Received;
+        tokenContract.transferFrom(
+            address(request),
+            requests[_index].pickupAddress,
+            tokenContract.balanceOf(address(request))
+        );
+        emit DisplayStep(
+            requests[_index].pickupAddress,
+            requests[_index].deliveryAddress,
+            requests[_index].identifier,
+            _index,
+            pickup,
+            destination,
+            request.value(),
+            request.fees(),
+            uint8(requests[_index].step),
+            uint8(request.weight())
         );
     }
 }

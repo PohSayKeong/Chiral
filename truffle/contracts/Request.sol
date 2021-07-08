@@ -6,14 +6,17 @@ import "./ChiralToken.sol";
 
 contract Request {
     address public pickupAddress;
-    uint256 public pickup_lat;
-    uint256 public pickup_lng;
-    uint256 public destination_lat;
-    uint256 public destination_lng;
-    uint256 public value;
-    uint256 public fees;
-    uint256 public index;
+    uint64 public value;
+    uint64 public fees;
+    uint64 public index;
     address public deliveryAddress;
+    enum weights {
+        foot,
+        bike,
+        car
+    }
+    weights public weight;
+    
 
     RequestManager parentContract;
     ChiralToken tokenContract;
@@ -21,23 +24,17 @@ contract Request {
     constructor(
         RequestManager _parentContract,
         ChiralToken _tokenContract,
-        uint256 _pickup_lat,
-        uint256 _pickup_lng,
-        uint256 _destination_lat,
-        uint256 _destination_lng,
-        uint256 _value,
-        uint256 _fees,
-        uint256 _index
+        uint64 _value,
+        uint64 _fees,
+        uint64 _index,
+        weights _weight
     ) {
         parentContract = _parentContract;
         tokenContract = _tokenContract;
-        pickup_lat = _pickup_lat;
-        pickup_lng = _pickup_lng;
-        destination_lat = _destination_lat;
-        destination_lng = _destination_lng;
         value = _value;
         fees = _fees;
         index = _index;
+        weight = _weight;
     }
 
     receive() external payable {}

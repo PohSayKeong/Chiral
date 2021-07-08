@@ -1,5 +1,4 @@
 const ChiralToken = artifacts.require("./ChiralToken.sol");
-const Crowdsale = artifacts.require("./Crowdsale.sol");
 const RequestManager = artifacts.require("./RequestManager.sol");
 require("dotenv").config({ path: "../.env" });
 
