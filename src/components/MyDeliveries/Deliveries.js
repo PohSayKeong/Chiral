@@ -12,31 +12,26 @@ import Button from "../../UI/CustomButtons/Button";
 import GridContainer from "../../UI/Grid/GridContainer";
 import Web3Context from "../../store/Web3-context";
 import useAsync from "hooks/use-async";
+import fetchAddress from "helpers/fetchAddress";
 
 const Deliveries = (props) => {
     const [origin, setOrigin] = useState("Loading");
     const [destination, setDestination] = useState("Loading");
     const web3Ctx = useContext(Web3Context);
 
+    // convert latlong to address
     const fetchPickup = () =>
-        fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${props.myData.pickup_lng},${props.myData.pickup_lat}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
-        )
-            .then((resp) => resp.json())
-            .then((data) => data.features[0].place_name);
-
+        fetchAddress(props.myData.pickup_lng, props.myData.pickup_lat);
     const fetchDestination = () =>
-        fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${props.myData.destination_lng},${props.myData.destination_lat}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
-        )
-            .then((resp) => resp.json())
-            .then((data) => data.features[0].place_name);
-
+        fetchAddress(
+            props.myData.destination_lng,
+            props.myData.destination_lat
+        );
     useAsync(fetchPickup, setOrigin);
-
     useAsync(fetchDestination, setDestination);
 
     const clickHandler = () => {
+        props.view(props.myData);
         if (
             web3Ctx.userAccount === props.myData.pickupAddress &&
             props.myData._step === "2"
@@ -52,7 +47,6 @@ const Deliveries = (props) => {
         ) {
             web3Ctx.handleCancelled(props.myData);
         }
-        props.view(props.myData);
     };
 
     let icon;

@@ -7,15 +7,30 @@ import Deliveries from "./MyDeliveries/Deliveries";
 import { v4 as uuidv4 } from "uuid";
 
 const SideBar = (props) => {
+    // clicked tracks the selected request by clicking on sidebar
     const [clicked, setClicked] = useState("");
+
     const viewHandler = (data) => {
         props.view(data);
         setClicked(data);
     };
 
+    // selected request by clicking on map
+    if (props.viewData && props.viewData !== clicked) {
+        viewHandler(props.viewData);
+    }
+
+    let sortedItems = props.data;
+    // move selected item to the front
+    if (props.data.includes(props.viewData)) {
+        sortedItems = [
+            props.viewData,
+            ...props.data.filter((item) => item !== props.viewData),
+        ];
+    }
     const items = (
         <Fragment>
-            {props.data.map((item) => (
+            {sortedItems.map((item) => (
                 <Item
                     data={item}
                     key={uuidv4()}

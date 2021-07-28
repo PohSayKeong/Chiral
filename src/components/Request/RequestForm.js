@@ -6,35 +6,14 @@ import CustomInput from "../../UI/CustomInput/CustomInput";
 import Button from "../../UI/CustomButtons/Button";
 import Card from "../../UI/Card/Card";
 import AutoComplete from "./AutoComplete";
-import Web3Context from "../../store/Web3-context";
-import useInput from "../../hooks/use-input.js";
+import Web3Context from "store/Web3-context";
+import useInput from "hooks/use-input.js";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import WeightRadio from "./WeightRadio";
-
-const fetchLatLng = async (location) => {
-    const locationResponse = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-            location
-        )}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
-    );
-    return await locationResponse.json();
-};
-
-const fetchDistance = async (data) => {
-    const routeResponse = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/driving/${data.pickup_lng},${data.pickup_lat};${data.destination_lng},${data.destination_lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
-    ).then((resp) => resp.json());
-    return (await routeResponse.routes[0].distance) / 1000;
-};
-
-const calculateFees = (distance) => {
-    if (distance > 5) {
-        return (0.8 * (10 + 0.7 * (distance - 5) + 2.3)).toFixed(2);
-    } else {
-        return (0.8 * (5 + distance + 2.3)).toFixed(2);
-    }
-};
+import fetchLatLng from "helpers/fetchLatLng.js";
+import fetchDistance from "helpers/fetchDistance.js";
+import calculateFees from "helpers/calculateFees.js";
 
 export default function RequestForm(props) {
     const { view, save, values } = props;

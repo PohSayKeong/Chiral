@@ -20,6 +20,7 @@ import { useCallback } from "react";
 function Map(props) {
     const [route, setRoute] = useState();
     const [markers, setMarkers] = useState("");
+    const [selectedMarkers, setSelectedMarkers] = useState("");
     const [viewport, setViewport] = useState({
         latitude: 1.352083,
         longitude: 103.819839,
@@ -113,7 +114,7 @@ function Map(props) {
                         </Source>
                     );
                 });
-            setMarkers(
+            setSelectedMarkers(
                 <Fragment>
                     <Marker
                         latitude={props.viewData.pickup_lat}
@@ -152,6 +153,7 @@ function Map(props) {
             mapStyle="mapbox://styles/sknai/ckpgcbh93197s18th45qf7azy"
             width="100%"
             height="100%"
+            style={{ zIndex: 0 }}
         >
             <NavigationControl style={navControlStyle} showCompass={false} />
             <GeolocateControl
@@ -168,6 +170,7 @@ function Map(props) {
                 countries="SG"
             />
             {markers}
+            {selectedMarkers}
             {route}
         </ReactMapGL>
     );

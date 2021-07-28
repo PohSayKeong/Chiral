@@ -26,36 +26,30 @@ export default function MobileBar(props) {
     const [anchorDeliver, setDeliver] = useState(null);
     const [anchorMyDeliveries, setMyDeliveries] = useState(null);
     const [formValues, setFormValues] = useState({});
-    const [items, setItems] = useState();
+    const [clicked, setClicked] = useState("");
+
     const viewHandler = (data) => {
-        if (data !== null) {
-            let sortedItems = props.data;
-            for (let i = 0; i < sortedItems.length; i++) {
-                if (sortedItems[i] === data) {
-                    const temp = sortedItems[0];
-                    sortedItems[0] = sortedItems[i];
-                    sortedItems[i] = temp;
-                }
-            }
-            setItems(sortedItems);
-            setNewRequest(null);
-            setDeliver(null);
-            setClicked(data);
-        }
+        setNewRequest(null);
+        setDeliver(null);
+        setMyDeliveries(null)
+        setClicked(data);
         props.view(data);
     };
-    const [clicked, setClicked] = useState("");
-    const generateItemsComponent = (items) => {
-        return items.map((item) => (
-            <Item
-                data={item}
-                key={uuidv4()}
-                view={viewHandler}
-                clicked={clicked}
-                clearItems={setItems}
-            />
-        ));
-    };
+
+    // selected request by clicking on map
+    if (props.viewData && props.viewData !== clicked) {
+        viewHandler(props.viewData);
+    }
+
+    let sortedItems = props.data;
+    // move selected item to the front
+    if (props.data.includes(props.viewData)) {
+        sortedItems = [
+            props.viewData,
+            ...props.data.filter((item) => item !== props.viewData),
+        ];
+    }
+
     return (
         <GridContainer className="Grid">
             <GridItem xs={4}>
@@ -104,10 +98,6 @@ export default function MobileBar(props) {
                     open={Boolean(anchorDeliver)}
                     anchorEl={anchorDeliver}
                     onClose={() => setDeliver(null)}
-                    anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "center",
-                    }}
                     transformOrigin={{
                         vertical: "bottom",
                         horizontal: "center",
@@ -119,9 +109,14 @@ export default function MobileBar(props) {
                             height: "40vh",
                         }}
                     >
-                        {items
-                            ? generateItemsComponent(items)
-                            : generateItemsComponent(props.data)}
+                        {sortedItems.map((item) => (
+                            <Item
+                                data={item}
+                                key={uuidv4()}
+                                view={viewHandler}
+                                clicked={clicked}
+                            />
+                        ))}
                     </div>
                 </Popover>
             </GridItem>
@@ -143,10 +138,6 @@ export default function MobileBar(props) {
                     open={Boolean(anchorMyDeliveries)}
                     anchorEl={anchorMyDeliveries}
                     onClose={() => setMyDeliveries(null)}
-                    anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "center",
-                    }}
                     transformOrigin={{
                         vertical: "bottom",
                         horizontal: "center",

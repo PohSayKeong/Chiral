@@ -3,8 +3,14 @@
   "name": "Chiral Couriers",
   "icons": [
     {
-      "src": "chiralIcon.png",
-      "sizes": "any"
+      "src": "chiralIcon192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "chiralIcon512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",

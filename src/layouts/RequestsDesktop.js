@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, Fragment } from "react";
 import { useSelector } from "react-redux";
-
 import "mapbox-gl/dist/mapbox-gl.css";
 import Map from "components/MapContainer";
 import SideBar from "components/SideBar";
@@ -18,16 +17,12 @@ const RequestsDesktop = () => {
         setView({ data: data, on: !view.on });
     };
     const web3Ctx = useContext(Web3Context);
-    useEffect(() => {
-        web3Ctx.web3Setup();
-        web3Ctx.getRequests();
-    }, [web3Ctx]);
-    const createdRequests = web3Ctx.getCreatedRequests() || [];
-    const acceptedRequests = web3Ctx.getAcceptedRequests() || [];
+    const createdRequests = web3Ctx.handleGetCreatedRequests() || [];
+    const acceptedRequests = web3Ctx.handleGetAcceptedRequests() || [];
     const notification = useSelector((state) => state.ui.notification);
 
     return (
-        <div>
+        <Fragment>
             {notification && <Notification status={notification.status} />}
             <Header
                 color="primary"
@@ -35,15 +30,16 @@ const RequestsDesktop = () => {
                 brand="Chiral"
                 icon={<Icon />}
             />
-            <GridContainer className="Grid">
-                <GridItem xs={12} md={6}>
+            <GridContainer spacing={1}>
+                <GridItem md={6}>
                     <SideBar
                         data={createdRequests}
                         myData={acceptedRequests}
+                        viewData={view.data}
                         view={viewHandler}
                     />
                 </GridItem>
-                <GridItem item xs={false} md={6}>
+                <GridItem md={6}>
                     <Map
                         data={createdRequests}
                         viewData={view.data}
@@ -52,7 +48,7 @@ const RequestsDesktop = () => {
                     />
                 </GridItem>
             </GridContainer>
-        </div>
+        </Fragment>
     );
 };
 

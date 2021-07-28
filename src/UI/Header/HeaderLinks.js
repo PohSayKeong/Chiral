@@ -1,7 +1,5 @@
 /*eslint-disable*/
 import React, { useContext } from "react";
-// react components for routing our app without refresh
-import { Link } from "react-router-dom";
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -14,13 +12,13 @@ import Modal from "../Modal/Modal";
 
 import styles from "../../assets/jss/material-kit-react/components/headerLinksStyle.js";
 
-import web3Context from "../../store/Web3-context";
+import Web3Context from "store/Web3-context";
 
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks() {
     const classes = useStyles();
-    const web3Ctx = useContext(web3Context);
+    const web3Ctx = useContext(Web3Context);
     return (
         <List className={classes.list}>
             <ListItem className={classes.listItem}>
@@ -46,11 +44,21 @@ export default function HeaderLinks() {
                 </Button>
             </ListItem>
             <ListItem className={classes.listItem}>
-                <Modal
-                    btnClass={classes.navLink}
-                    tokens={web3Ctx.userTokens}
-                    confirmClick={web3Ctx.handleBuyTokens}
-                />
+                {web3Ctx.userAccount ? (
+                    <Modal
+                        btnClass={classes.navLink}
+                        tokens={web3Ctx.userTokens}
+                        confirmClick={web3Ctx.handleBuyTokens}
+                    />
+                ) : (
+                    <Button
+                        color="transparent"
+                        target="_blank"
+                        className={classes.navLink}
+                    >
+                        Connecting
+                    </Button>
+                )}
             </ListItem>
         </List>
     );

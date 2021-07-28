@@ -12,6 +12,7 @@ import Button from "../../UI/CustomButtons/Button";
 import GridContainer from "../../UI/Grid/GridContainer";
 import Web3Context from "../../store/Web3-context";
 import useAsync from "hooks/use-async";
+import fetchAddress from "helpers/fetchAddress";
 
 const Item = (props) => {
     const [origin, setOrigin] = useState("Loading");
@@ -22,6 +23,8 @@ const Item = (props) => {
         clicked: false,
     });
     const web3Ctx = useContext(Web3Context);
+
+    // Another item is selected, reset current button
     if (props.clicked !== props.data && buttonProps.clicked === true) {
         setButtonProps({
             ...buttonProps,
@@ -30,6 +33,8 @@ const Item = (props) => {
             clicked: false,
         });
     }
+
+    // This item is selected, change button to selected state
     if (props.clicked === props.data && buttonProps.clicked === false) {
         setButtonProps({
             ...buttonProps,
@@ -39,43 +44,20 @@ const Item = (props) => {
         });
     }
 
+    // convert latlong to address
     const fetchPickup = () =>
-        fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${props.data.pickup_lng},${props.data.pickup_lat}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
-        )
-            .then((resp) => resp.json())
-            .then((data) => data.features[0].place_name);
-
+        fetchAddress(props.data.pickup_lng, props.data.pickup_lat);
     const fetchDestination = () =>
-        fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${props.data.destination_lng},${props.data.destination_lat}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
-        )
-            .then((resp) => resp.json())
-            .then((data) => data.features[0].place_name);
-
+        fetchAddress(props.data.destination_lng, props.data.destination_lat);
     useAsync(fetchPickup, setOrigin);
-
     useAsync(fetchDestination, setDestination);
 
     const viewHandler = () => {
         props.view(props.data, props.id);
-        if (buttonProps.clicked === false) {
-            setButtonProps({
-                ...buttonProps,
-                text: "Accept",
-                color: "warning",
-                clicked: true,
-            });
-        } else {
-            acceptHandler();
+        // confirm button has been clicked
+        if (buttonProps.clicked === true) {
+            web3Ctx.handleAcceptRequest(props.data);
         }
-    };
-
-    const acceptHandler = () => {
-        if (props.clearItems) {
-            props.clearItems();
-        }
-        web3Ctx.handleAcceptRequest(props.data);
     };
 
     let icon;

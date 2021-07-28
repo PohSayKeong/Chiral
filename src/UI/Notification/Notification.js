@@ -1,4 +1,5 @@
 import React from "react";
+import { Fragment } from "react";
 // @material-ui/icons
 import Check from "@material-ui/icons/Check";
 import ErrorIcon from "@material-ui/icons/Error";
@@ -6,22 +7,25 @@ import ErrorIcon from "@material-ui/icons/Error";
 // core components
 import SnackbarContent from "../Snackbar/SnackbarContent.js";
 import Clearfix from "../Clearfix/Clearfix.js";
+import Backdrop from "@material-ui/core/Backdrop";
 
 export default function Notification(props) {
     return (
         <div style={{ zIndex: "1", position: "absolute", width: "100%" }}>
             {props.status === "pending" && (
-                <SnackbarContent
-                    message={
-                        <span>
-                            <b> Pending:</b> Please sign the transaction and
-                            wait for it to be uploaded on the blockchain.
-                        </span>
-                    }
-                    close
-                    color="info"
-                    icon="pending"
-                />
+                <Fragment>
+                    <SnackbarContent
+                        message={
+                            <span>
+                                <b> Pending:</b> Please sign the transaction and
+                                wait for it to be uploaded on the blockchain.
+                            </span>
+                        }
+                        color="info"
+                        icon="pending"
+                    />
+                    <Backdrop open style={{ zIndex: -1 }} />
+                </Fragment>
             )}
             {props.status === "success" && (
                 <SnackbarContent

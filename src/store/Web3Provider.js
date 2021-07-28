@@ -1,82 +1,33 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Web3Context from "./Web3-context";
-import ChiralToken from "../contracts/ChiralToken.json";
-import RequestManager from "../contracts/RequestManager.json";
-import getWeb3 from "../getWeb3";
-import { RelayProvider } from "@opengsn/provider";
-import Web3 from "web3";
-import { uiActions } from "../store/ui-slice";
 import { useDispatch } from "react-redux";
+import initWeb3Provider from "./requestHelpers/initWeb3Provider";
+import buyTokens from "./tokenHelper/buyTokens";
+import submitRequest from "./requestHelpers/submitRequest";
+import acceptRequest from "./requestHelpers/acceptRequest";
+import delivered from "./requestHelpers/delivered";
+import received from "./requestHelpers/received";
+import cancelled from "./requestHelpers/cancelled";
+import getRequests from "./requestHelpers/getRequests";
 
 const Web3Provider = (props) => {
     const [web3State, setWeb3State] = useState({
+        web3: {},
         accounts: [],
         tokenInstance: {},
         requestManagerInstance: {},
-        web3: {},
         userTokens: 0,
     });
     const [requests, setRequests] = useState([]);
-    const [loaded, setLoaded] = useState(false);
-    const paymasterAddress = "0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016";
-    const config = {
-        paymasterAddress,
-    };
     const dispatch = useDispatch();
-    const pending = () => {
-        dispatch(
-            uiActions.showNotification({
-                status: "pending",
-            })
-        );
-    };
-    const success = () => {
-        dispatch(
-            uiActions.showNotification({
-                status: "success",
-            })
-        );
-    };
-    const failed = () => {
-        dispatch(
-            uiActions.showNotification({
-                status: "failed",
-            })
-        );
-    };
 
-    const web3Setup = async () => {
+    const web3Setup = useCallback(async () => {
         try {
-            // Get network provider and web3 instance.
-            const newWeb3 = await getWeb3();
-            const provider = await RelayProvider.newProvider({
-                provider: newWeb3.currentProvider,
-                config,
-            }).init();
-            const GSNWeb3 = new Web3(provider);
-
-            // Use web3 to get the user's accounts.
-            const newAccounts = await GSNWeb3.eth.getAccounts();
-
-            // Get the contract instance.
-            const networkId = await GSNWeb3.eth.net.getId();
-            const newTokenInstance = new GSNWeb3.eth.Contract(
-                ChiralToken.abi,
-                ChiralToken.networks[networkId] &&
-                    ChiralToken.networks[networkId].address
-            );
-            const newRequestManagerInstance = new GSNWeb3.eth.Contract(
-                RequestManager.abi,
-                RequestManager.networks[networkId] &&
-                    RequestManager.networks[networkId].address
-            );
-            await setWeb3State((prevState) => {
+            const web3Values = await initWeb3Provider();
+            setWeb3State((prevState) => {
                 return {
                     ...prevState,
-                    web3: GSNWeb3,
-                    accounts: newAccounts,
-                    tokenInstance: newTokenInstance,
-                    requestManagerInstance: newRequestManagerInstance,
+                    ...web3Values,
                 };
             });
         } catch (error) {
@@ -85,8 +36,13 @@ const Web3Provider = (props) => {
                 `Failed to load web3, accounts, or contract. Check console for details.`
             );
             console.error(error);
+            web3Setup();
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        web3Setup();
+    }, [web3Setup]);
 
     const updateUserTokens = useCallback(async () => {
         const newUserTokens = await web3State.tokenInstance.methods
@@ -97,153 +53,58 @@ const Web3Provider = (props) => {
         });
     }, [web3State.accounts, web3State.tokenInstance.methods]);
 
+    const handleBuyTokens = async (amount) => {
+        await buyTokens(amount, web3State, dispatch);
+        await updateUserTokens();
+    };
+
+    const handleGetRequests = useCallback(async () => {
+        const requestsResult = await getRequests(
+            web3State.requestManagerInstance
+        );
+        setRequests(requestsResult);
+    }, [web3State.requestManagerInstance]);
+
     useEffect(() => {
         if (web3State.accounts[0]) {
             updateUserTokens();
+            handleGetRequests();
         }
-    }, [web3State.accounts, updateUserTokens]);
-
-    const handleBuyTokens = async (amount) => {
-        pending();
-        try {
-            await web3State.tokenInstance.methods.mint(amount).send({
-                from: web3State.accounts[0],
-                gas: 30000,
-            });
-            await updateUserTokens();
-            success();
-        } catch {
-            failed();
-        }
-    };
+    }, [web3State.accounts, updateUserTokens, handleGetRequests]);
 
     const handleSubmitRequest = async (data) => {
-        pending();
-        try {
-            await web3State.requestManagerInstance.methods
-                .createRequest(
-                    data.name,
-                    data.pickup,
-                    data.destination,
-                    data.value,
-                    data.fees,
-                    data.weight
-                )
-                .send({
-                    from: web3State.accounts[0],
-                    gas: 1000000,
-                });
-            await updateUserTokens();
-            setLoaded(false);
-            success();
-        } catch {
-            failed();
-        }
+        await submitRequest(data, web3State, dispatch);
+        await updateUserTokens();
+        await handleGetRequests();
     };
 
     const handleAcceptRequest = async (data) => {
-        pending();
-        try {
-            await web3State.requestManagerInstance.methods
-                .triggerAccepted(data.index)
-                .send({
-                    from: web3State.accounts[0],
-                    gas: 150000,
-                });
-            await updateUserTokens();
-            setLoaded(false);
-            success();
-        } catch {
-            failed();
-        }
+        await acceptRequest(data, web3State, dispatch);
+        await updateUserTokens();
+        await handleGetRequests();
     };
 
     const handleDelivered = async (data) => {
-        pending();
-        try {
-            await web3State.requestManagerInstance.methods
-                .triggerDelivery(data.index)
-                .send({
-                    from: web3State.accounts[0],
-                    gas: 80000,
-                });
-            setLoaded(false);
-            success();
-        } catch {
-            failed();
-        }
+        await delivered(data, web3State, dispatch);
+        await handleGetRequests();
     };
 
     const handleReceived = async (data) => {
-        pending();
-        try {
-            await web3State.requestManagerInstance.methods
-                .triggerReceive(data.index)
-                .send({
-                    from: web3State.accounts[0],
-                    gas: 100000,
-                });
-            setLoaded(false);
-            success();
-        } catch {
-            failed();
-        }
+        await received(data, web3State, dispatch);
+        await handleGetRequests();
     };
 
     const handleCancelled = async (data) => {
-        pending();
-        try {
-            await web3State.requestManagerInstance.methods
-                .triggerCancel(data.index)
-                .send({
-                    from: web3State.accounts[0],
-                    gas: 100000,
-                });
-            await updateUserTokens();
-            setLoaded(false);
-            success();
-        } catch {
-            failed();
-        }
+        await cancelled(data, web3State, dispatch);
+        await updateUserTokens();
+        await handleGetRequests();
     };
 
-    const getRequests = async () => {
-        if (web3State.requestManagerInstance.events && !loaded) {
-            const toCoord = Math.pow(10, 15).toFixed(10);
-            let result = [];
-            await web3State.requestManagerInstance
-                .getPastEvents("allEvents", {
-                    fromBlock: 1,
-                })
-                .then((response) =>
-                    response.map((item) => {
-                        const temp = {
-                            ...item.returnValues,
-                            ...item.returnValues.pickup,
-                            ...item.returnValues.destination,
-                        };
-                        temp.pickup_lng /= toCoord;
-                        temp.pickup_lat /= toCoord;
-                        temp.destination_lng /= toCoord;
-                        temp.destination_lat /= toCoord;
-                        if (!result[item.returnValues.index]) {
-                            result.push(temp);
-                        } else {
-                            result[item.returnValues.index] = temp;
-                        }
-                        return true;
-                    })
-                );
-            setLoaded(true);
-            setRequests(result);
-        }
-    };
-
-    const getCreatedRequests = () => {
+    const handleGetCreatedRequests = () => {
         return requests.filter((request) => request._step === "0");
     };
 
-    const getAcceptedRequests = () => {
+    const handleGetAcceptedRequests = () => {
         const created = requests.filter(
             (request) =>
                 request.pickupAddress === web3State.accounts[0] &&
@@ -266,9 +127,9 @@ const Web3Provider = (props) => {
         handleDelivered,
         handleReceived,
         handleCancelled,
-        getRequests,
-        getCreatedRequests,
-        getAcceptedRequests,
+        handleGetRequests,
+        handleGetCreatedRequests,
+        handleGetAcceptedRequests,
         web3Setup,
     };
 
