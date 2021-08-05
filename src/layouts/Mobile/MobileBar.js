@@ -8,8 +8,8 @@ import Button from "UI/CustomButtons/Button.js";
 import styles from "assets/jss/material-kit-react/popoverStyles.js";
 import GridContainer from "UI/Grid/GridContainer";
 import GridItem from "UI/Grid/GridItem";
-import RequestForm from "components/Request/RequestForm";
-import Item from "components/AvailableDeliveries/Item";
+import RequestForm from "components/RequestForm/RequestForm";
+import Request from "components/Requests/Request";
 import Deliveries from "components/MyDeliveries/Deliveries";
 import barStyles from "./MobileBarStyles.js";
 import CreateIcon from "@material-ui/icons/Create";
@@ -31,7 +31,7 @@ export default function MobileBar(props) {
     const viewHandler = (data) => {
         setNewRequest(null);
         setDeliver(null);
-        setMyDeliveries(null)
+        setMyDeliveries(null);
         setClicked(data);
         props.view(data);
     };
@@ -41,10 +41,10 @@ export default function MobileBar(props) {
         viewHandler(props.viewData);
     }
 
-    let sortedItems = props.data;
+    let sortedRequests = props.data;
     // move selected item to the front
     if (props.data.includes(props.viewData)) {
-        sortedItems = [
+        sortedRequests = [
             props.viewData,
             ...props.data.filter((item) => item !== props.viewData),
         ];
@@ -109,8 +109,8 @@ export default function MobileBar(props) {
                             height: "40vh",
                         }}
                     >
-                        {sortedItems.map((item) => (
-                            <Item
+                        {sortedRequests.map((item) => (
+                            <Request
                                 data={item}
                                 key={uuidv4()}
                                 view={viewHandler}
@@ -151,7 +151,7 @@ export default function MobileBar(props) {
                     >
                         {props.myData.map((item) => (
                             <Deliveries
-                                myData={item}
+                                data={item}
                                 key={uuidv4()}
                                 view={viewHandler}
                             />

@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from "react";
 
-import NavPills from "../UI/NavPills/NavPills";
-import RequestForm from "./Request/RequestForm";
-import Item from "./AvailableDeliveries/Item";
-import Deliveries from "./MyDeliveries/Deliveries";
+import NavPills from "../../UI/NavPills/NavPills";
+import RequestForm from "../../components/RequestForm/RequestForm";
+import Request from "components/Requests/Request";
+import Deliveries from "../../components/MyDeliveries/Deliveries";
 import { v4 as uuidv4 } from "uuid";
 
 const SideBar = (props) => {
@@ -28,10 +28,10 @@ const SideBar = (props) => {
             ...props.data.filter((item) => item !== props.viewData),
         ];
     }
-    const items = (
+    const requests = (
         <Fragment>
             {sortedItems.map((item) => (
-                <Item
+                <Request
                     data={item}
                     key={uuidv4()}
                     view={viewHandler}
@@ -44,7 +44,7 @@ const SideBar = (props) => {
     const deliveries = (
         <Fragment>
             {props.myData.map((item) => (
-                <Deliveries myData={item} key={uuidv4()} view={viewHandler} />
+                <Deliveries data={item} key={uuidv4()} view={viewHandler} />
             ))}
         </Fragment>
     );
@@ -59,7 +59,7 @@ const SideBar = (props) => {
                 },
                 {
                     tabButton: "Deliver",
-                    tabContent: { ...items },
+                    tabContent: { ...requests },
                 },
                 {
                     tabButton: "My Deliveries",

@@ -9,8 +9,9 @@ import Header from "UI/Header/Header";
 import HeaderLinks from "UI/Header/HeaderLinks";
 import Web3Context from "store/Web3-context";
 import Notification from "UI/Notification/Notification";
-import MobileBar from "components/MobileBar";
+import MobileBar from "layouts/Mobile/MobileBar";
 import { ReactComponent as Icon } from "assets/images/chiralIcon.svg";
+import Chatbox from "components/Chat/Chatbox";
 
 const RequestsMobile = () => {
     const [view, setView] = useState({ on: false });
@@ -21,6 +22,7 @@ const RequestsMobile = () => {
     const createdRequests = web3Ctx.handleGetCreatedRequests() || [];
     const acceptedRequests = web3Ctx.handleGetAcceptedRequests() || [];
     const notification = useSelector((state) => state.ui.notification);
+    const chat = useSelector((state) => state.chat.chatInfo);
 
     return (
         <Fragment>
@@ -35,6 +37,7 @@ const RequestsMobile = () => {
                     />
                 </GridItem>
                 <GridItem>
+                    {chat && <Chatbox info={chat} />}
                     <div style={{ height: `calc(0.9 * (100vh - 70px))` }}>
                         <Map
                             data={createdRequests}

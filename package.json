@@ -18,6 +18,8 @@
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "git+https://github.com/PohSayKeong/react-scripts.git",
+    "stream-chat": "^3.13.1",
+    "stream-chat-react": "^6.4.9",
     "uuid": "^8.3.2",
     "web3": "^1.4.0",
     "web3modal": "^1.9.3"
