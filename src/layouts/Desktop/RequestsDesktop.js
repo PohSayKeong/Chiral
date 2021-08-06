@@ -1,7 +1,7 @@
 import React, { useContext, useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 import "mapbox-gl/dist/mapbox-gl.css";
-import Map from "components/MapContainer";
+import Map from "components/Map/MapContainer";
 import SideBar from "layouts/Desktop/SideBar";
 import GridContainer from "UI/Grid/GridContainer";
 import GridItem from "UI/Grid/GridItem";

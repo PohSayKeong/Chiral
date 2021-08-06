@@ -9,6 +9,9 @@
 
 .messages {
     background-color: white;
+    display: flex;
+    flex-grow: inherit;
+    flex-direction: column;
 }
 
 .messaging.str-chat .str-chat__header-livestream {
@@ -36,10 +39,6 @@
     flex-direction: column;
 }
 
-.str-chat__list {
-    flex: none;
-}
-
 .str-chat.messaging,
 .str-chat.commerce {
     height: 100%;
@@ -55,6 +54,7 @@
     z-index: 1;
     position: absolute;
     width: inherit;
+    height: 100%;
 }
 
 @media screen and (max-width: 1023px) {

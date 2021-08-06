@@ -2,8 +2,8 @@ import React from "react";
 
 import "./App.css";
 import { useMediaQuery } from "react-responsive";
-import RequestsDesktop from "./layouts/Desktop/RequestsDesktop";
-import RequestsMobile from "./layouts/Mobile/RequestsMobile";
+import RequestsDesktop from "layouts/Desktop/RequestsDesktop";
+import Mobile from "layouts/Mobile/Mobile";
 
 const App = () => {
     const isDesktopOrLaptop = useMediaQuery({
@@ -13,7 +13,7 @@ const App = () => {
     return (
         <div className="App">
             {isDesktopOrLaptop && <RequestsDesktop />}
-            {!isDesktopOrLaptop && <RequestsMobile />}
+            {!isDesktopOrLaptop && <Mobile />}
         </div>
     );
 };

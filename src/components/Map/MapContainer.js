@@ -1,21 +1,19 @@
-import React, { Fragment, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import ReactMapGL, {
-    Marker,
     NavigationControl,
     WebMercatorViewport,
     FlyToInterpolator,
-    Layer,
-    Source,
     GeolocateControl,
 } from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
-import { ReactComponent as Icon } from "../assets/images/parcelIcon.svg";
-import FlagIcon from "@material-ui/icons/Flag";
 import { easeCubic } from "d3-ease";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import { v4 as uuidv4 } from "uuid";
 import { useCallback } from "react";
+import RouteLine from "./RouteLine";
+import RouteMarkers from "./RouteMarkers";
+import ParcelMarkers from "./ParcelMarkers";
+import { v4 as uuidv4 } from "uuid";
 
 function Map(props) {
     const [route, setRoute] = useState();
@@ -42,33 +40,11 @@ function Map(props) {
     const updateLocation = (data) => {
         viewportRef.current.latitiude = data.coords.latitude;
         viewportRef.current.longitude = data.coords.longitude;
+        zoomToFitView();
     };
 
-    useEffect(() => {
-        viewportRef.current = viewport;
-    });
-
-    if (!props.viewData && props.data.length !== 0 && markers === "") {
-        setMarkers(
-            props.data.map((parcel) => (
-                <Marker
-                    latitude={parcel.pickup_lat}
-                    longitude={parcel.pickup_lng}
-                    key={uuidv4()}
-                    offsetLeft={-20}
-                    offsetTop={-10}
-                >
-                    <Icon
-                        onClick={() => props.view(parcel)}
-                        style={{ cursor: "pointer" }}
-                    />
-                </Marker>
-            ))
-        );
-    }
-
-    useEffect(() => {
-        if (props.viewData) {
+    const zoomToFitView = useCallback(async () => {
+        if (props.viewData && viewportRef.current.latitude !== 1.352083) {
             const { longitude, latitude, zoom } = new WebMercatorViewport(
                 viewportRef.current
             ).fitBounds(
@@ -98,46 +74,27 @@ function Map(props) {
             )
                 .then((resp) => resp.json())
                 .then((data) => {
-                    setRoute(
-                        <Source type="geojson" data={data.routes[0].geometry}>
-                            <Layer
-                                {...{
-                                    id: "directions",
-                                    type: "line",
-                                    paint: {
-                                        "line-color": "#A032CD",
-                                        "line-width": 3,
-                                        "line-opacity": 0.75,
-                                    },
-                                }}
-                            />
-                        </Source>
-                    );
+                    setRoute(<RouteLine data={data} />);
                 });
-            setSelectedMarkers(
-                <Fragment>
-                    <Marker
-                        latitude={props.viewData.pickup_lat}
-                        longitude={props.viewData.pickup_lng}
-                        key={uuidv4()}
-                        offsetLeft={-20}
-                        offsetTop={-10}
-                    >
-                        <Icon />
-                    </Marker>
-                    <Marker
-                        latitude={props.viewData.destination_lat}
-                        longitude={props.viewData.destination_lng}
-                        key={uuidv4()}
-                        offsetLeft={-20}
-                        offsetTop={-10}
-                    >
-                        <FlagIcon fontSize="large" />
-                    </Marker>
-                </Fragment>
-            );
+            setSelectedMarkers(<RouteMarkers viewData={props.viewData} />);
         }
-    }, [props.viewData, props.resetZoom]);
+    }, [props.viewData]);
+
+    useEffect(() => {
+        viewportRef.current = viewport;
+    });
+
+    //Place markers of available requests
+    if (!props.viewData && props.data.length !== 0 && markers === "") {
+        setMarkers(
+            <ParcelMarkers data={props.data} view={props.view} key={uuidv4()} />
+        );
+    }
+
+    //Change map to fit new request selected
+    useEffect(() => {
+        zoomToFitView();
+    }, [props.viewData, zoomToFitView]);
 
     const handleViewportChange = useCallback(
         (newViewport) => setViewport(newViewport),
