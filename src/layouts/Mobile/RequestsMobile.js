@@ -37,7 +37,6 @@ const RequestsMobile = () => {
                     />
                 </GridItem>
                 <GridItem>
-                    {chat && <Chatbox info={chat} />}
                     <div style={{ height: `calc(0.9 * (100vh - 70px))` }}>
                         <Map
                             data={createdRequests}
@@ -49,14 +48,18 @@ const RequestsMobile = () => {
                     </div>
                 </GridItem>
                 <GridItem>
-                    <div style={{ height: `calc(0.1 * (100vh - 70px))` }}>
-                        <MobileBar
-                            viewData={view.data}
-                            view={viewHandler}
-                            data={createdRequests}
-                            myData={acceptedRequests}
-                        />
-                    </div>
+                    {chat ? (
+                        <Chatbox info={chat} />
+                    ) : (
+                        <div style={{ height: `calc(0.1 * (100vh - 70px))` }}>
+                            <MobileBar
+                                viewData={view.data}
+                                view={viewHandler}
+                                data={createdRequests}
+                                myData={acceptedRequests}
+                            />
+                        </div>
+                    )}
                 </GridItem>
             </GridContainer>
         </Fragment>

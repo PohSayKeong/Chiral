@@ -3,11 +3,11 @@
 }
 
 .messaging.str-chat .str-chat__list .str-chat__reverse-infinite-scroll {
+    height: 62vh;
     padding-top: 0;
 }
 
 .messages {
-    height: 62vh;
     background-color: white;
 }
 
@@ -58,8 +58,8 @@
 }
 
 @media screen and (max-width: 1023px) {
-    .messages {
-        height: calc(100vh - 216.2px);
+    .messaging.str-chat .str-chat__list .str-chat__reverse-infinite-scroll {
+        height: calc(100vh - 146.2px);
     }
     .container {
         z-index: 1301;

@@ -11,6 +11,7 @@ import {
     LoadingIndicator,
 } from "stream-chat-react";
 import CloseChatButton from "./CloseChatButton";
+import { CustomMessageInput } from "./CustomMessageInput";
 
 import "stream-chat-react/dist/css/index.css";
 import "./Chatbox.css";
@@ -25,10 +26,13 @@ const Chatbox = (props) => {
                 process.env.REACT_APP_GETSTREAM_KEY
             );
             if (!client._user) {
-                await client.setGuestUser({
-                    id: props.info.user,
-                    name: props.info.user,
-                });
+                await client.connectUser(
+                    {
+                        id: props.info.user,
+                        name: props.info.user,
+                    },
+                    client.devToken(props.info.user)
+                );
             }
 
             setChatClient(client);
@@ -48,7 +52,7 @@ const Chatbox = (props) => {
     return (
         <div className="container">
             <Chat client={chatClient} theme="messaging light">
-                <Channel channel={channel}>
+                <Channel channel={channel} Input={CustomMessageInput}>
                     <Window>
                         <div className="header">
                             <ChannelHeader />
@@ -57,7 +61,7 @@ const Chatbox = (props) => {
                         <div className="messages">
                             <MessageList />
                         </div>
-                        <MessageInput />
+                        <MessageInput focus={true} />
                     </Window>
                     <Thread />
                 </Channel>
