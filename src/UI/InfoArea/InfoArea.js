@@ -32,7 +32,9 @@ export default function InfoArea(props) {
             <div className={classes.descriptionWrapper}>
                 <h4 className={classes.title}>
                     {title}
-                    <Badge color="primary">{props.value} Tokens</Badge>
+                    {props.value && (
+                        <Badge color="primary">{props.value} Tokens</Badge>
+                    )}
                 </h4>
                 <p className={classes.description}>{description}</p>
             </div>

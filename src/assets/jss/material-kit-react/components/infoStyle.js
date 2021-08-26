@@ -11,14 +11,11 @@ import {
 
 const infoStyle = {
     infoArea: {
-        maxWidth: "360px",
-        margin: "0 auto",
-        padding: "0px",
+        padding: "0 2rem",
     },
     iconWrapper: {
         float: "left",
         marginTop: "24px",
-        marginRight: "10px",
     },
     primary: {
         color: primaryColor,
@@ -49,12 +46,17 @@ const infoStyle = {
         color: grayColor,
         overflow: "hidden",
     },
-    title,
+    title: {
+        ...title,
+        fontSize: "1.5rem",
+        fontFamily:
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'",
+    },
     description: {
         color: grayColor,
         overflow: "hidden",
         marginTop: "0px",
-        fontSize: "14px",
+        fontSize: "1rem",
     },
     iconWrapperVertical: {
         float: "none",

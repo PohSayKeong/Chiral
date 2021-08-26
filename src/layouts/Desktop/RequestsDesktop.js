@@ -6,7 +6,7 @@ import SideBar from "layouts/Desktop/SideBar";
 import GridContainer from "UI/Grid/GridContainer";
 import GridItem from "UI/Grid/GridItem";
 import Header from "UI/Header/Header";
-import HeaderLinks from "UI/Header/HeaderLinks";
+import HeaderLinks from "UI/Header/HeaderLinksApp";
 import Web3Context from "store/Web3-context";
 import Notification from "UI/Notification/Notification";
 import { ReactComponent as Icon } from "assets/images/chiralIcon.svg";
