@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import ReactMapGL, {
     NavigationControl,
     WebMercatorViewport,
@@ -26,6 +26,10 @@ function Map(props) {
     });
     const viewportRef = useRef(viewport);
     const mapRef = useRef();
+    const availableRequests = useSelector(
+        (state) => state.request.availableRequests
+    );
+    const viewData = useSelector((state) => state.request.viewData);
 
     const navControlStyle = {
         right: 10,
@@ -44,16 +48,13 @@ function Map(props) {
     };
 
     const zoomToFitView = useCallback(async () => {
-        if (props.viewData && viewportRef.current.latitude !== 1.352083) {
+        if (viewData && viewportRef.current.latitude !== 1.352083) {
             const { longitude, latitude, zoom } = new WebMercatorViewport(
                 viewportRef.current
             ).fitBounds(
                 [
-                    [props.viewData.pickup_lng, props.viewData.pickup_lat],
-                    [
-                        props.viewData.destination_lng,
-                        props.viewData.destination_lat,
-                    ],
+                    [viewData.pickup_lng, viewData.pickup_lat],
+                    [viewData.destination_lng, viewData.destination_lat],
                 ],
                 {
                     padding: 20,
@@ -70,31 +71,35 @@ function Map(props) {
                 transitionEasing: easeCubic,
             });
             fetch(
-                `https://api.mapbox.com/directions/v5/mapbox/driving/${props.viewData.pickup_lng},${props.viewData.pickup_lat};${props.viewData.destination_lng},${props.viewData.destination_lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+                `https://api.mapbox.com/directions/v5/mapbox/driving/${viewData.pickup_lng},${viewData.pickup_lat};${viewData.destination_lng},${viewData.destination_lat}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
             )
                 .then((resp) => resp.json())
                 .then((data) => {
                     setRoute(<RouteLine data={data} />);
                 });
-            setSelectedMarkers(<RouteMarkers viewData={props.viewData} />);
+            setSelectedMarkers(<RouteMarkers viewData={viewData} />);
         }
-    }, [props.viewData]);
+    }, [viewData]);
 
     useEffect(() => {
         viewportRef.current = viewport;
     });
 
     //Place markers of available requests
-    if (!props.viewData && props.data.length !== 0 && markers === "") {
+    if (!viewData && availableRequests.length !== 0 && markers === "") {
         setMarkers(
-            <ParcelMarkers data={props.data} view={props.view} key={uuidv4()} />
+            <ParcelMarkers
+                data={availableRequests}
+                view={props.view}
+                key={uuidv4()}
+            />
         );
     }
 
     //Change map to fit new request selected
     useEffect(() => {
         zoomToFitView();
-    }, [props.viewData, zoomToFitView]);
+    }, [viewData, zoomToFitView]);
 
     const handleViewportChange = useCallback(
         (newViewport) => setViewport(newViewport),

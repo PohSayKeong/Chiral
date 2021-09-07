@@ -22,7 +22,6 @@ export default class AutocompletePlace extends Component {
 
     handleSearchChange(e) {
         this.props.onInputChange(e);
-        this.props.buttonChange();
         this.setState({
             ...this.state,
             search: e.target.value,

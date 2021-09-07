@@ -8,7 +8,7 @@ import DeliveriesButton from "./DeliveriesButton";
 import OpenChatButton from "components/Chat/OpenChatButton";
 import InfoCard from "components/InfoCard";
 
-const Deliveries = (props) => {
+const Delivery = (props) => {
     const chat = useSelector((state) => state.chat.chatInfo);
 
     return (
@@ -16,7 +16,7 @@ const Deliveries = (props) => {
             <GridContainer alignItems="center" direction="column">
                 <InfoCard data={props.data} details={true} />
                 <GridContainer justify="center">
-                    <DeliveriesButton data={props.data} view={props.view} />
+                    <DeliveriesButton data={props.data} />
                     {(!chat || chat.index !== props.data.index) && (
                         <OpenChatButton data={props.data} />
                     )}
@@ -25,4 +25,4 @@ const Deliveries = (props) => {
         </Card>
     );
 };
-export default Deliveries;
+export default Delivery;

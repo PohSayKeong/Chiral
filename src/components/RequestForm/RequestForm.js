@@ -1,142 +1,111 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 // core components
 import GridContainer from "../../UI/Grid/GridContainer.js";
 import GridItem from "../../UI/Grid/GridItem.js";
-import CustomInput from "../../UI/CustomInput/CustomInput";
-import Button from "../../UI/CustomButtons/Button";
 import Card from "../../UI/Card/Card";
-import AutoComplete from "./AutoComplete";
 import Web3Context from "store/Web3-context";
 import useInput from "hooks/use-input.js";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import WeightRadio from "./WeightRadio";
+import WeightRadio from "./Components/WeightRadio";
 import fetchLatLng from "helpers/fetchLatLng.js";
 import fetchDistance from "helpers/fetchDistance.js";
 import calculateFees from "helpers/calculateFees.js";
+import Name from "./Components/Name.js";
+import Location from "./Components/Location.js";
+import Value from "./Components/Value.js";
+import Fees from "./Components/Fees.js";
+import { requestActions } from "store/request-slice";
+import Submit from "./Components/Submit.js";
+import { uiActions } from "store/ui-slice.js";
+import UnitDetails from "./Components/UnitDetails.js";
 
-export default function RequestForm(props) {
-    const { view, save, values } = props;
-    const {
-        value: enteredName,
-        isValid: enteredNameIsValid,
-        hasError: nameInputHasError,
-        valueChangeHandler: nameChangedHandler,
-        inputBlurHandler: nameBlurHandler,
-        reset: resetNameInput,
-    } = useInput((value) => value.trim() !== "", values ? values.name : "");
-    const nameRef = useRef();
-    nameRef.current = enteredName;
-    const {
-        value: enteredPickup,
-        isValid: enteredPickupIsValid,
-        hasError: pickupInputHasError,
-        valueChangeHandler: pickupChangeHandler,
-        inputBlurHandler: pickupBlurHandler,
-        reset: resetPickupInput,
-    } = useInput((value) => value.trim() !== "", values ? values.pickup : "");
-    const pickupRef = useRef();
-    pickupRef.current = enteredPickup;
-    const {
-        value: enteredDestination,
-        isValid: enteredDestinationIsValid,
-        hasError: destinationInputHasError,
-        valueChangeHandler: destinationChangeHandler,
-        inputBlurHandler: destinationBlurHandler,
-        reset: resetDestinationInput,
-    } = useInput(
+export default function RequestForm() {
+    const formData = useSelector((state) => state.ui.form);
+    const formQuery = useSelector((state) => state.ui.query);
+    const viewData = useSelector((state) => state.request.viewData);
+    const [clicked, setClicked] = useState(false);
+    const nameProps = useInput(
         (value) => value.trim() !== "",
-        values ? values.destination : ""
+        formData ? formData.name : ""
     );
-    const destinationRef = useRef();
-    destinationRef.current = enteredDestination;
-    const {
-        value: enteredValue,
-        isValid: enteredValueIsValid,
-        hasError: valueInputHasError,
-        valueChangeHandler,
-        inputBlurHandler: valueBlurHandler,
-        reset: resetValueInput,
-    } = useInput(
+    const pickupProps = useInput(
+        (value) => value.trim() !== "",
+        formData ? formData.pickup : ""
+    );
+    const destinationProps = useInput(
+        (value) => value.trim() !== "",
+        formData ? formData.destination : ""
+    );
+    const valueProps = useInput(
         (value) => value.trim() !== "" && !isNaN(value),
-        values ? values.value : ""
+        formData ? formData.value : ""
     );
-    const valueRef = useRef();
-    valueRef.current = enteredValue;
-    const {
-        value: enteredFees,
-        isValid: enteredFeesIsValid,
-        hasError: feesInputHasError,
-        valueChangeHandler: feesChangeHandler,
-        inputBlurHandler: feesBlurHandler,
-        reset: resetFeesInput,
-    } = useInput(
+    const feesProps = useInput(
         (value) => value.trim() !== "" && !isNaN(value),
-        values ? values.fees : ""
+        formData ? formData.fees : ""
     );
-    const feesRef = useRef();
-    feesRef.current = enteredFees;
-    const pickupFloor = useRef();
-    const pickupUnit = useRef();
-    const destinationFloor = useRef();
-    const destinationUnit = useRef();
+    const pickupFloorProps = useInput(
+        () => {},
+        formData ? formData.pickupFloor : ""
+    );
+    const pickupUnitProps = useInput(
+        () => {},
+        formData ? formData.pickupUnit : ""
+    );
+    const destinationFloorProps = useInput(
+        () => {},
+        formData ? formData.destinationFloor : ""
+    );
+    const destinationUnitProps = useInput(
+        () => {},
+        formData ? formData.destinationUnit : ""
+    );
     const [selectedWeight, setSelectedWeight] = useState(
-        values && values.weight ? values.weight : ""
+        formData && formData.weight ? formData.weight : ""
     );
-    const selectedWeightRef = useRef();
-    selectedWeightRef.current = selectedWeight;
 
-    const [buttonProps, setButtonProps] = useState({
-        text: "Show on map",
-        color: "primary",
-        clicked: false,
-    });
-    const clickedRef = useRef();
-    clickedRef.current = buttonProps.clicked;
     const [estimatedFees, setEstimatedFees] = useState(0);
     const web3Ctx = useContext(Web3Context);
+    const dispatch = useDispatch();
 
     let formIsValid = false;
-
     if (
-        enteredNameIsValid &&
-        enteredPickupIsValid &&
-        enteredDestinationIsValid &&
-        enteredValueIsValid &&
-        enteredFeesIsValid &&
+        nameProps.isValid &&
+        pickupProps.isValid &&
+        destinationProps.isValid &&
+        valueProps.isValid &&
+        feesProps.isValid &&
         selectedWeight !== ""
     ) {
         formIsValid = true;
     }
 
-    useEffect(() => {
-        if (values) {
-            if (values.requestSubmit) {
-                setButtonProps((prevButtonProps) => {
-                    return {
-                        ...prevButtonProps,
-                        text: "Confirm",
-                        color: "warning",
-                        clicked: true,
-                    };
-                });
-            }
-        }
-    }, [values]);
-
-    const resetClicked = () => {
-        setButtonProps({
-            ...buttonProps,
-            text: "Show on map",
-            color: "primary",
-            clicked: false,
-        });
-        setEstimatedFees(0);
+    const data = {
+        name: nameProps.value,
+        pickup: pickupProps.value,
+        destination: destinationProps.value,
+        value: valueProps.value,
+        fees: feesProps.value,
+        pickupFloor: pickupFloorProps.value,
+        pickupUnit: pickupUnitProps.value,
+        destinationFloor: destinationFloorProps.value,
+        destinationUnit: destinationUnitProps.value,
+        weight: selectedWeight,
     };
+    const dataRef = useRef(data);
+    if (
+        formQuery &&
+        viewData === formQuery &&
+        data.pickup === formData.pickup &&
+        data.destination === formData.destination &&
+        clicked === false
+    ) {
+        setClicked(true);
+    }
 
     const handleSubmit = async () => {
-        const pickupData = await fetchLatLng(enteredPickup);
-        const destinationData = await fetchLatLng(enteredDestination);
+        const pickupData = await fetchLatLng(pickupProps.value);
+        const destinationData = await fetchLatLng(destinationProps.value);
         let query = {
             pickup_lat: pickupData.features[0].center[1],
             pickup_lng: pickupData.features[0].center[0],
@@ -145,195 +114,112 @@ export default function RequestForm(props) {
         };
         const distance = await fetchDistance(query);
         setEstimatedFees(calculateFees(distance));
-        if (buttonProps.clicked === false) {
-            setButtonProps({
-                ...buttonProps,
-                text: "Confirm",
-                color: "warning",
-                clicked: true,
-            });
-            view(query);
-        } else {
+        dispatch(requestActions.setViewData(query));
+        dispatch(uiActions.saveForm({ data, query }));
+        if (clicked) {
             const processCoord = (coord) =>
                 Math.trunc(coord * Math.pow(10, 15)).toString();
             let output = {
-                name: enteredName,
+                name: nameProps.value,
                 pickup: [
                     processCoord(query.pickup_lat),
                     processCoord(query.pickup_lng),
-                    pickupFloor.current.value ? pickupFloor.current.value : 0,
-                    pickupUnit.current.value ? pickupUnit.current.value : 0,
+                    pickupFloorProps.value ? pickupFloorProps.value : 0,
+                    pickupUnitProps.value ? pickupUnitProps.value : 0,
                 ],
                 destination: [
                     processCoord(query.destination_lat),
                     processCoord(query.destination_lng),
-                    destinationFloor.current.value
-                        ? destinationFloor.current.value
+                    destinationFloorProps.value
+                        ? destinationFloorProps.value
                         : 0,
-                    destinationUnit.current.value
-                        ? destinationUnit.current.value
-                        : 0,
+                    destinationUnitProps.value ? destinationUnitProps.value : 0,
                 ],
-                value: enteredValue,
-                fees: enteredFees,
+                value: valueProps.value,
+                fees: feesProps.value,
                 weight: selectedWeight,
             };
-            await clearForm();
-            view(query);
-            await web3Ctx.handleSubmitRequest(output);
+            web3Ctx.handleSubmitRequest(output);
+            clearForm();
         }
     };
 
     const clearForm = () => {
-        resetNameInput();
-        resetPickupInput();
-        resetDestinationInput();
-        resetValueInput();
-        resetFeesInput();
-        resetClicked();
-        pickupFloor.current.value = "";
-        pickupUnit.current.value = "";
-        destinationFloor.current.value = "";
-        destinationUnit.current.value = "";
+        nameProps.reset();
+        pickupProps.reset();
+        destinationProps.reset();
+        valueProps.reset();
+        feesProps.reset();
+        pickupFloorProps.reset();
+        pickupUnitProps.reset();
+        destinationUnitProps.reset();
+        destinationFloorProps.reset();
         setSelectedWeight("");
+        setClicked(false);
+        setEstimatedFees(0);
     };
 
     useEffect(() => {
-        return async () => {
-            if (save) {
-                save({
-                    ...values,
-                    name: nameRef.current,
-                    pickup: pickupRef.current,
-                    destination: destinationRef.current,
-                    value: valueRef.current,
-                    fees: feesRef.current,
-                    requestSubmit: clickedRef.current ? true : false,
-                    // eslint-disable-next-line
-                    pickupFloor: pickupFloor.current.value,
-                    // eslint-disable-next-line
-                    pickupUnit: pickupUnit.current.value,
-                    // eslint-disable-next-line
-                    destinationFloor: destinationFloor.current.value,
-                    // eslint-disable-next-line
-                    destinationUnit: destinationUnit.current.value,
-                    weight: selectedWeightRef.current,
-                });
-            }
+        dataRef.current = data;
+    }, [data]);
+
+    useEffect(() => {
+        return () => {
+            dispatch(uiActions.saveForm(dataRef.current));
         };
-    }, [save, values]);
+    }, [dispatch]);
 
     return (
         <Card>
             <form>
                 <GridContainer alignItems="center" direction="column">
                     <GridItem xs={10} md={8}>
-                        <CustomInput
-                            labelText="Object Name"
-                            formControlProps={{
-                                fullWidth: true,
-                            }}
-                            inputProps={{
-                                onChange: nameChangedHandler,
-                                onBlur: nameBlurHandler,
-                                value: enteredName,
-                            }}
-                            error={nameInputHasError}
-                        />
-                        {nameInputHasError && (
-                            <FormHelperText error>
-                                Name cannot be empty
-                            </FormHelperText>
-                        )}
+                        <Name {...nameProps} />
                     </GridItem>
                     <GridItem xs={10} md={8}>
-                        <AutoComplete
-                            labelText="Deliver From"
-                            inputProps={{
-                                onBlur: pickupBlurHandler,
-                            }}
-                            error={pickupInputHasError}
-                            onInputChange={pickupChangeHandler}
-                            buttonChange={resetClicked}
-                            value={enteredPickup}
+                        <Location
+                            {...pickupProps}
+                            resetClicked={setClicked}
+                            type={"Pickup"}
                         />
-                        {pickupInputHasError && (
-                            <FormHelperText error>
-                                Pickup location cannot be empty
-                            </FormHelperText>
-                        )}
                     </GridItem>
                     <GridItem xs={10} md={8}>
                         <GridContainer>
                             <GridItem xs={5}>
-                                <CustomInput
-                                    labelText="Floor Number"
-                                    inputProps={{
-                                        type: "number",
-                                        inputRef: pickupFloor,
-                                        defaultValue: values
-                                            ? values.pickupFloor
-                                            : "",
-                                    }}
+                                <UnitDetails
+                                    type={"Floor"}
+                                    {...pickupFloorProps}
                                 />
                             </GridItem>
                             <GridItem xs={2} />
                             <GridItem xs={5}>
-                                <CustomInput
-                                    labelText="Unit Number"
-                                    inputProps={{
-                                        type: "number",
-                                        inputRef: pickupUnit,
-                                        defaultValue: values
-                                            ? values.pickupUnit
-                                            : "",
-                                    }}
+                                <UnitDetails
+                                    type={"Unit"}
+                                    {...pickupUnitProps}
                                 />
                             </GridItem>
                         </GridContainer>
                     </GridItem>
                     <GridItem xs={10} md={8}>
-                        <AutoComplete
-                            labelText="Deliver To"
-                            inputProps={{
-                                onBlur: destinationBlurHandler,
-                            }}
-                            error={destinationInputHasError}
-                            onInputChange={destinationChangeHandler}
-                            buttonChange={resetClicked}
-                            value={enteredDestination}
+                        <Location
+                            {...destinationProps}
+                            resetClicked={setClicked}
+                            type={"Destination"}
                         />
-                        {destinationInputHasError && (
-                            <FormHelperText error>
-                                Destination location cannot be empty
-                            </FormHelperText>
-                        )}
                     </GridItem>
                     <GridItem xs={10} md={8}>
                         <GridContainer>
                             <GridItem xs={5}>
-                                <CustomInput
-                                    labelText="Floor Number"
-                                    inputProps={{
-                                        type: "number",
-                                        inputRef: destinationFloor,
-                                        defaultValue: values
-                                            ? values.destinationFloor
-                                            : "",
-                                    }}
+                                <UnitDetails
+                                    type={"Floor"}
+                                    {...destinationFloorProps}
                                 />
                             </GridItem>
                             <GridItem xs={2} />
                             <GridItem xs={5}>
-                                <CustomInput
-                                    labelText="Unit Number"
-                                    inputProps={{
-                                        type: "number",
-                                        inputRef: destinationUnit,
-                                        defaultValue: values
-                                            ? values.destinationUnit
-                                            : "",
-                                    }}
+                                <UnitDetails
+                                    type={"Unit"}
+                                    {...destinationUnitProps}
                                 />
                             </GridItem>
                         </GridContainer>
@@ -345,74 +231,17 @@ export default function RequestForm(props) {
                         />
                     </GridItem>
                     <GridItem xs={10} md={8}>
-                        <CustomInput
-                            labelText="Estimated Value"
-                            formControlProps={{
-                                fullWidth: true,
-                            }}
-                            inputProps={{
-                                onChange: valueChangeHandler,
-                                onBlur: valueBlurHandler,
-                                value: enteredValue,
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        Tokens
-                                    </InputAdornment>
-                                ),
-                            }}
-                            error={valueInputHasError}
-                        />
-                        {valueInputHasError && (
-                            <FormHelperText error>
-                                Value must be a valid number
-                            </FormHelperText>
-                        )}
+                        <Value {...valueProps} />
                     </GridItem>
                     <GridItem xs={10} md={8}>
-                        <CustomInput
-                            labelText="Fees"
-                            formControlProps={{
-                                fullWidth: true,
-                            }}
-                            inputProps={{
-                                onChange: feesChangeHandler,
-                                onBlur: feesBlurHandler,
-                                value: enteredFees,
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        Tokens
-                                    </InputAdornment>
-                                ),
-                            }}
-                            error={feesInputHasError}
-                        />
-                        {feesInputHasError && (
-                            <FormHelperText error>
-                                Fees must be a valid number
-                            </FormHelperText>
-                        )}
-                        {estimatedFees !== 0 && (
-                            <FormHelperText>
-                                Suggested Fees: {estimatedFees} tokens
-                            </FormHelperText>
-                        )}
-                        {values && values.fees && (
-                            <FormHelperText>
-                                Suggested Fees: {values.fees} tokens
-                            </FormHelperText>
-                        )}
-                        <FormHelperText>1 Token → 1SGD</FormHelperText>
+                        <Fees {...feesProps} estimatedFees={estimatedFees} />
                     </GridItem>
                     <GridItem xs={10} md={8} style={{ textAlign: "center" }}>
-                        <Button
-                            color={buttonProps.color}
-                            disabled={!formIsValid}
-                            onClick={() => {
-                                handleSubmit();
-                            }}
-                        >
-                            {buttonProps.text}
-                        </Button>
+                        <Submit
+                            handleSubmit={handleSubmit}
+                            formIsValid={formIsValid}
+                            clicked={clicked}
+                        />
                     </GridItem>
                 </GridContainer>
             </form>

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Button from "../../UI/CustomButtons/Button";
 import Web3Context from "../../store/Web3-context";
 import { chatActions } from "store/chat-slice";
+import { requestActions } from "store/request-slice";
 import { useDispatch } from "react-redux";
 
 const DeliveriesButton = (props) => {
@@ -9,7 +10,7 @@ const DeliveriesButton = (props) => {
     const dispatch = useDispatch();
 
     const clickHandler = () => {
-        props.view(props.data);
+        dispatch(requestActions.setViewData(props.data));
         dispatch(chatActions.setChat(null));
         if (
             web3Ctx.userAccount === props.data.pickupAddress &&

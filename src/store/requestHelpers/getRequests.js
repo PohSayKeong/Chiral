@@ -1,4 +1,6 @@
-const getRequests = async (requestManagerInstance) => {
+import { requestActions } from "store/request-slice";
+
+const getRequests = async (requestManagerInstance, account, dispatch) => {
     if (requestManagerInstance.events) {
         const toCoord = Math.pow(10, 15).toFixed(10);
         let result = [];
@@ -25,7 +27,26 @@ const getRequests = async (requestManagerInstance) => {
                     return true;
                 })
             );
-        return result;
+        dispatch(
+            requestActions.setRequests({
+                availableRequests: result.filter(
+                    (request) => request._step === "0"
+                ),
+                myCurrentRequests: result
+                    .filter(
+                        (request) =>
+                            request.pickupAddress === account &&
+                            request._step !== "3"
+                    )
+                    .concat(
+                        result.filter(
+                            (request) =>
+                                request.deliveryAddress === account &&
+                                request._step === "1"
+                        )
+                    ),
+            })
+        );
     }
 };
 

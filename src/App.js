@@ -2,8 +2,8 @@ import React from "react";
 
 import "./App.css";
 import { useMediaQuery } from "react-responsive";
-import RequestsDesktop from "layouts/Desktop/RequestsDesktop";
-import Mobile from "layouts/Mobile/Mobile";
+import Desktop from "layouts/App/Desktop/Desktop";
+import Mobile from "layouts/App/Mobile/Mobile";
 import Landing from "layouts/Landing/Landing";
 import Web3Provider from "./store/Web3Provider";
 import { Provider } from "react-redux";
@@ -22,7 +22,7 @@ const App = () => {
                     <Provider store={store}>
                         <Web3Provider>
                             <div className="App">
-                                {isDesktopOrLaptop && <RequestsDesktop />}
+                                {isDesktopOrLaptop && <Desktop />}
                                 {!isDesktopOrLaptop && <Mobile />}
                             </div>
                         </Web3Provider>

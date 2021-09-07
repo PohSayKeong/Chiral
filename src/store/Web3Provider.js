@@ -18,7 +18,6 @@ const Web3Provider = (props) => {
         requestManagerInstance: {},
         userTokens: 0,
     });
-    const [requests, setRequests] = useState([]);
     const dispatch = useDispatch();
 
     const web3Setup = useCallback(async () => {
@@ -59,11 +58,12 @@ const Web3Provider = (props) => {
     };
 
     const handleGetRequests = useCallback(async () => {
-        const requestsResult = await getRequests(
-            web3State.requestManagerInstance
+        await getRequests(
+            web3State.requestManagerInstance,
+            web3State.accounts[0],
+            dispatch
         );
-        setRequests(requestsResult);
-    }, [web3State.requestManagerInstance]);
+    }, [web3State.requestManagerInstance, web3State.accounts, dispatch]);
 
     useEffect(() => {
         if (web3State.accounts[0]) {
@@ -100,24 +100,6 @@ const Web3Provider = (props) => {
         await handleGetRequests();
     };
 
-    const handleGetCreatedRequests = () => {
-        return requests.filter((request) => request._step === "0");
-    };
-
-    const handleGetAcceptedRequests = () => {
-        const created = requests.filter(
-            (request) =>
-                request.pickupAddress === web3State.accounts[0] &&
-                request._step !== "3"
-        );
-        const accepted = requests.filter(
-            (request) =>
-                request._step === "1" &&
-                request.deliveryAddress === web3State.accounts[0]
-        );
-        return accepted.concat(created);
-    };
-
     const web3Context = {
         userAccount: web3State.accounts[0],
         userTokens: web3State.userTokens,
@@ -128,8 +110,6 @@ const Web3Provider = (props) => {
         handleReceived,
         handleCancelled,
         handleGetRequests,
-        handleGetCreatedRequests,
-        handleGetAcceptedRequests,
         web3Setup,
     };
 
