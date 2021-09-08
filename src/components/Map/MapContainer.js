@@ -56,7 +56,7 @@ function Map(props) {
     };
 
     const zoomToFitView = useCallback(async () => {
-        if (viewData && viewportRef.current.latitude !== 1.352083) {
+        if (viewData) {
             const { longitude, latitude, zoom } = new WebMercatorViewport(
                 viewportRef.current
             ).fitBounds(

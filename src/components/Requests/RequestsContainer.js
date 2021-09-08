@@ -30,37 +30,39 @@ const RequestsContainer = () => {
     }
 
     useEffect(() => {
-        const getDistanceToUser = async (availableRequests) => {
-            availableRequests.forEach(async (request, index) => {
-                let temp = { ...request };
-                temp.distanceToUser = await fetchDistance(
-                    request.pickup_lng,
-                    request.pickup_lat,
-                    userCoord.lng,
-                    userCoord.lat
-                );
-                setSortedItems((prevState) => {
-                    let position = 0;
-                    prevState.forEach((request, index) => {
-                        if (request.distanceToUser) {
-                            if (
-                                parseFloat(temp.distanceToUser) >
-                                parseFloat(request.distanceToUser)
-                            ) {
-                                position += 1;
+        if (userCoord) {
+            const getDistanceToUser = async (availableRequests) => {
+                availableRequests.forEach(async (request) => {
+                    let temp = { ...request };
+                    temp.distanceToUser = await fetchDistance(
+                        request.pickup_lng,
+                        request.pickup_lat,
+                        userCoord.lng,
+                        userCoord.lat
+                    );
+                    setSortedItems((prevState) => {
+                        let position = 0;
+                        prevState.forEach((request, index) => {
+                            if (request.distanceToUser) {
+                                if (
+                                    parseFloat(temp.distanceToUser) >
+                                    parseFloat(request.distanceToUser)
+                                ) {
+                                    position += 1;
+                                }
                             }
-                        }
-                        if (request.index === temp.index) {
-                            prevState.splice(index, 1);
-                            prevState.splice(position, 0, temp);
-                        }
+                            if (request.index === temp.index) {
+                                prevState.splice(index, 1);
+                                prevState.splice(position, 0, temp);
+                            }
+                        });
+                        return [...prevState];
                     });
-                    return [...prevState];
                 });
-            });
-        };
-        getDistanceToUser(availableRequests);
-    }, [availableRequests, userCoord.lat, userCoord.lng]);
+            };
+            getDistanceToUser(availableRequests);
+        }
+    }, [availableRequests, userCoord]);
 
     const requests = (
         <Fragment>
