@@ -25,7 +25,6 @@ export default function HeaderLinks() {
                 <Button
                     href="/"
                     color="transparent"
-                    target="_blank"
                     className={classes.navLink}
                 >
                     {" "}
@@ -36,7 +35,6 @@ export default function HeaderLinks() {
                 <Button
                     href="/"
                     color="transparent"
-                    target="_blank"
                     className={classes.navLink}
                 >
                     {" "}
@@ -51,11 +49,7 @@ export default function HeaderLinks() {
                         confirmClick={web3Ctx.handleBuyTokens}
                     />
                 ) : (
-                    <Button
-                        color="transparent"
-                        target="_blank"
-                        className={classes.navLink}
-                    >
+                    <Button color="transparent" className={classes.navLink}>
                         Connecting
                     </Button>
                 )}

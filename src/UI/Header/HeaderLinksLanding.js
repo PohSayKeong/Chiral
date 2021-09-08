@@ -24,7 +24,6 @@ export default function HeaderLinks() {
                 <Button
                     href="/app"
                     color="transparent"
-                    target="_blank"
                     className={classes.navLink}
                 >
                     {" "}
@@ -35,7 +34,6 @@ export default function HeaderLinks() {
                 <Button
                     href="/"
                     color="transparent"
-                    target="_blank"
                     className={classes.navLink}
                 >
                     {" "}
@@ -46,7 +44,6 @@ export default function HeaderLinks() {
                 <Button
                     href="/"
                     color="transparent"
-                    target="_blank"
                     className={classes.navLink}
                 >
                     {" "}
