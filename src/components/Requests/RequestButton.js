@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Button from "../../UI/CustomButtons/Button";
 import Web3Context from "../../store/Web3-context";
 import { chatActions } from "store/chat-slice";
-import { useDispatch } from "react-redux";
 import { requestActions } from "store/request-slice";
 
 const RequestButton = (props) => {
@@ -25,24 +24,32 @@ const RequestButton = (props) => {
         }
     };
 
-    // Another item is selected, reset current button
-    if (viewData !== props.data && buttonProps.clicked === true) {
-        setButtonProps({
-            ...buttonProps,
-            text: props.data.fees + " Tokens",
-            color: "primary",
-            clicked: false,
-        });
-    }
+    if (viewData) {
+        // Another item is selected, reset current button
+        if (
+            viewData.index !== props.data.index &&
+            buttonProps.clicked === true
+        ) {
+            setButtonProps({
+                ...buttonProps,
+                text: props.data.fees + " Tokens",
+                color: "primary",
+                clicked: false,
+            });
+        }
 
-    // This item is selected, change button to selected state
-    if (viewData === props.data && buttonProps.clicked === false) {
-        setButtonProps({
-            ...buttonProps,
-            text: "Accept",
-            color: "warning",
-            clicked: true,
-        });
+        // This item is selected, change button to selected state
+        if (
+            viewData.index === props.data.index &&
+            buttonProps.clicked === false
+        ) {
+            setButtonProps({
+                ...buttonProps,
+                text: "Accept",
+                color: "warning",
+                clicked: true,
+            });
+        }
     }
 
     return (

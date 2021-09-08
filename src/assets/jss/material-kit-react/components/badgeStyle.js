@@ -21,7 +21,6 @@ const badgeStyle = {
         whiteSpace: "nowrap",
         verticalAlign: "baseline",
         display: "inline-block",
-        position: "absolute",
         right: "1rem",
     },
     primary: {

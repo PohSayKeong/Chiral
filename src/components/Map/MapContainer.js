@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ReactMapGL, {
     NavigationControl,
     WebMercatorViewport,
@@ -14,6 +14,7 @@ import RouteLine from "./RouteLine";
 import RouteMarkers from "./RouteMarkers";
 import ParcelMarkers from "./ParcelMarkers";
 import { v4 as uuidv4 } from "uuid";
+import { userActions } from "store/user-slice";
 
 function Map(props) {
     const [route, setRoute] = useState();
@@ -30,6 +31,7 @@ function Map(props) {
         (state) => state.request.availableRequests
     );
     const viewData = useSelector((state) => state.request.viewData);
+    const dispatch = useDispatch();
 
     const navControlStyle = {
         right: 10,
@@ -44,6 +46,12 @@ function Map(props) {
     const updateLocation = (data) => {
         viewportRef.current.latitiude = data.coords.latitude;
         viewportRef.current.longitude = data.coords.longitude;
+        dispatch(
+            userActions.setLocation({
+                lat: data.coords.latitude,
+                lng: data.coords.longitude,
+            })
+        );
         zoomToFitView();
     };
 

@@ -8,7 +8,7 @@ import Web3Context from "store/Web3-context";
 import useInput from "hooks/use-input.js";
 import WeightRadio from "./Components/WeightRadio";
 import fetchLatLng from "helpers/fetchLatLng.js";
-import fetchDistance from "helpers/fetchDistance.js";
+import { fetchRequestDistance } from "helpers/fetchDistance.js";
 import calculateFees from "helpers/calculateFees.js";
 import Name from "./Components/Name.js";
 import Location from "./Components/Location.js";
@@ -112,7 +112,7 @@ export default function RequestForm() {
             destination_lat: destinationData.features[0].center[1],
             destination_lng: destinationData.features[0].center[0],
         };
-        const distance = await fetchDistance(query);
+        const distance = await fetchRequestDistance(query);
         setEstimatedFees(calculateFees(distance));
         dispatch(requestActions.setViewData(query));
         dispatch(uiActions.saveForm({ data, query }));

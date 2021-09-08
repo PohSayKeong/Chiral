@@ -6,7 +6,7 @@ import MotorcycleIcon from "@material-ui/icons/Motorcycle";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 
 // core components
-import InfoArea from "UI/InfoArea/InfoArea";
+import InfoAreaRequests from "UI/InfoArea/InfoAreaRequests";
 import useAsync from "hooks/use-async";
 import fetchAddress from "helpers/fetchAddress";
 
@@ -59,12 +59,13 @@ const InfoCard = (props) => {
     }
 
     return (
-        <InfoArea
+        <InfoAreaRequests
             title={props.data.identifier}
             description={description}
             icon={icon}
             iconColor="primary"
             value={props.data.value}
+            distance={props.data.distanceToUser}
         />
     );
 };
