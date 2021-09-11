@@ -11,7 +11,7 @@ import {
 
 const infoRequestsStyle = {
     infoArea: {
-        padding: "0 2rem",
+        width: "100%",
     },
     iconWrapper: {
         float: "left",
@@ -44,6 +44,7 @@ const infoRequestsStyle = {
     descriptionWrapper: {
         marginTop: "24px",
         overflow: "hidden",
+        padding: "0 2rem",
     },
     title: {
         ...title,

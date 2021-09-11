@@ -19,7 +19,7 @@ const RequestButton = (props) => {
         dispatch(requestActions.setViewData(props.data));
         dispatch(chatActions.setChat(null));
         // confirm button has been clicked
-        if (viewData === props.data) {
+        if (viewData && viewData.index === props.data.index) {
             web3Ctx.handleAcceptRequest(props.data);
         }
     };

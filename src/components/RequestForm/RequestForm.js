@@ -64,7 +64,9 @@ export default function RequestForm() {
         formData && formData.weight ? formData.weight : ""
     );
 
-    const [estimatedFees, setEstimatedFees] = useState(0);
+    const [estimatedFees, setEstimatedFees] = useState(
+        formData && formData.estimatedFees ? formData.estimatedFees : 0
+    );
     const web3Ctx = useContext(Web3Context);
     const dispatch = useDispatch();
 
@@ -90,6 +92,7 @@ export default function RequestForm() {
         pickupUnit: pickupUnitProps.value,
         destinationFloor: destinationFloorProps.value,
         destinationUnit: destinationUnitProps.value,
+        estimatedFees: estimatedFees,
         weight: selectedWeight,
     };
     const dataRef = useRef(data);

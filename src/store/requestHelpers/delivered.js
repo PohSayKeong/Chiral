@@ -1,4 +1,5 @@
 import { uiActions } from "store/ui-slice";
+import { requestActions } from "store/request-slice";
 
 const delivered = async (data, web3State, dispatch) => {
     dispatch(uiActions.showNotification({ status: "pending" }));
@@ -10,6 +11,7 @@ const delivered = async (data, web3State, dispatch) => {
                 gas: 80000,
             });
         dispatch(uiActions.showNotification({ status: "success" }));
+        dispatch(requestActions.setViewData(null));
     } catch {
         dispatch(uiActions.showNotification({ status: "failure" }));
     }

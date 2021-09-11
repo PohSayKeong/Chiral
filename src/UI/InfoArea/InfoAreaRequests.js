@@ -41,8 +41,8 @@ export default function InfoArea(props) {
                         )}
                     </div>
                 </div>
+                <p className={classes.description}>{description}</p>
             </div>
-            <p className={classes.description}>{description}</p>
         </div>
     );
 }

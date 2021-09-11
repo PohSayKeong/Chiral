@@ -10,7 +10,8 @@ const RequestsContainer = () => {
     );
     const userCoord = useSelector((state) => state.user.location);
     const viewData = useSelector((state) => state.request.viewData);
-    const [sortedItems, setSortedItems] = useState([...availableRequests]);
+    const [sortedItems, setSortedItems] = useState([]);
+
     // move selected item to the front
     if (sortedItems.length > 0 && viewData) {
         if (viewData.index) {
@@ -30,6 +31,7 @@ const RequestsContainer = () => {
     }
 
     useEffect(() => {
+        setSortedItems([...availableRequests]);
         if (userCoord) {
             const getDistanceToUser = async (availableRequests) => {
                 availableRequests.forEach(async (request) => {
@@ -41,20 +43,13 @@ const RequestsContainer = () => {
                         userCoord.lat
                     );
                     setSortedItems((prevState) => {
-                        let position = 0;
                         prevState.forEach((request, index) => {
-                            if (request.distanceToUser) {
-                                if (
-                                    parseFloat(temp.distanceToUser) >
-                                    parseFloat(request.distanceToUser)
-                                ) {
-                                    position += 1;
-                                }
-                            }
                             if (request.index === temp.index) {
-                                prevState.splice(index, 1);
-                                prevState.splice(position, 0, temp);
+                                prevState[index] = temp;
                             }
+                        });
+                        prevState.sort((a, b) => {
+                            return a.distanceToUser - b.distanceToUser;
                         });
                         return [...prevState];
                     });
@@ -62,7 +57,7 @@ const RequestsContainer = () => {
             };
             getDistanceToUser(availableRequests);
         }
-    }, [availableRequests, userCoord]);
+    }, [availableRequests, userCoord, viewData]);
 
     const requests = (
         <Fragment>
