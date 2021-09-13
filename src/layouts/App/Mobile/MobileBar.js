@@ -1,126 +1,106 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-// material-ui components
-import { makeStyles } from "@material-ui/core/styles";
-import Popover from "@material-ui/core/Popover";
-// core components
-import Button from "UI/CustomButtons/Button.js";
-import styles from "assets/jss/material-kit-react/popoverStyles.js";
+import React, { Fragment } from "react";
 import GridContainer from "UI/Grid/GridContainer";
 import GridItem from "UI/Grid/GridItem";
-import RequestForm from "components/RequestForm/RequestForm";
-import barStyles from "./MobileBarStyles.js";
+import Button from "UI/CustomButtons/Button.js";
 import CreateIcon from "@material-ui/icons/Create";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 import PersonIcon from "@material-ui/icons/Person";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import RequestsContainer from "components/Requests/RequestsContainer.js";
-import DeliveriesContainer from "components/MyDeliveries/DeliveriesContainer.js";
+import ExploreIcon from "@material-ui/icons/Explore";
+import mobileStyles from "./mobileStyles";
+import { makeStyles } from "@material-ui/core/styles";
+import Warning from "UI/Typography/Warning";
 
-const useStyles = makeStyles({ ...styles, ...barStyles });
+const useStyles = makeStyles(mobileStyles);
 
-export default function MobileBar() {
+const MobileBar = (props) => {
+    const { tab, setTab } = { ...props };
     const classes = useStyles();
-    const [anchorNewRequest, setNewRequest] = useState(null);
-    const [anchorDeliver, setDeliver] = useState(null);
-    const [anchorMyDeliveries, setMyDeliveries] = useState(null);
-    const view = useSelector((state) => state.request.viewData);
-    useEffect(() => {
-        setNewRequest(null);
-        setDeliver(null);
-        setMyDeliveries(null);
-    }, [view]);
-
-    return (
-        <GridContainer className="Grid">
-            <GridItem xs={4}>
-                <Button
-                    onClick={(event) => setNewRequest(event.currentTarget)}
-                    classes={{ root: classes.MobileBarButton }}
-                >
-                    <p>
-                        <CreateIcon />
-                        <br />
-                        New Request
-                    </p>
-                </Button>
-                <SwipeableDrawer
-                    anchor={"bottom"}
-                    open={Boolean(anchorNewRequest)}
-                    onClose={() => {
-                        setNewRequest(null);
-                    }}
-                    onOpen={() => {}}
-                >
-                    {<RequestForm />}
-                </SwipeableDrawer>
-            </GridItem>
-            <GridItem xs={4}>
-                <Button
-                    onClick={(event) => setDeliver(event.currentTarget)}
-                    classes={{ root: classes.MobileBarButton }}
-                >
-                    <p>
-                        <LocalShippingIcon />
-                        <br />
-                        Deliver
-                    </p>
-                </Button>
-                <Popover
-                    classes={{
-                        paper: classes.popover,
-                    }}
-                    open={Boolean(anchorDeliver)}
-                    anchorEl={anchorDeliver}
-                    onClose={() => setDeliver(null)}
-                    transformOrigin={{
-                        vertical: "bottom",
-                        horizontal: "center",
-                    }}
-                >
-                    <div
-                        style={{
-                            overflow: "auto",
-                            height: "40vh",
-                        }}
-                    >
-                        <RequestsContainer />
-                    </div>
-                </Popover>
-            </GridItem>
-            <GridItem xs={4}>
-                <Button
-                    onClick={(event) => setMyDeliveries(event.currentTarget)}
-                    classes={{ root: classes.MobileBarButton }}
-                >
-                    <p>
-                        <PersonIcon />
-                        <br />
-                        My Deliveries
-                    </p>
-                </Button>
-                <Popover
-                    classes={{
-                        paper: classes.popover,
-                    }}
-                    open={Boolean(anchorMyDeliveries)}
-                    anchorEl={anchorMyDeliveries}
-                    onClose={() => setMyDeliveries(null)}
-                    transformOrigin={{
-                        vertical: "bottom",
-                        horizontal: "center",
-                    }}
-                >
-                    <div
-                        style={{
-                            overflow: "auto",
-                            height: "20vh",
-                        }}
-                    >
-                        <DeliveriesContainer />
-                    </div>
-                </Popover>
-            </GridItem>
-        </GridContainer>
+    const explore = (
+        <Fragment>
+            <ExploreIcon />
+            <br />
+            Explore
+        </Fragment>
     );
-}
+    const form = (
+        <Fragment>
+            <CreateIcon />
+            <br />
+            New Request
+        </Fragment>
+    );
+    const requests = (
+        <Fragment>
+            <LocalShippingIcon />
+            <br />
+            Deliver
+        </Fragment>
+    );
+    const deliveries = (
+        <Fragment>
+            <PersonIcon />
+            <br />
+            My Deliveries
+        </Fragment>
+    );
+    return (
+        <div style={{ height: `calc(0.1 * (100vh - 70px))` }}>
+            <GridContainer className="Grid">
+                <GridItem xs={3}>
+                    <Button
+                        onClick={() => setTab("explore")}
+                        className={classes.mobileBarButton}
+                        color="primary"
+                    >
+                        {tab === "explore" ? (
+                            <Warning>{explore}</Warning>
+                        ) : (
+                            <p>{explore}</p>
+                        )}
+                    </Button>
+                </GridItem>
+                <GridItem xs={3}>
+                    <Button
+                        onClick={() => setTab("form")}
+                        className={classes.mobileBarButton}
+                        color="primary"
+                    >
+                        {tab === "form" ? (
+                            <Warning>{form}</Warning>
+                        ) : (
+                            <p>{form}</p>
+                        )}
+                    </Button>
+                </GridItem>
+                <GridItem xs={3}>
+                    <Button
+                        onClick={() => setTab("requests")}
+                        className={classes.mobileBarButton}
+                        color="primary"
+                    >
+                        {tab === "requests" ? (
+                            <Warning>{requests}</Warning>
+                        ) : (
+                            <p>{requests}</p>
+                        )}
+                    </Button>
+                </GridItem>
+                <GridItem xs={3}>
+                    <Button
+                        onClick={() => setTab("deliveries")}
+                        className={classes.mobileBarButton}
+                        color="primary"
+                    >
+                        {tab === "deliveries" ? (
+                            <Warning>{deliveries}</Warning>
+                        ) : (
+                            <p>{deliveries}</p>
+                        )}
+                    </Button>
+                </GridItem>
+            </GridContainer>
+        </div>
+    );
+};
+
+export default MobileBar;

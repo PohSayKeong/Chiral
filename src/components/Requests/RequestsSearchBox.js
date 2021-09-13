@@ -57,8 +57,12 @@ const RequestsSearchBox = (props) => {
 
     return (
         <Card>
-            <GridContainer alignItems="center" justify="space-evenly">
-                <GridItem xs={6} md={8} style={{ paddingBottom: "2rem" }}>
+            <GridContainer
+                alignItems="center"
+                justify="space-evenly"
+                spacing={2}
+            >
+                <GridItem xs={7} style={{ paddingBottom: "2rem" }}>
                     <AutocompletePlace
                         labelText="Pickup"
                         onInputChange={(e) => {
@@ -76,7 +80,7 @@ const RequestsSearchBox = (props) => {
                         value={destinationProps.value}
                     />
                 </GridItem>
-                <GridItem xs={2}>
+                <GridItem xs={3}>
                     {filtering ? (
                         <Button
                             type="button"

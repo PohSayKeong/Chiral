@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 // core components
 import GridContainer from "../../UI/Grid/GridContainer.js";
 import GridItem from "../../UI/Grid/GridItem.js";
-import Card from "../../UI/Card/Card";
 import Web3Context from "store/Web3-context";
 import useInput from "hooks/use-input.js";
 import WeightRadio from "./Components/WeightRadio";
@@ -173,81 +172,73 @@ export default function RequestForm() {
     }, [dispatch]);
 
     return (
-        <Card>
-            <form>
-                <GridContainer alignItems="center" direction="column">
-                    <GridItem xs={10} md={8}>
-                        <Name {...nameProps} />
-                    </GridItem>
-                    <GridItem xs={10} md={8}>
-                        <Location
-                            {...pickupProps}
-                            resetClicked={setClicked}
-                            type={"Pickup"}
-                        />
-                    </GridItem>
-                    <GridItem xs={10} md={8}>
-                        <GridContainer>
-                            <GridItem xs={5}>
-                                <UnitDetails
-                                    type={"Floor"}
-                                    {...pickupFloorProps}
-                                />
-                            </GridItem>
-                            <GridItem xs={2} />
-                            <GridItem xs={5}>
-                                <UnitDetails
-                                    type={"Unit"}
-                                    {...pickupUnitProps}
-                                />
-                            </GridItem>
-                        </GridContainer>
-                    </GridItem>
-                    <GridItem xs={10} md={8}>
-                        <Location
-                            {...destinationProps}
-                            resetClicked={setClicked}
-                            type={"Destination"}
-                        />
-                    </GridItem>
-                    <GridItem xs={10} md={8}>
-                        <GridContainer>
-                            <GridItem xs={5}>
-                                <UnitDetails
-                                    type={"Floor"}
-                                    {...destinationFloorProps}
-                                />
-                            </GridItem>
-                            <GridItem xs={2} />
-                            <GridItem xs={5}>
-                                <UnitDetails
-                                    type={"Unit"}
-                                    {...destinationUnitProps}
-                                />
-                            </GridItem>
-                        </GridContainer>
-                    </GridItem>
-                    <GridItem xs={10} md={8}>
-                        <WeightRadio
-                            selectedEnabled={selectedWeight}
-                            setSelectedEnabled={setSelectedWeight}
-                        />
-                    </GridItem>
-                    <GridItem xs={10} md={8}>
-                        <Value {...valueProps} />
-                    </GridItem>
-                    <GridItem xs={10} md={8}>
-                        <Fees {...feesProps} estimatedFees={estimatedFees} />
-                    </GridItem>
-                    <GridItem xs={10} md={8} style={{ textAlign: "center" }}>
-                        <Submit
-                            handleSubmit={handleSubmit}
-                            formIsValid={formIsValid}
-                            clicked={clicked}
-                        />
-                    </GridItem>
-                </GridContainer>
-            </form>
-        </Card>
+        <form>
+            <GridContainer alignItems="center" direction="column">
+                <GridItem xs={10} md={8}>
+                    <Name {...nameProps} />
+                </GridItem>
+                <GridItem xs={10} md={8}>
+                    <Location
+                        {...pickupProps}
+                        resetClicked={setClicked}
+                        type={"Pickup"}
+                    />
+                </GridItem>
+                <GridItem xs={10} md={8}>
+                    <GridContainer>
+                        <GridItem xs={5}>
+                            <UnitDetails type={"Floor"} {...pickupFloorProps} />
+                        </GridItem>
+                        <GridItem xs={2} />
+                        <GridItem xs={5}>
+                            <UnitDetails type={"Unit"} {...pickupUnitProps} />
+                        </GridItem>
+                    </GridContainer>
+                </GridItem>
+                <GridItem xs={10} md={8}>
+                    <Location
+                        {...destinationProps}
+                        resetClicked={setClicked}
+                        type={"Destination"}
+                    />
+                </GridItem>
+                <GridItem xs={10} md={8}>
+                    <GridContainer>
+                        <GridItem xs={5}>
+                            <UnitDetails
+                                type={"Floor"}
+                                {...destinationFloorProps}
+                            />
+                        </GridItem>
+                        <GridItem xs={2} />
+                        <GridItem xs={5}>
+                            <UnitDetails
+                                type={"Unit"}
+                                {...destinationUnitProps}
+                            />
+                        </GridItem>
+                    </GridContainer>
+                </GridItem>
+                <GridItem xs={10} md={8}>
+                    <WeightRadio
+                        selectedEnabled={selectedWeight}
+                        setSelectedEnabled={setSelectedWeight}
+                    />
+                </GridItem>
+                <GridItem xs={10} md={8}>
+                    <Value {...valueProps} />
+                </GridItem>
+                <GridItem xs={10} md={8}>
+                    <Fees {...feesProps} estimatedFees={estimatedFees} />
+                </GridItem>
+                <GridItem xs={10} md={8} style={{ textAlign: "center" }}>
+                    <Submit
+                        handleSubmit={handleSubmit}
+                        formIsValid={formIsValid}
+                        clicked={clicked}
+                    />
+                </GridItem>
+            </GridContainer>
+        </form>
     );
 }

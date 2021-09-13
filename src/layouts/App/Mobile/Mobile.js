@@ -12,7 +12,7 @@ const Mobile = () => {
     return (
         <Router>
             <Switch>
-                <Route path="/chat" exact>
+                <Route path="/app/chat" exact>
                     <Chatbox info={chat} />
                 </Route>
                 <Route path="/">

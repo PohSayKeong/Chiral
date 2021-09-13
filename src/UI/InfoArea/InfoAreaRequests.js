@@ -33,8 +33,10 @@ export default function InfoArea(props) {
                 <div className={classes.header}>
                     <span className={classes.title}>{title}</span>
                     <div className={classes.badges}>
-                        {props.distance && (
+                        {props.distance ? (
                             <Badge color="info">{props.distance} Km</Badge>
+                        ) : (
+                            ""
                         )}
                         {props.value && (
                             <Badge color="primary">{props.value} Tokens</Badge>

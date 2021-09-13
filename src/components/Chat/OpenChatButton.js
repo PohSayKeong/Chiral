@@ -29,7 +29,7 @@ const OpenChatButton = (props) => {
             {isDesktopOrLaptop ? (
                 button
             ) : (
-                <NavLink to="/chat" style={{ textDecoration: "none" }}>
+                <NavLink to="/app/chat" style={{ textDecoration: "none" }}>
                     {button}
                 </NavLink>
             )}
