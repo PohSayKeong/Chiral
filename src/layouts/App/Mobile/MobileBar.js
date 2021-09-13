@@ -44,7 +44,7 @@ const MobileBar = (props) => {
         </Fragment>
     );
     return (
-        <div style={{ height: `calc(0.1 * (100vh - 70px))` }}>
+        <div className={classes.mobileBar}>
             <GridContainer className="Grid">
                 <GridItem xs={3}>
                     <Button
