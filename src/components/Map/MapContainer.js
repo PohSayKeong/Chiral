@@ -16,7 +16,7 @@ import ParcelMarkers from "./ParcelMarkers";
 import { v4 as uuidv4 } from "uuid";
 import { userActions } from "store/user-slice";
 
-function Map(props) {
+function Map() {
     const [route, setRoute] = useState();
     const [markers, setMarkers] = useState("");
     const [selectedMarkers, setSelectedMarkers] = useState("");
@@ -56,7 +56,8 @@ function Map(props) {
     };
 
     const zoomToFitView = useCallback(async () => {
-        if (viewData) {
+        // second conditions prevents map from crashing after opening chat
+        if (viewData && viewportRef.current.latitude !== 1.352083) {
             const { longitude, latitude, zoom } = new WebMercatorViewport(
                 viewportRef.current
             ).fitBounds(
@@ -92,17 +93,10 @@ function Map(props) {
     useEffect(() => {
         viewportRef.current = viewport;
     });
-
     //Place markers of available requests
-    if (!viewData && availableRequests.length !== 0 && markers === "") {
-        setMarkers(
-            <ParcelMarkers
-                data={availableRequests}
-                view={props.view}
-                key={uuidv4()}
-            />
-        );
-    }
+    useEffect(() => {
+        setMarkers(<ParcelMarkers data={availableRequests} key={uuidv4()} />);
+    }, [availableRequests]);
 
     //Change map to fit new request selected
     useEffect(() => {

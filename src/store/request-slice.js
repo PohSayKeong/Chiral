@@ -6,6 +6,7 @@ const requestSlice = createSlice({
         availableRequests: [],
         myCurrentRequests: [],
         viewData: null,
+        filterData: [],
     },
     reducers: {
         setRequests(state, action) {
@@ -14,6 +15,9 @@ const requestSlice = createSlice({
         },
         setViewData(state, action) {
             state.viewData = action.payload;
+        },
+        setFilterData(state, action) {
+            state.filterData = action.payload;
         },
     },
 });

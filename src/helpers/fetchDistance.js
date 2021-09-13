@@ -9,5 +9,7 @@ export const fetchDistance = async (lng1, lat1, lng2, lat2) => {
     const routeResponse = await fetch(
         `https://api.mapbox.com/directions/v5/mapbox/driving/${lng1},${lat1};${lng2},${lat2}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
     ).then((resp) => resp.json());
-    return ((await routeResponse.routes[0].distance) / 1000).toFixed(2);
+    if (routeResponse.code === "Ok") {
+        return ((await routeResponse.routes[0].distance) / 1000).toFixed(2);
+    }
 };

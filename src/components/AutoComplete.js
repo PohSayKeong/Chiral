@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import CustomInput from "../../UI/CustomInput/CustomInput";
+import CustomInput from "UI/CustomInput/CustomInput";
 import "./Autocomplete.css";
 
 export default class AutocompletePlace extends Component {

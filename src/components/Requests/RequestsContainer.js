@@ -2,7 +2,13 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Request from "./Request";
 import { v4 as uuidv4 } from "uuid";
-import { fetchDistance } from "helpers/fetchDistance";
+import RequestsSearchBox from "./RequestsSearchBox";
+import {
+    distanceToUser,
+    distanceToPickup,
+    distanceToDestination,
+    distanceToRoute,
+} from "./sorting";
 
 const RequestsContainer = () => {
     const availableRequests = useSelector(
@@ -10,6 +16,7 @@ const RequestsContainer = () => {
     );
     const userCoord = useSelector((state) => state.user.location);
     const viewData = useSelector((state) => state.request.viewData);
+    const filterData = useSelector((state) => state.request.filterData);
     const [sortedItems, setSortedItems] = useState([]);
 
     // move selected item to the front
@@ -32,41 +39,29 @@ const RequestsContainer = () => {
 
     useEffect(() => {
         setSortedItems([...availableRequests]);
-        if (userCoord) {
-            const getDistanceToUser = async (availableRequests) => {
-                availableRequests.forEach(async (request) => {
-                    let temp = { ...request };
-                    temp.distanceToUser = await fetchDistance(
-                        request.pickup_lng,
-                        request.pickup_lat,
-                        userCoord.lng,
-                        userCoord.lat
-                    );
-                    setSortedItems((prevState) => {
-                        prevState.forEach((request, index) => {
-                            if (request.index === temp.index) {
-                                prevState[index] = temp;
-                            }
-                        });
-                        prevState.sort((a, b) => {
-                            return a.distanceToUser - b.distanceToUser;
-                        });
-                        return [...prevState];
-                    });
-                });
-            };
-            getDistanceToUser(availableRequests);
+        if (filterData.pickupCoord && filterData.destinationCoord) {
+            distanceToRoute(availableRequests, filterData, setSortedItems);
+        } else if (filterData.pickupCoord) {
+            distanceToPickup(availableRequests, filterData, setSortedItems);
+        } else if (filterData.destinationCoord) {
+            distanceToDestination(
+                availableRequests,
+                filterData,
+                setSortedItems
+            );
+        } else if (userCoord) {
+            distanceToUser(availableRequests, userCoord, setSortedItems);
         }
-    }, [availableRequests, userCoord, viewData]);
+    }, [filterData, availableRequests, userCoord, viewData]);
 
-    const requests = (
+    return (
         <Fragment>
+            <RequestsSearchBox />
             {sortedItems.map((item) => (
                 <Request data={item} key={uuidv4()} />
             ))}
         </Fragment>
     );
-    return requests;
 };
 
 export default RequestsContainer;

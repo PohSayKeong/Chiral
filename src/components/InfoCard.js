@@ -9,18 +9,25 @@ import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 import InfoAreaRequests from "UI/InfoArea/InfoAreaRequests";
 import useAsync from "hooks/use-async";
 import fetchAddress from "helpers/fetchAddress";
+import { fetchDistance } from "helpers/fetchDistance";
 
 const InfoCard = (props) => {
     const [origin, setOrigin] = useState("Loading");
     const [destination, setDestination] = useState("Loading");
+    const [requestDistance, setrequestDistance] = useState("Loading");
+    const { pickup_lng, pickup_lat, destination_lng, destination_lat } = {
+        ...props.data,
+    };
 
     // convert latlong to address
-    const fetchPickup = () =>
-        fetchAddress(props.data.pickup_lng, props.data.pickup_lat);
+    const fetchPickup = () => fetchAddress(pickup_lng, pickup_lat);
     const fetchDestination = () =>
-        fetchAddress(props.data.destination_lng, props.data.destination_lat);
+        fetchAddress(destination_lng, destination_lat);
+    const fetchRequestDistance = () =>
+        fetchDistance(pickup_lng, pickup_lat, destination_lng, destination_lat);
     useAsync(fetchPickup, setOrigin);
     useAsync(fetchDestination, setDestination);
+    useAsync(fetchRequestDistance, setrequestDistance);
 
     let icon;
     switch (props.data._weight) {
@@ -53,9 +60,9 @@ const InfoCard = (props) => {
 
     let description;
     if (props.details) {
-        description = `${origin} ${pickupDetails} -> ${destination} ${destinationDetails}`;
+        description = `${origin} ${pickupDetails} -> ${destination} ${destinationDetails} (${requestDistance} KM)`;
     } else {
-        description = `${origin} -> ${destination}`;
+        description = `${origin} -> ${destination} (${requestDistance} KM)`;
     }
 
     return (

@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import AutocompletePlace from "../AutoComplete";
+import AutocompletePlace from "components/AutoComplete";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
 const Location = (props) => {
