@@ -1,3 +1,5 @@
+import fetchAddress from "helpers/fetchAddress";
+import { fetchDistance } from "helpers/fetchDistance";
 import { requestActions } from "store/request-slice";
 
 const getRequests = async (requestManagerInstance, account, dispatch) => {
@@ -27,24 +29,58 @@ const getRequests = async (requestManagerInstance, account, dispatch) => {
                     return true;
                 })
             );
+        const availableRequests = result
+            .filter((request) => request._step === "0")
+            .map(async (request) => {
+                request.pickup = await fetchAddress(
+                    request.pickup_lng,
+                    request.pickup_lat
+                );
+                request.destination = await fetchAddress(
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                request.requestDistance = await fetchDistance(
+                    request.pickup_lng,
+                    request.pickup_lat,
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                return request;
+            });
+        const myCurrentRequests = result
+            .filter(
+                (request) =>
+                    request.pickupAddress === account && request._step !== "3"
+            )
+            .concat(
+                result.filter(
+                    (request) =>
+                        request.deliveryAddress === account &&
+                        request._step === "1"
+                )
+            )
+            .map(async (request) => {
+                request.pickup = await fetchAddress(
+                    request.pickup_lng,
+                    request.pickup_lat
+                );
+                request.destination = await fetchAddress(
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                request.requestDistance = await fetchDistance(
+                    request.pickup_lng,
+                    request.pickup_lat,
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                return request;
+            });
         dispatch(
             requestActions.setRequests({
-                availableRequests: result.filter(
-                    (request) => request._step === "0"
-                ),
-                myCurrentRequests: result
-                    .filter(
-                        (request) =>
-                            request.pickupAddress === account &&
-                            request._step !== "3"
-                    )
-                    .concat(
-                        result.filter(
-                            (request) =>
-                                request.deliveryAddress === account &&
-                                request._step === "1"
-                        )
-                    ),
+                availableRequests: await Promise.all(availableRequests),
+                myCurrentRequests: await Promise.all(myCurrentRequests),
             })
         );
     }
