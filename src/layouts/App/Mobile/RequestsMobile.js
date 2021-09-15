@@ -36,15 +36,14 @@ const RequestsMobile = () => {
                 icon={<Icon />}
             />
             <div className={classes.contentBlock}>
-                {tab === "explore" ? (
-                    <Map />
-                ) : (
+                {tab !== "explore" && (
                     <div className={classes.content}>
                         {tab === "form" && <RequestForm />}
                         {tab === "requests" && <RequestsContainer />}
                         {tab === "deliveries" && <DeliveriesContainer />}
                     </div>
                 )}
+                <Map />
             </div>
             <MobileBar tab={tab} setTab={setTab} />
         </GridContainer>

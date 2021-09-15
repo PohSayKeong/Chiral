@@ -16,13 +16,15 @@ const mobileStyles = {
     },
     contentBlock: {
         height: `calc(0.9 * (100vh - 70px))`,
-        overflow: "auto",
+        overflow: "hidden",
     },
     content: {
-        paddingTop: "2rem",
+        paddingTop: "1rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        overflow: "auto",
+        height: "100%",
     },
 };
 
