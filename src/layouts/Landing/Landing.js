@@ -77,7 +77,6 @@ export default function LandingPage(props) {
                         color="primary"
                         size="lg"
                         href="/app"
-                        target="_blank"
                         rel="noopener noreferrer"
                         className={classes.appButton}
                     >
