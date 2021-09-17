@@ -4,7 +4,6 @@ import Request from "./Request";
 import { v4 as uuidv4 } from "uuid";
 import RequestsSearchBox from "./RequestsSearchBox";
 import {
-    distanceToUser,
     distanceToPickup,
     distanceToDestination,
     distanceToRoute,
@@ -14,7 +13,6 @@ const RequestsContainer = () => {
     const availableRequests = useSelector(
         (state) => state.request.availableRequests
     );
-    const userCoord = useSelector((state) => state.user.location);
     const viewData = useSelector((state) => state.request.viewData);
     const filterData = useSelector((state) => state.request.filterData);
     const [sortedItems, setSortedItems] = useState([]);
@@ -49,10 +47,8 @@ const RequestsContainer = () => {
                 filterData,
                 setSortedItems
             );
-        } else if (userCoord) {
-            distanceToUser(availableRequests, userCoord, setSortedItems);
         }
-    }, [filterData, availableRequests, userCoord, viewData]);
+    }, [filterData, availableRequests, viewData]);
 
     return (
         <Fragment>

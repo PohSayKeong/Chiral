@@ -1,29 +1,7 @@
 import { fetchDistance } from "helpers/fetchDistance";
 
-export const distanceToUser = (data, targetCoord, setState) => {
-    data.forEach(async (request) => {
-        let temp = { ...request };
-        temp.distanceToUser = await fetchDistance(
-            request.pickup_lng,
-            request.pickup_lat,
-            targetCoord.lng,
-            targetCoord.lat
-        );
-        setState((prevState) => {
-            prevState.forEach((request, index) => {
-                if (request.index === temp.index) {
-                    prevState[index] = temp;
-                }
-            });
-            prevState.sort((a, b) => {
-                return a.distanceToUser - b.distanceToUser;
-            });
-            return [...prevState];
-        });
-    });
-};
-
 export const distanceToPickup = (data, filterData, setState) => {
+    let result = [];
     data.forEach(async (request) => {
         let temp = { ...request };
         temp.distanceToUser = await fetchDistance(
@@ -32,21 +10,19 @@ export const distanceToPickup = (data, filterData, setState) => {
             filterData.pickupCoord[0],
             filterData.pickupCoord[1]
         );
-        setState((prevState) => {
-            prevState.forEach((request, index) => {
-                if (request.index === temp.index) {
-                    prevState[index] = temp;
-                }
-            });
-            prevState.sort((a, b) => {
-                return a.distanceToUser - b.distanceToUser;
-            });
-            return [...prevState];
-        });
+        result.push(temp);
+        if (result.length === data.length) {
+            setState(
+                result.sort((a, b) => {
+                    return a.distanceToUser - b.distanceToUser;
+                })
+            );
+        }
     });
 };
 
 export const distanceToDestination = (data, filterData, setState) => {
+    let result = [];
     data.forEach(async (request) => {
         let temp = { ...request };
         temp.distanceToUser = await fetchDistance(
@@ -55,24 +31,22 @@ export const distanceToDestination = (data, filterData, setState) => {
             filterData.destinationCoord[0],
             filterData.destinationCoord[1]
         );
-        setState((prevState) => {
-            prevState.forEach((request, index) => {
-                if (request.index === temp.index) {
-                    prevState[index] = temp;
-                }
-            });
-            prevState.sort((a, b) => {
-                return a.distanceToUser - b.distanceToUser;
-            });
-            return [...prevState];
-        });
+        result.push(temp);
+        if (result.length === data.length) {
+            setState(
+                result.sort((a, b) => {
+                    return a.distanceToUser - b.distanceToUser;
+                })
+            );
+        }
     });
 };
 
 export const distanceToRoute = (data, filterData, setState) => {
+    let result = [];
     data.forEach(async (request) => {
         let temp = { ...request };
-        const distanceToPickup = parseInt(
+        const distanceToPickup = parseFloat(
             await fetchDistance(
                 request.pickup_lng,
                 request.pickup_lat,
@@ -80,7 +54,7 @@ export const distanceToRoute = (data, filterData, setState) => {
                 filterData.pickupCoord[1]
             )
         );
-        const distanceToDestination = parseInt(
+        const distanceToDestination = parseFloat(
             await fetchDistance(
                 request.destination_lng,
                 request.destination_lat,
@@ -88,17 +62,16 @@ export const distanceToRoute = (data, filterData, setState) => {
                 filterData.destinationCoord[1]
             )
         );
-        temp.distanceToUser = distanceToPickup + distanceToDestination;
-        setState((prevState) => {
-            prevState.forEach((request, index) => {
-                if (request.index === temp.index) {
-                    prevState[index] = temp;
-                }
-            });
-            prevState.sort((a, b) => {
-                return a.distanceToUser - b.distanceToUser;
-            });
-            return [...prevState];
-        });
+        temp.distanceToUser = (
+            distanceToPickup + distanceToDestination
+        ).toFixed(2);
+        result.push(temp);
+        if (result.length === data.length) {
+            setState(
+                result.sort((a, b) => {
+                    return a.distanceToUser - b.distanceToUser;
+                })
+            );
+        }
     });
 };

@@ -2,7 +2,12 @@ import fetchAddress from "helpers/fetchAddress";
 import { fetchDistance } from "helpers/fetchDistance";
 import { requestActions } from "store/request-slice";
 
-const getRequests = async (requestManagerInstance, account, dispatch) => {
+const getRequests = async (
+    requestManagerInstance,
+    account,
+    targetCoord,
+    dispatch
+) => {
     if (requestManagerInstance.events) {
         const toCoord = Math.pow(10, 15).toFixed(10);
         let result = [];
@@ -32,20 +37,30 @@ const getRequests = async (requestManagerInstance, account, dispatch) => {
         const availableRequests = result
             .filter((request) => request._step === "0")
             .map(async (request) => {
-                request.pickup = await fetchAddress(
+                const pickup = fetchAddress(
                     request.pickup_lng,
                     request.pickup_lat
                 );
-                request.destination = await fetchAddress(
+                const destination = fetchAddress(
                     request.destination_lng,
                     request.destination_lat
                 );
-                request.requestDistance = await fetchDistance(
+                const requestDistance = fetchDistance(
                     request.pickup_lng,
                     request.pickup_lat,
                     request.destination_lng,
                     request.destination_lat
                 );
+                if (targetCoord) {
+                    request.distanceToUser = await fetchDistance(
+                        request.pickup_lng,
+                        request.pickup_lat,
+                        targetCoord.lng,
+                        targetCoord.lat
+                    );
+                }
+                [request.pickup, request.destination, request.requestDistance] =
+                    await Promise.all([pickup, destination, requestDistance]);
                 return request;
             });
         const myCurrentRequests = result

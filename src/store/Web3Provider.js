@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Web3Context from "./Web3-context";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import initWeb3Provider from "./requestHelpers/initWeb3Provider";
 import buyTokens from "./tokenHelper/buyTokens";
 import submitRequest from "./requestHelpers/submitRequest";
@@ -18,6 +18,7 @@ const Web3Provider = (props) => {
         requestManagerInstance: {},
         userTokens: 0,
     });
+    const userCoord = useSelector((state) => state.user.location);
     const dispatch = useDispatch();
 
     const web3Setup = useCallback(async () => {
@@ -58,12 +59,27 @@ const Web3Provider = (props) => {
     };
 
     const handleGetRequests = useCallback(async () => {
-        await getRequests(
-            web3State.requestManagerInstance,
-            web3State.accounts[0],
-            dispatch
-        );
-    }, [web3State.requestManagerInstance, web3State.accounts, dispatch]);
+        if (userCoord) {
+            await getRequests(
+                web3State.requestManagerInstance,
+                web3State.accounts[0],
+                userCoord,
+                dispatch
+            );
+        } else {
+            await getRequests(
+                web3State.requestManagerInstance,
+                web3State.accounts[0],
+                undefined,
+                dispatch
+            );
+        }
+    }, [
+        web3State.requestManagerInstance,
+        web3State.accounts,
+        userCoord,
+        dispatch,
+    ]);
 
     useEffect(() => {
         if (web3State.accounts[0]) {
