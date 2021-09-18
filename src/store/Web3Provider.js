@@ -59,21 +59,12 @@ const Web3Provider = (props) => {
     };
 
     const handleGetRequests = useCallback(async () => {
-        if (userCoord) {
-            await getRequests(
-                web3State.requestManagerInstance,
-                web3State.accounts[0],
-                userCoord,
-                dispatch
-            );
-        } else {
-            await getRequests(
-                web3State.requestManagerInstance,
-                web3State.accounts[0],
-                undefined,
-                dispatch
-            );
-        }
+        await getRequests(
+            web3State.requestManagerInstance,
+            web3State.accounts[0],
+            userCoord,
+            dispatch
+        );
     }, [
         web3State.requestManagerInstance,
         web3State.accounts,

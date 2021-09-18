@@ -36,7 +36,11 @@ const RequestsContainer = () => {
     }
 
     useEffect(() => {
-        setSortedItems([...availableRequests]);
+        setSortedItems(
+            [...availableRequests].sort((a, b) => {
+                return a.distanceToUser - b.distanceToUser;
+            })
+        );
         if (filterData.pickupCoord && filterData.destinationCoord) {
             distanceToRoute(availableRequests, filterData, setSortedItems);
         } else if (filterData.pickupCoord) {
