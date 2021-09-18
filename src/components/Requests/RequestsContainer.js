@@ -18,9 +18,9 @@ const RequestsContainer = () => {
     const [sortedItems, setSortedItems] = useState([]);
 
     // move selected item to the front
-    if (sortedItems.length > 0 && viewData) {
-        if (viewData.index) {
-            if (viewData.index !== sortedItems[0].index) {
+    if (viewData) {
+        sortedItems.forEach((request, index) => {
+            if (viewData.index === request.index && index !== 0) {
                 setSortedItems((prevState) => {
                     return [
                         ...prevState.filter(
@@ -31,8 +31,9 @@ const RequestsContainer = () => {
                         ),
                     ];
                 });
+                return;
             }
-        }
+        });
     }
 
     useEffect(() => {
