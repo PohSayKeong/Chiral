@@ -6,7 +6,7 @@ import MotorcycleIcon from "@material-ui/icons/Motorcycle";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 
 // core components
-import InfoAreaRequests from "UI/InfoArea/InfoAreaRequests";
+import DeliveryInfoAreaRequests from "./DeliveryInfoAreaRequests";
 
 const InfoCard = (props) => {
     const {
@@ -40,23 +40,20 @@ const InfoCard = (props) => {
             icon = LocalShippingIcon;
     }
 
-    const pickupDetails = `${pickup_floor !== "0" ? `#${pickup_floor}` : ""}${
-        pickup_unit !== "0" ? `-${pickup_unit}` : ""
-    }`;
+    const pickupDetails = `${pickup_floor !== "0" ? `#${pickup_floor}` : ""}${pickup_unit !== "0" ? `-${pickup_unit}` : ""
+        }`;
 
-    const destinationDetails = `${
-        destination_floor !== "0" ? `#${destination_floor}` : ""
-    }${destination_unit !== "0" ? `-${destination_unit}` : ""}`;
+    const destinationDetails = `${destination_floor !== "0" ? `#${destination_floor}` : ""}${destination_unit !== "0" ? `-${destination_unit}` : ""}`;
 
     let description;
     if (props.details) {
-        description = `${pickup} ${pickupDetails} -> ${destination} ${destinationDetails} (${requestDistance} KM)`;
+        description = `${pickup}!@#${destination}!@#${requestDistance} KM!@#${pickupDetails}!@#${destinationDetails}`;
     } else {
-        description = `${pickup} -> ${destination} (${requestDistance} KM)`;
+        description = `${pickup}!@#${destination}!@#${requestDistance} KM`;
     }
 
     return (
-        <InfoAreaRequests
+        <DeliveryInfoAreaRequests
             title={identifier}
             description={description}
             icon={icon}
