@@ -6,14 +6,13 @@ import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
-import styles from "assets/jss/material-kit-react/components/infoRequestsStyle";
+import styles from "assets/jss/material-kit-react/components/Custom/infoRequestsStyle";
 
 import Badge from "UI/Badge/Badge";
-import Description from "./Description";
 
 const useStyles = makeStyles(styles);
 
-export default function DeliveryInfoAreaRequests(props) {
+export default function InfoAreaRequests(props) {
     const classes = useStyles();
     const { title, description, iconColor, vertical } = props;
     const iconWrapper = classNames({
@@ -25,6 +24,7 @@ export default function DeliveryInfoAreaRequests(props) {
         [classes.icon]: true,
         [classes.iconVertical]: vertical,
     });
+    const { pickup, destination, distance, pickupDetails, destinationDetails } = description;
     return (
         <div className={classes.infoArea}>
             <div className={classes.descriptionWrapper}>
@@ -44,20 +44,23 @@ export default function DeliveryInfoAreaRequests(props) {
                         )}
                     </div>
                 </div>
-                <Description className={classes.description} content={description} />
+                <p className={classes.description}>
+                    <b>FROM:</b> {pickup} {pickupDetails}<br /><br />
+                    <b>TO:</b> {destination} {destinationDetails}<br /><hr />
+                    <b>DISTANCE:</b> {distance}
+                </p>
             </div>
         </div>
     );
 }
 
-DeliveryInfoAreaRequests.defaultProps = {
+InfoAreaRequests.defaultProps = {
     iconColor: "gray",
 };
 
-DeliveryInfoAreaRequests.propTypes = {
+InfoAreaRequests.propTypes = {
     icon: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
     iconColor: PropTypes.oneOf([
         "primary",
         "warning",
