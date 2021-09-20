@@ -9,7 +9,7 @@ import ListItem from "@material-ui/core/ListItem";
 // core components
 import Button from "../../CustomButtons/Button.js";
 
-import styles from "../../../assets/jss/material-kit-react/components/Custom/headerLinksStyle.js";
+import styles from "../../../assets/jss/material-kit-react/components/headerLinksStyle.js";
 
 import Web3Context from "store/Web3-context";
 

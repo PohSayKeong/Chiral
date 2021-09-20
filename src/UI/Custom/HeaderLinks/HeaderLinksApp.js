@@ -10,7 +10,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Button from "../../CustomButtons/Button.js";
 import Modal from "../../Modal/Modal";
 
-import styles from "../../../assets/jss/material-kit-react/components/Custom/headerLinksStyle.js";
+import styles from "../../../assets/jss/material-kit-react/components/headerLinksStyle.js";
 
 import Web3Context from "store/Web3-context";
 

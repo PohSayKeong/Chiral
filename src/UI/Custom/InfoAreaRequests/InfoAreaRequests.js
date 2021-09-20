@@ -24,7 +24,8 @@ export default function InfoAreaRequests(props) {
         [classes.icon]: true,
         [classes.iconVertical]: vertical,
     });
-    const { pickup, destination, distance, pickupDetails, destinationDetails } = description;
+    const { pickup, destination, distance, pickupDetails, destinationDetails } =
+        description;
     return (
         <div className={classes.infoArea}>
             <div className={classes.descriptionWrapper}>
@@ -45,8 +46,14 @@ export default function InfoAreaRequests(props) {
                     </div>
                 </div>
                 <p className={classes.description}>
-                    <b>FROM:</b> {pickup} {pickupDetails}<br /><br />
-                    <b>TO:</b> {destination} {destinationDetails}<br /><hr />
+                    <b>FROM:</b> {pickup} {pickupDetails}
+                    <br />
+                    <br />
+                    <b>TO:</b> {destination} {destinationDetails}
+                    <br />
+                </p>
+                <hr />
+                <p className={classes.description}>
                     <b>DISTANCE:</b> {distance}
                 </p>
             </div>
