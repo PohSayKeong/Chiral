@@ -7,7 +7,7 @@ import {
     roseColor,
     grayColor,
     title,
-} from "../../material-kit-react";
+} from "../../../material-kit-react";
 
 const infoRequestsStyle = {
     infoArea: {
@@ -54,7 +54,6 @@ const infoRequestsStyle = {
             "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'",
     },
     description: {
-        color: grayColor,
         overflow: "hidden",
         fontSize: "1rem",
     },
