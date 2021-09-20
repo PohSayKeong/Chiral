@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Request from "./Request";
 import { v4 as uuidv4 } from "uuid";
@@ -56,12 +56,20 @@ const RequestsContainer = () => {
     }, [filterData, availableRequests, viewData]);
 
     return (
-        <Fragment>
+        <div
+            style={{
+                overflow: "auto",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+            }}
+        >
             <RequestsSearchBox />
             {sortedItems.map((item) => (
                 <Request data={item} key={uuidv4()} />
             ))}
-        </Fragment>
+        </div>
     );
 };
 

@@ -76,26 +76,38 @@ const getRequests = async (
                 )
             )
             .map(async (request) => {
-                request.pickup = await fetchAddress(
+                const pickup = fetchAddress(
                     request.pickup_lng,
                     request.pickup_lat
                 );
-                request.destination = await fetchAddress(
+                const destination = fetchAddress(
                     request.destination_lng,
                     request.destination_lat
                 );
-                request.requestDistance = await fetchDistance(
+                const requestDistance = fetchDistance(
                     request.pickup_lng,
                     request.pickup_lat,
                     request.destination_lng,
                     request.destination_lat
                 );
+                [request.pickup, request.destination, request.requestDistance] =
+                    await Promise.all([pickup, destination, requestDistance]);
                 return request;
-            });
+            })
+            .reverse();
+        const myPastRequests = result
+            .filter(
+                (request) =>
+                    (request.pickupAddress === account ||
+                        request.deliveryAddress === account) &&
+                    request._step === "3"
+            )
+            .reverse();
         dispatch(
             requestActions.setRequests({
                 availableRequests: await Promise.all(availableRequests),
                 myCurrentRequests: await Promise.all(myCurrentRequests),
+                myPastRequests: myPastRequests,
             })
         );
     }

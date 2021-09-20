@@ -50,6 +50,7 @@ const infoRequestsStyle = {
         ...title,
         fontSize: "1.5rem",
         margin: "0",
+        maxWidth: "10em",
         fontFamily:
             "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'",
     },
@@ -69,6 +70,7 @@ const infoRequestsStyle = {
         alignItems: "baseline",
         justifyContent: "space-between",
         marginLeft: "50px",
+        flexDirection: "column",
     },
     badges: {
         float: "right",

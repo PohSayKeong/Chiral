@@ -5,6 +5,7 @@ const requestSlice = createSlice({
     initialState: {
         availableRequests: [],
         myCurrentRequests: [],
+        myPastRequests: [],
         viewData: null,
         filterData: [],
     },
@@ -12,6 +13,7 @@ const requestSlice = createSlice({
         setRequests(state, action) {
             state.availableRequests = action.payload.availableRequests;
             state.myCurrentRequests = action.payload.myCurrentRequests;
+            state.myPastRequests = action.payload.myPastRequests;
         },
         setViewData(state, action) {
             state.viewData = action.payload;

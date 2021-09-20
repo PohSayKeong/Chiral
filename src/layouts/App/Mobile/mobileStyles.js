@@ -17,6 +17,7 @@ const mobileStyles = {
     contentBlock: {
         height: `calc(0.9 * (100vh - 70px))`,
         overflow: "hidden",
+        width: "100%",
     },
     content: {
         paddingTop: "1rem",

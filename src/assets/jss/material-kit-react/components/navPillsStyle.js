@@ -139,7 +139,6 @@ const navPillsStyle = (theme) => ({
         height: "calc(100vh - 102px)",
     },
     tabContent: {
-        overflow: "auto",
         height: "100%",
         width: "100%",
         padding: "0 1rem 1rem 1rem",
