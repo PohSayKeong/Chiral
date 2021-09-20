@@ -40,7 +40,7 @@ export default function Notification(props) {
                     icon={Check}
                 />
             )}
-            {props.status === "failed" && (
+            {props.status === "failure" && (
                 <SnackbarContent
                     message={
                         <span>

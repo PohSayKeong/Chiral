@@ -17,11 +17,12 @@ const DeliveriesButton = (props) => {
             props.data._step === "2"
         ) {
             web3Ctx.handleReceived(props.data);
-        }
-        if (web3Ctx.userAccount === props.data.deliveryAddress) {
+        } else if (
+            web3Ctx.userAccount === props.data.deliveryAddress &&
+            props.data._step === "1"
+        ) {
             web3Ctx.handleDelivered(props.data);
-        }
-        if (
+        } else if (
             web3Ctx.userAccount === props.data.pickupAddress &&
             props.data._step === "0"
         ) {
@@ -40,7 +41,12 @@ const DeliveriesButton = (props) => {
             {web3Ctx.userAccount === props.data.pickupAddress &&
                 props.data._step === "2" &&
                 "Received"}
-            {web3Ctx.userAccount === props.data.deliveryAddress && "Delivered"}
+            {web3Ctx.userAccount === props.data.deliveryAddress &&
+                props.data._step === "1" &&
+                "Delivered"}
+            {web3Ctx.userAccount === props.data.deliveryAddress &&
+                props.data._step === "2" &&
+                "Confirming"}
         </Button>
     );
 };

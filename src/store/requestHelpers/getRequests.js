@@ -66,14 +66,9 @@ const getRequests = async (
         const myCurrentRequests = result
             .filter(
                 (request) =>
-                    request.pickupAddress === account && request._step !== "3"
-            )
-            .concat(
-                result.filter(
-                    (request) =>
-                        request.deliveryAddress === account &&
-                        request._step === "1"
-                )
+                    (request.pickupAddress === account ||
+                        request.deliveryAddress === account) &&
+                    request._step !== "3"
             )
             .map(async (request) => {
                 const pickup = fetchAddress(
