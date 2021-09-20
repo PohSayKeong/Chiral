@@ -6,7 +6,7 @@ import MotorcycleIcon from "@material-ui/icons/Motorcycle";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 
 // core components
-import InfoAreaRequests from "UI/InfoArea/InfoAreaRequests";
+import InfoAreaRequests from "UI/Custom/InfoAreaRequests/InfoAreaRequests";
 
 const InfoCard = (props) => {
     const {
@@ -21,9 +21,7 @@ const InfoCard = (props) => {
         identifier,
         value,
         distanceToUser,
-    } = {
-        ...props.data,
-    };
+    } = props.data;
 
     let icon;
     switch (_weight) {
@@ -48,11 +46,14 @@ const InfoCard = (props) => {
         destination_floor !== "0" ? `#${destination_floor}` : ""
     }${destination_unit !== "0" ? `-${destination_unit}` : ""}`;
 
-    let description;
+    let description = {
+        pickup: pickup,
+        destination: destination,
+        distance: requestDistance + "KM",
+    };
     if (props.details) {
-        description = `${pickup} ${pickupDetails} -> ${destination} ${destinationDetails} (${requestDistance} KM)`;
-    } else {
-        description = `${pickup} -> ${destination} (${requestDistance} KM)`;
+        description.pickupDetails = pickupDetails;
+        description.destinationDetails = destinationDetails;
     }
 
     return (

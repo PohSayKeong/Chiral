@@ -12,7 +12,7 @@ import Footer from "UI/Footer/Footer.js";
 import GridContainer from "UI/Grid/GridContainer.js";
 import GridItem from "UI/Grid/GridItem.js";
 import Button from "UI/CustomButtons/Button.js";
-import HeaderLinks from "UI/Header/HeaderLinksLanding.js";
+import HeaderLinks from "UI/Custom/HeaderLinks/HeaderLinksLanding.js";
 import Parallax from "UI/Parallax/Parallax.js";
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";

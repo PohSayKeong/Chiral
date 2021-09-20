@@ -6,13 +6,13 @@ import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
-import styles from "../../assets/jss/material-kit-react/components/infoRequestsStyle";
+import styles from "assets/jss/material-kit-react/components/Custom/infoRequestsStyle";
 
-import Badge from "../Badge/Badge";
+import Badge from "UI/Badge/Badge";
 
 const useStyles = makeStyles(styles);
 
-export default function InfoArea(props) {
+export default function InfoAreaRequests(props) {
     const classes = useStyles();
     const { title, description, iconColor, vertical } = props;
     const iconWrapper = classNames({
@@ -24,6 +24,8 @@ export default function InfoArea(props) {
         [classes.icon]: true,
         [classes.iconVertical]: vertical,
     });
+    const { pickup, destination, distance, pickupDetails, destinationDetails } =
+        description;
     return (
         <div className={classes.infoArea}>
             <div className={classes.descriptionWrapper}>
@@ -43,20 +45,29 @@ export default function InfoArea(props) {
                         )}
                     </div>
                 </div>
-                <p className={classes.description}>{description}</p>
+                <p className={classes.description}>
+                    <b>FROM:</b> {pickup} {pickupDetails}
+                    <br />
+                    <br />
+                    <b>TO:</b> {destination} {destinationDetails}
+                    <br />
+                </p>
+                <hr />
+                <p className={classes.description}>
+                    <b>DISTANCE:</b> {distance}
+                </p>
             </div>
         </div>
     );
 }
 
-InfoArea.defaultProps = {
+InfoAreaRequests.defaultProps = {
     iconColor: "gray",
 };
 
-InfoArea.propTypes = {
+InfoAreaRequests.propTypes = {
     icon: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
     iconColor: PropTypes.oneOf([
         "primary",
         "warning",

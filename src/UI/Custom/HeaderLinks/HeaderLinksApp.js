@@ -7,16 +7,16 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 
 // core components
-import Button from "../CustomButtons/Button.js";
-import Modal from "../Modal/Modal";
+import Button from "../../CustomButtons/Button.js";
+import Modal from "../../Modal/Modal";
 
-import styles from "../../assets/jss/material-kit-react/components/headerLinksStyle.js";
+import styles from "../../../assets/jss/material-kit-react/components/headerLinksStyle.js";
 
 import Web3Context from "store/Web3-context";
 
 const useStyles = makeStyles(styles);
 
-export default function HeaderLinks() {
+export default function HeaderLinksApp() {
     const classes = useStyles();
     const web3Ctx = useContext(Web3Context);
     return (
