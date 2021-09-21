@@ -21,9 +21,13 @@ const Value = (props) => {
                 }}
                 error={props.hasError}
             />
-            {props.hasError && (
+            {props.hasError ? (
                 <FormHelperText error>
                     Value must be a valid number
+                </FormHelperText>
+            ) : (
+                <FormHelperText>
+                    Compensation when package is lost
                 </FormHelperText>
             )}
         </Fragment>

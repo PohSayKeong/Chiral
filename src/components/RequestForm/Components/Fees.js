@@ -21,10 +21,12 @@ const Fees = (props) => {
                 }}
                 error={props.hasError}
             />
-            {props.hasError && (
+            {props.hasError ? (
                 <FormHelperText error>
                     Fees must be a valid number
                 </FormHelperText>
+            ) : (
+                <FormHelperText>Amount paid to courier</FormHelperText>
             )}
             {props.estimatedFees !== 0 && (
                 <FormHelperText>

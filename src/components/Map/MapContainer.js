@@ -56,8 +56,7 @@ function Map() {
     };
 
     const zoomToFitView = useCallback(async () => {
-        // second conditions prevents map from crashing after opening chat
-        if (viewData && viewportRef.current.latitude !== 1.352083) {
+        if (viewData) {
             const { longitude, latitude, zoom } = new WebMercatorViewport(
                 viewportRef.current
             ).fitBounds(

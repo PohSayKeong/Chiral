@@ -8,9 +8,12 @@ import Button from "UI/CustomButtons/Button";
 import fetchLatLng from "helpers/fetchLatLng";
 import { requestActions } from "store/request-slice";
 import { useDispatch, useSelector } from "react-redux";
+import MyLocationIcon from "@material-ui/icons/MyLocation";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
-const RequestsSearchBox = (props) => {
+const RequestsSearchBox = () => {
     const filterData = useSelector((state) => state.request.filterData);
+    const userCoord = useSelector((state) => state.user.location);
     const pickupProps = useInput(
         () => {},
         filterData.pickup ? filterData.pickup : ""
@@ -21,11 +24,34 @@ const RequestsSearchBox = (props) => {
     );
     const dispatch = useDispatch();
     const [filtering, setFiltering] = useState(false);
+
+    // User selected pickup as current location
+    const setCurrentLocation = () => {
+        pickupProps.valueChangeHandler({
+            target: { value: "Current Location" },
+        });
+    };
+
+    const CurrentLocationButton = userCoord ? (
+        <InputAdornment position="end">
+            <Button size="sm" color="transparent" onClick={setCurrentLocation}>
+                <MyLocationIcon />
+            </Button>
+        </InputAdornment>
+    ) : (
+        ""
+    );
+
     const handleFilter = async () => {
-        const pickupData =
-            pickupProps.value !== ""
-                ? await fetchLatLng(pickupProps.value)
-                : null;
+        let pickupData;
+        if (pickupProps.value === "Current Location") {
+            pickupData = [userCoord.lng, userCoord.lat];
+        } else {
+            pickupData =
+                pickupProps.value !== ""
+                    ? await fetchLatLng(pickupProps.value)
+                    : null;
+        }
         const destinationData =
             destinationProps.value !== ""
                 ? await fetchLatLng(destinationProps.value)
@@ -35,10 +61,11 @@ const RequestsSearchBox = (props) => {
         }
         dispatch(
             requestActions.setFilterData({
-                pickupCoord:
-                    pickupData && pickupData.features[0]
-                        ? pickupData.features[0].geometry.coordinates
-                        : null,
+                pickupCoord: Array.isArray(pickupData)
+                    ? pickupData
+                    : pickupData && pickupData.features[0]
+                    ? pickupData.features[0].geometry.coordinates
+                    : null,
                 destinationCoord:
                     destinationData && destinationData.features[0]
                         ? destinationData.features[0].geometry.coordinates
@@ -48,6 +75,7 @@ const RequestsSearchBox = (props) => {
             })
         );
     };
+
     const handleClear = () => {
         pickupProps.reset();
         destinationProps.reset();
@@ -63,14 +91,19 @@ const RequestsSearchBox = (props) => {
                 spacing={2}
             >
                 <GridItem xs={7} style={{ paddingBottom: "2rem" }}>
-                    <AutocompletePlace
-                        labelText="Pickup"
-                        onInputChange={(e) => {
-                            setFiltering(false);
-                            pickupProps.valueChangeHandler(e);
-                        }}
-                        value={pickupProps.value}
-                    />
+                    <div>
+                        <AutocompletePlace
+                            labelText="Pickup"
+                            onInputChange={(e) => {
+                                setFiltering(false);
+                                pickupProps.valueChangeHandler(e);
+                            }}
+                            value={pickupProps.value}
+                            inputProps={{
+                                endAdornment: CurrentLocationButton,
+                            }}
+                        />
+                    </div>
                     <AutocompletePlace
                         labelText="Destination"
                         onInputChange={(e) => {

@@ -1,8 +1,14 @@
 const calculateFees = (distance) => {
-    if (distance > 5) {
-        return (0.8 * (10 + 0.7 * (distance - 5) + 2.3)).toFixed(2);
+    if (distance < 5) {
+        return 5;
+    } else if (distance < 10) {
+        return 7;
+    } else if (distance < 20) {
+        return 10;
+    } else if (distance < 35) {
+        return 13;
     } else {
-        return (0.8 * (5 + distance + 2.3)).toFixed(2);
+        return 15;
     }
 };
 

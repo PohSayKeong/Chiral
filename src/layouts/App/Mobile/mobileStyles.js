@@ -1,6 +1,6 @@
 const mobileStyles = {
     mobileBar: {
-        height: `calc(0.1 * (100vh - 70px))`,
+        height: `70px`,
         position: "fixed",
         bottom: "0",
         width: "100%",
@@ -15,7 +15,7 @@ const mobileStyles = {
         textTransform: "none",
     },
     contentBlock: {
-        height: `calc(0.9 * (100vh - 70px))`,
+        height: `calc(100vh - 140px)`,
         overflow: "hidden",
         width: "100%",
     },

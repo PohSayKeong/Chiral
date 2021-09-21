@@ -53,7 +53,12 @@ const RequestButton = (props) => {
     }
 
     return (
-        <Button type="button" color={buttonProps.color} onClick={viewHandler}>
+        <Button
+            type="button"
+            color={buttonProps.color}
+            onClick={viewHandler}
+            disabled={web3Ctx.userTokens < props.data.value ? true : false}
+        >
             {buttonProps.text}
         </Button>
     );
