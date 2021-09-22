@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
-pragma experimental ABIEncoderV2;
+pragma solidity 0.8.7;
 
 import "./Request.sol";
 import "./ChiralToken.sol";
@@ -15,23 +14,19 @@ contract RequestManager is ERC2771Context {
         tokenContract = newtoken;
     }
 
-    struct S_Request {
-        Request request;
-        RequestManager.SupplyChainSteps step;
-        string identifier;
-        address pickupAddress;
-        address deliveryAddress;
+    mapping(uint32 => Request) public requests;
+    uint32 nextIndex;
+    enum weights {
+        foot,
+        bike,
+        car
     }
-    mapping(uint64 => S_Request) public requests;
-    uint64 index;
-    
     struct S_pickup {
-    uint64 pickup_lat;
-    uint64 pickup_lng;
-    uint8 pickup_floor;
-    uint16 pickup_unit;
+        uint64 pickup_lat;
+        uint64 pickup_lng;
+        uint8 pickup_floor;
+        uint16 pickup_unit;
     }
-    S_pickup public pickup;
 
     struct S_destination {
         uint64 destination_lat;
@@ -39,187 +34,182 @@ contract RequestManager is ERC2771Context {
         uint8 destination_floor;
         uint16 destination_unit;
     }
-    S_destination public destination;
 
-    enum SupplyChainSteps {
+    enum steps {
         Created,
         Accepted,
         Delivered,
-        Received
+        Received,
+        Cancelled,
+        Intervention
     }
 
-    event DisplayStep(
-        address indexed pickupAddress,
-        address indexed deliveryAddress,
+    event Created(
+        uint32 index,
         string identifier,
-        uint64 index,
+        address indexed pickupAddress,
+        uint32 value,
+        uint32 fees,
+        uint8 weight,
         S_pickup pickup,
         S_destination destination,
-        uint64 value,
-        uint64 fees,
-        uint8 indexed _step,
-        uint8 _weight
+        uint8 indexed step
     );
+
+    event Accepted(
+        uint32 index,
+        address indexed courierAddress,
+        uint8 indexed step
+    );
+
+    event Verdict(uint32 index, address winner);
+
+    event Step(uint32 index, uint8 indexed step);
 
     function createRequest(
         string memory identifier,
-        S_pickup memory _pickup,
-        S_destination memory _destination,
-        uint64 value,
-        uint64 fees,
-        Request.weights weight
+        S_pickup memory pickup,
+        S_destination memory destination,
+        uint32 value,
+        uint32 fees,
+        weights weight
     ) public {
-        require(
-            tokenContract.balanceOf(_msgSender()) > fees,
-            "Not enough tokens in wallet"
-        );
+        require(tokenContract.balanceOf(_msgSender()) > fees);
         Request request = new Request(
-            this,
-            tokenContract,
+            identifier,
+            _msgSender(),
             value,
             fees,
-            index,
-            weight
-        );
-        pickup = _pickup;
-        destination = _destination;
-        requests[index].request = request;
-        requests[index].step = SupplyChainSteps.Created;
-        requests[index].identifier = identifier;
-        tokenContract.transferFrom(_msgSender(), address(request), fees);
-        requests[index].pickupAddress = _msgSender();
-        emit DisplayStep(
-            requests[index].pickupAddress,
-            requests[index].deliveryAddress,
-            identifier,
-            index,
+            weight,
             pickup,
             destination,
+            tokenContract,
+            this
+        );
+        requests[nextIndex] = request;
+        tokenContract.transferFrom(_msgSender(), address(request), fees);
+        emit Created(
+            nextIndex,
+            identifier,
+            _msgSender(),
             value,
             fees,
-            uint8(requests[index].step),
-            uint8(request.weight())
+            uint8(weight),
+            pickup,
+            destination,
+            uint8(steps.Created)
         );
-        index++;
+        nextIndex++;
     }
 
-    function triggerAccepted(uint64 _index) public {
-        Request request = requests[_index].request;
+    function triggerAccepted(uint32 _index) public {
+        require(requests[_index].step() == steps.Created);
         require(
-            requests[_index].step == SupplyChainSteps.Created,
-            "Request is not available"
+            tokenContract.balanceOf(_msgSender()) > requests[_index].value()
         );
-        require(
-            tokenContract.balanceOf(_msgSender()) > request.value(),
-            "Please deposit full stake"
-        );
-        require(
-            _msgSender() != requests[_index].pickupAddress,
-            "This is your own request"
-        );
+        require(_msgSender() != requests[_index].pickupAddress());
         tokenContract.transferFrom(
             _msgSender(),
-            address(request),
-            request.value()
+            address(requests[_index]),
+            requests[_index].value()
         );
-        requests[_index].deliveryAddress = _msgSender();
-        requests[_index].step = SupplyChainSteps.Accepted;
-        emit DisplayStep(
-            requests[_index].pickupAddress,
-            requests[_index].deliveryAddress,
-            requests[_index].identifier,
+        requests[_index].setCourier(_msgSender());
+        requests[_index].setStep(steps.Accepted);
+        emit Accepted(
             _index,
-            pickup,
-            destination,
-            request.value(),
-            request.fees(),
-            uint8(requests[_index].step),
-            uint8(request.weight())
+            requests[_index].courierAddress(),
+            uint8(requests[_index].step())
         );
     }
 
-    function triggerDelivery(uint64 _index) public {
-        Request request = requests[_index].request;
-        require(
-            requests[_index].step == SupplyChainSteps.Accepted,
-            "Request not on delivery"
-        );
-        require(
-            _msgSender() == requests[_index].deliveryAddress,
-            "This is not your delivery"
-        );
-        requests[_index].step = SupplyChainSteps.Delivered;
-        emit DisplayStep(
-            requests[_index].pickupAddress,
-            requests[_index].deliveryAddress,
-            requests[_index].identifier,
-            _index,
-            pickup,
-            destination,
-            request.value(),
-            request.fees(),
-            uint8(requests[_index].step),
-            uint8(request.weight())
-        );
+    function triggerDelivery(uint32 _index) public {
+        require(requests[_index].step() == steps.Accepted);
+        require(_msgSender() == requests[_index].courierAddress());
+        requests[_index].setStep(steps.Delivered);
+        emit Step(_index, uint8(requests[_index].step()));
     }
 
-    function triggerReceive(uint64 _index) public {
-        Request request = requests[_index].request;
-        require(
-            requests[_index].step == SupplyChainSteps.Delivered,
-            "Request not delivered"
-        );
-        require(
-            _msgSender() == requests[_index].pickupAddress,
-            "This is not your item"
-        );
-        requests[_index].step = SupplyChainSteps.Received;
+    function triggerReceive(uint32 _index) public {
+        require(requests[_index].step() == steps.Delivered);
+        require(_msgSender() == requests[_index].pickupAddress());
+        requests[_index].setStep(steps.Received);
         tokenContract.transferFrom(
-            address(request),
-            requests[_index].deliveryAddress,
-            tokenContract.balanceOf(address(request))
+            address(requests[_index]),
+            requests[_index].courierAddress(),
+            tokenContract.balanceOf(address(requests[_index]))
         );
-        emit DisplayStep(
-            requests[_index].pickupAddress,
-            requests[_index].deliveryAddress,
-            requests[_index].identifier,
-            _index,
-            pickup,
-            destination,
-            request.value(),
-            request.fees(),
-            uint8(requests[_index].step),
-            uint8(request.weight())
-        );
+        emit Step(_index, uint8(requests[_index].step()));
     }
 
-    function triggerCancel(uint64 _index) public {
-        Request request = requests[_index].request;
-        require(
-            requests[_index].step == SupplyChainSteps.Created,
-            "Request already accepted"
-        );
-        require(
-            _msgSender() == requests[_index].pickupAddress,
-            "This is not your item"
-        );
-        requests[_index].step = SupplyChainSteps.Received;
+    function triggerCancel(uint32 _index) public {
+        require(requests[_index].step() == steps.Created);
+        require(_msgSender() == requests[_index].pickupAddress());
+        requests[_index].setStep(steps.Cancelled);
         tokenContract.transferFrom(
-            address(request),
-            requests[_index].pickupAddress,
-            tokenContract.balanceOf(address(request))
+            address(requests[_index]),
+            requests[_index].pickupAddress(),
+            tokenContract.balanceOf(address(requests[_index]))
         );
-        emit DisplayStep(
-            requests[_index].pickupAddress,
-            requests[_index].deliveryAddress,
-            requests[_index].identifier,
-            _index,
-            pickup,
-            destination,
-            request.value(),
-            request.fees(),
-            uint8(requests[_index].step),
-            uint8(request.weight())
+        emit Step(_index, uint8(requests[_index].step()));
+    }
+
+    function triggerReport(uint32 _index) public {
+        require(
+            _msgSender() == requests[_index].pickupAddress() ||
+                _msgSender() == requests[_index].courierAddress()
         );
+        require(
+            requests[_index].step() != steps.Created &&
+                requests[_index].step() != steps.Cancelled
+        );
+        require(requests[_index].step() != steps.Intervention);
+        requests[_index].setStep(steps.Intervention);
+        emit Step(_index, uint8(requests[_index].step()));
+    }
+
+    function awardToSender(uint32 _index) public {
+        require(
+            _msgSender() != requests[_index].pickupAddress() &&
+                _msgSender() != requests[_index].courierAddress()
+        );
+        require(
+            tokenContract.balanceOf(_msgSender()) >
+                requests[_index].value() * 10
+        );
+        require(requests[_index].step() == steps.Intervention);
+        tokenContract.transferFrom(
+            address(requests[_index]),
+            requests[_index].pickupAddress(),
+            requests[_index].value()
+        );
+        tokenContract.transferFrom(
+            address(requests[_index]),
+            _msgSender(),
+            requests[_index].fees()
+        );
+        emit Verdict(_index, requests[_index].pickupAddress());
+    }
+
+    function awardToCourier(uint32 _index) public {
+        require(
+            _msgSender() != requests[_index].pickupAddress() &&
+                _msgSender() != requests[_index].courierAddress()
+        );
+        require(
+            tokenContract.balanceOf(_msgSender()) >=
+                requests[_index].value() * 10
+        );
+        require(requests[_index].step() == steps.Intervention);
+        tokenContract.transferFrom(
+            address(requests[_index]),
+            requests[_index].courierAddress(),
+            requests[_index].value()
+        );
+        tokenContract.transferFrom(
+            address(requests[_index]),
+            _msgSender(),
+            requests[_index].fees()
+        );
+        emit Verdict(_index, requests[_index].courierAddress());
     }
 }

@@ -17,25 +17,31 @@ const getRequests = async (
             })
             .then((response) =>
                 response.map((item) => {
-                    const temp = {
-                        ...item.returnValues,
-                        ...item.returnValues.pickup,
-                        ...item.returnValues.destination,
-                    };
-                    temp.pickup_lng /= toCoord;
-                    temp.pickup_lat /= toCoord;
-                    temp.destination_lng /= toCoord;
-                    temp.destination_lat /= toCoord;
-                    if (!result[item.returnValues.index]) {
+                    if (item.returnValues.step === "0") {
+                        const temp = {
+                            ...item.returnValues,
+                            ...item.returnValues.pickup,
+                            ...item.returnValues.destination,
+                        };
+                        temp.pickup_lng /= toCoord;
+                        temp.pickup_lat /= toCoord;
+                        temp.destination_lng /= toCoord;
+                        temp.destination_lat /= toCoord;
                         result.push(temp);
                     } else {
-                        result[item.returnValues.index] = temp;
+                        result[item.returnValues.index] = {
+                            ...result[item.returnValues.index],
+                            ...item.returnValues,
+                        };
                     }
                     return true;
                 })
             );
         const availableRequests = result
-            .filter((request) => request._step === "0")
+            .filter(
+                (request) =>
+                    request.step === "0" && request.pickupAddress !== account
+            )
             .map(async (request) => {
                 const pickup = fetchAddress(
                     request.pickup_lng,
@@ -67,8 +73,8 @@ const getRequests = async (
             .filter(
                 (request) =>
                     (request.pickupAddress === account ||
-                        request.deliveryAddress === account) &&
-                    request._step !== "3"
+                        request.courierAddress === account) &&
+                    request.step !== "3"
             )
             .map(async (request) => {
                 const pickup = fetchAddress(
@@ -94,8 +100,8 @@ const getRequests = async (
             .filter(
                 (request) =>
                     (request.pickupAddress === account ||
-                        request.deliveryAddress === account) &&
-                    request._step === "3"
+                        request.courierAddress === account) &&
+                    request.step === "3"
             )
             .reverse();
         dispatch(

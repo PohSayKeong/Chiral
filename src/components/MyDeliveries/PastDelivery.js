@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PastDelivery = (props) => {
-    const { identifier, fees, deliveryAddress } = props.data;
-    const isCourier = props.userAddress === deliveryAddress;
+    const { identifier, fees, courierAddress } = props.data;
+    const isCourier = props.userAddress === courierAddress;
     const classes = useStyles();
     return (
         <Accordion

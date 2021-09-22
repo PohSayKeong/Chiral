@@ -50,7 +50,7 @@ const DeliveriesContainer = () => {
     let displayRequests = value === 0 ? myCurrentRequests : myPastRequests;
     if (filter === "Courier") {
         displayRequests = displayRequests.filter(
-            (request) => request.deliveryAddress === web3Ctx.userAccount
+            (request) => request.courierAddress === web3Ctx.userAccount
         );
     } else if (filter === "Sender") {
         displayRequests = displayRequests.filter(

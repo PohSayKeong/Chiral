@@ -1,46 +1,44 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.4;
+pragma solidity 0.8.7;
 
 import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-// This is just a simple example of a coin-like contract.
-// It is not standards compatible and cannot be expected to talk to other
-// coin/token contracts. If you want to create a standards-compliant
-// token, see: https://github.com/ConsenSys/Tokens. Cheers!
-
-contract ChiralToken is ERC2771Context {
-    string public symbol = "CLN";
-    string public description = "Chiral Token";
-    uint256 public decimals = 0;
-
+contract ChiralToken is ERC2771Context, ERC20 {
     mapping(address => uint256) balances;
 
-    event Transfer(address indexed _from, address indexed _to, uint256 _value);
-
-    constructor(address _forwarder) ERC2771Context(_forwarder) {}
-
-    function transferFrom(
-        address sender,
-        address receiver,
-        uint256 amount
-    ) public returns (bool sufficient) {
-        if (balances[sender] < amount) return false;
-        balances[sender] -= amount;
-        balances[receiver] += amount;
-        emit Transfer(sender, receiver, amount);
-        return true;
+    function _msgSender()
+        internal
+        view
+        override(Context, ERC2771Context)
+        returns (address sender)
+    {
+        sender = ERC2771Context._msgSender();
     }
 
-    function balanceOf(address addr) public view returns (uint256) {
-        return balances[addr];
+    function _msgData()
+        internal
+        view
+        override(Context, ERC2771Context)
+        returns (bytes calldata)
+    {
+        return ERC2771Context._msgData();
+    }
+
+    constructor(address _forwarder, uint256 amount)
+        ERC2771Context(_forwarder)
+        ERC20("ChiralToken", "CLT")
+    {
+        _mint(_msgSender(), amount);
     }
 
     /**
      * mint some coins for this caller.
      * (in a real-life application, minting is protected for admin, or by other mechanism.
-     * but for our sample, any user can mint some coins - but just once..
+     * but for our sample, any user can mint some coins
      */
+
     function mint(uint256 amount) public {
-        balances[_msgSender()] += amount;
+        _mint(_msgSender(), amount);
     }
 }

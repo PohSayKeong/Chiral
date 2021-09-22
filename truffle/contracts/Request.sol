@@ -1,41 +1,47 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity 0.8.7;
 
 import "./RequestManager.sol";
 import "./ChiralToken.sol";
 
 contract Request {
+    string public identifier;
     address public pickupAddress;
-    uint64 public value;
-    uint64 public fees;
-    uint64 public index;
-    address public deliveryAddress;
-    enum weights {
-        foot,
-        bike,
-        car
-    }
-    weights public weight;
-    
-
-    RequestManager parentContract;
-    ChiralToken tokenContract;
+    address public courierAddress;
+    uint32 public value;
+    uint32 public fees;
+    RequestManager.weights public weight;
+    RequestManager.S_pickup public pickup;
+    RequestManager.S_destination public destination;
+    RequestManager.steps public step;
 
     constructor(
-        RequestManager _parentContract,
+        string memory _identifier,
+        address _pickupAddress,
+        uint32 _value,
+        uint32 _fees,
+        RequestManager.weights _weight,
+        RequestManager.S_pickup memory _pickup,
+        RequestManager.S_destination memory _destination,
         ChiralToken _tokenContract,
-        uint64 _value,
-        uint64 _fees,
-        uint64 _index,
-        weights _weight
+        RequestManager _parentContract
     ) {
-        parentContract = _parentContract;
-        tokenContract = _tokenContract;
+        identifier = _identifier;
+        pickupAddress = _pickupAddress;
         value = _value;
         fees = _fees;
-        index = _index;
         weight = _weight;
+        pickup = _pickup;
+        destination = _destination;
+        step = RequestManager.steps.Created;
+        _tokenContract.approve(address(_parentContract), _value + _fees);
     }
 
-    receive() external payable {}
+    function setCourier(address _courierAddress) public {
+        courierAddress = _courierAddress;
+    }
+
+    function setStep(RequestManager.steps _step) public {
+        step = _step;
+    }
 }

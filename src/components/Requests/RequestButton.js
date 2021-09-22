@@ -57,7 +57,7 @@ const RequestButton = (props) => {
             type="button"
             color={buttonProps.color}
             onClick={viewHandler}
-            disabled={web3Ctx.userTokens < props.data.value ? true : false}
+            disabled={parseInt(web3Ctx.userTokens) < parseInt(props.data.value) ? true : false}
         >
             {buttonProps.text}
         </Button>

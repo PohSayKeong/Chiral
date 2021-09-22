@@ -21,11 +21,16 @@ module.exports = {
                 );
             },
             network_id: 4,
+            gas: 6800000 
         },
     },
     compilers: {
         solc: {
-            version: "0.8.4",
+            version: "0.8.7",
+            optimizer: {
+                enabled: true,
+                runs: 200
+              }
         },
     },
 };
