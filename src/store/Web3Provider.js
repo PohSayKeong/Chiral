@@ -33,7 +33,7 @@ const Web3Provider = (props) => {
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
-                `Failed to load web3, accounts, or contract. Check console for details.`
+                `Please restart the app and login with Portis/Metamask.`
             );
             console.error(error);
             web3Setup();

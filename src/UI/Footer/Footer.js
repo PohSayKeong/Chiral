@@ -39,7 +39,7 @@ export default function Footer(props) {
                         </ListItem>
                         <ListItem className={classes.inlineBlock}>
                             <a
-                                href="https://discord.gg/Vzc5fpkPav"
+                                href="https://discord.gg/yez8zAvvC2"
                                 className={classes.block}
                                 target="_blank"
                             >

@@ -12,6 +12,7 @@ const Value = (props) => {
                     fullWidth: true,
                 }}
                 inputProps={{
+                    type: "number",
                     onChange: props.valueChangeHandler,
                     onBlur: props.inputBlurHandler,
                     value: props.value,
@@ -23,7 +24,7 @@ const Value = (props) => {
             />
             {props.hasError ? (
                 <FormHelperText error>
-                    Value must be a valid number
+                    Value must be a valid integer
                 </FormHelperText>
             ) : (
                 <FormHelperText>

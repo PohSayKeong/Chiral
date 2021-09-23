@@ -12,6 +12,7 @@ const Fees = (props) => {
                     fullWidth: true,
                 }}
                 inputProps={{
+                    type: "number",
                     onChange: props.valueChangeHandler,
                     onBlur: props.inputBlurHandler,
                     value: props.value,
@@ -23,7 +24,7 @@ const Fees = (props) => {
             />
             {props.hasError ? (
                 <FormHelperText error>
-                    Fees must be a valid number
+                    Fees must be a valid integer
                 </FormHelperText>
             ) : (
                 <FormHelperText>Amount paid to courier</FormHelperText>

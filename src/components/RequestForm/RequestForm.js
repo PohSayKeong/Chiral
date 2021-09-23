@@ -18,45 +18,55 @@ import Submit from "./Components/Submit.js";
 import { uiActions } from "store/ui-slice.js";
 import UnitDetails from "./Components/UnitDetails.js";
 
+const notEmpty = (value) => {
+    return value.trim() !== "";
+};
+
+const isInt = (value) => {
+    return Number.isInteger(parseFloat(value));
+};
+
+const validateUnitDetails = (value) => {
+    if (value !== "") {
+        return isInt(value);
+    } else {
+        return true;
+    }
+};
+
 export default function RequestForm() {
     const formData = useSelector((state) => state.ui.form);
     const formQuery = useSelector((state) => state.ui.query);
     const viewData = useSelector((state) => state.request.viewData);
     const [clicked, setClicked] = useState(false);
-    const nameProps = useInput(
-        (value) => value.trim() !== "",
-        formData ? formData.name : ""
-    );
-    const pickupProps = useInput(
-        (value) => value.trim() !== "",
-        formData ? formData.pickup : ""
-    );
+    const nameProps = useInput(notEmpty, formData ? formData.name : "");
+    const pickupProps = useInput(notEmpty, formData ? formData.pickup : "");
     const destinationProps = useInput(
-        (value) => value.trim() !== "",
+        notEmpty,
         formData ? formData.destination : ""
     );
     const valueProps = useInput(
-        (value) => value.trim() !== "" && !isNaN(value),
+        (value) => notEmpty(value) && isInt(value),
         formData ? formData.value : ""
     );
     const feesProps = useInput(
-        (value) => value.trim() !== "" && !isNaN(value),
+        (value) => notEmpty(value) && isInt(value),
         formData ? formData.fees : ""
     );
     const pickupFloorProps = useInput(
-        () => {},
+        validateUnitDetails,
         formData ? formData.pickupFloor : ""
     );
     const pickupUnitProps = useInput(
-        () => {},
+        validateUnitDetails,
         formData ? formData.pickupUnit : ""
     );
     const destinationFloorProps = useInput(
-        () => {},
+        validateUnitDetails,
         formData ? formData.destinationFloor : ""
     );
     const destinationUnitProps = useInput(
-        () => {},
+        validateUnitDetails,
         formData ? formData.destinationUnit : ""
     );
     const [selectedWeight, setSelectedWeight] = useState(
@@ -76,6 +86,10 @@ export default function RequestForm() {
         destinationProps.isValid &&
         valueProps.isValid &&
         feesProps.isValid &&
+        pickupFloorProps.isValid &&
+        pickupUnitProps.isValid &&
+        destinationFloorProps.isValid &&
+        destinationUnitProps.isValid &&
         selectedWeight !== ""
     ) {
         formIsValid = true;
