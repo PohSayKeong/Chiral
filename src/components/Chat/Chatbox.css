@@ -2,16 +2,11 @@
     padding: 0;
 }
 
-.messaging.str-chat .str-chat__list .str-chat__reverse-infinite-scroll {
-    height: 62vh;
-    padding-top: 0;
-}
-
 .messages {
-    background-color: white;
     display: flex;
     flex-grow: inherit;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .messaging.str-chat .str-chat__header-livestream {
@@ -22,32 +17,11 @@
 
 .header {
     display: flex;
-    box-shadow: 0 7px 9px 0 var(--border), 0 1px 0 0 var(--border);
-}
-
-.str-chat__input-flat {
-    padding: 0;
-}
-
-.messaging.str-chat .str-chat__list {
-    padding: 0;
-}
-
-.str-chat__message-data,
-.str-chat__message-simple-data {
-    display: flex;
-    flex-direction: column;
 }
 
 .str-chat.messaging,
 .str-chat.commerce {
     height: 100%;
-    padding-right: 5px;
-    background-color: white;
-}
-
-.str-chat__date-separator {
-    padding-bottom: 0;
 }
 
 .container {
@@ -60,6 +34,7 @@
 .inputBar {
     display: flex;
     align-items: center;
+    background-color: white;
 }
 
 .str-chat__input-flat .str-chat__textarea > textarea {
