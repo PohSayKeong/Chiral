@@ -57,6 +57,19 @@
     height: 100%;
 }
 
+.inputBar {
+    display: flex;
+    align-items: center;
+}
+
+.str-chat__input-flat .str-chat__textarea > textarea {
+    padding-right: 0;
+}
+
+.str-chat__header-hamburger {
+    display: none;
+}
+
 @media screen and (max-width: 1023px) {
     .container {
         height: calc(100vh - 140px);

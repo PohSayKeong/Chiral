@@ -12,7 +12,8 @@ import {
 } from "stream-chat-react";
 import CloseChatButton from "./CloseChatButton";
 import { CustomMessageInput } from "./CustomMessageInput";
-
+import IconButton from "@material-ui/core/IconButton";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import "stream-chat-react/dist/css/index.css";
 import "./Chatbox.css";
 
@@ -49,6 +50,18 @@ const Chatbox = (props) => {
         });
     }
 
+    async function uploadImage(event) {
+        const response = await channel.sendImage(event.target.files[0]);
+        await channel.sendMessage({
+            attachments: [
+                {
+                    type: "image",
+                    image_url: response.file,
+                },
+            ],
+        });
+    }
+
     return (
         <div className="container">
             <Chat client={chatClient} theme="messaging light">
@@ -61,7 +74,21 @@ const Chatbox = (props) => {
                         <div className="messages">
                             <MessageList />
                         </div>
-                        <MessageInput focus={true} />
+                        <div className="inputBar">
+                            <MessageInput focus={true} />
+                            <label htmlFor="icon-button-file">
+                                <input
+                                    accept="image/*"
+                                    id="icon-button-file"
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    onChange={uploadImage}
+                                />
+                                <IconButton color="primary" component="span">
+                                    <PhotoCamera />
+                                </IconButton>
+                            </label>
+                        </div>
                     </Window>
                     <Thread />
                 </Channel>
