@@ -41,19 +41,15 @@ export default function HeaderLinksApp() {
                     Whitepaper
                 </Button>
             </ListItem>
-            <ListItem className={classes.listItem}>
-                {web3Ctx.userAccount ? (
+            {web3Ctx.userAccount && (
+                <ListItem className={classes.listItem}>
                     <Modal
                         btnClass={classes.navLink}
                         tokens={web3Ctx.userTokens}
                         confirmClick={web3Ctx.handleBuyTokens}
                     />
-                ) : (
-                    <Button color="transparent" className={classes.navLink}>
-                        Connecting
-                    </Button>
-                )}
-            </ListItem>
+                </ListItem>
+            )}
         </List>
     );
 }

@@ -1,15 +1,13 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import { useSelector } from "react-redux";
-import { useContext } from "react";
 import Web3Context from "store/Web3-context";
 import Delivery from "./Delivery";
 import { v4 as uuidv4 } from "uuid";
 import { Tabs, Tab } from "@material-ui/core";
-import Card from "UI/Card/Card";
-import CardBody from "UI/Card/CardBody";
 import { makeStyles } from "@material-ui/styles";
 import PastDelivery from "./PastDelivery";
 import CustomDropdown from "UI/CustomDropdown/CustomDropdown";
+import UserInfo from "./UserInfo";
 
 const useStyles = makeStyles({
     tabs: {
@@ -76,12 +74,7 @@ const DeliveriesContainer = () => {
                 </Tabs>
             </div>
             <div className={classes.deliveries}>
-                <Card>
-                    <CardBody>
-                        <h3>{web3Ctx.userTokens} Chiral Tokens</h3>
-                        <p>{web3Ctx.userAccount}</p>
-                    </CardBody>
-                </Card>
+                <UserInfo />
                 <div className={classes.filterBox}>
                     <CustomDropdown
                         buttonText={filter}

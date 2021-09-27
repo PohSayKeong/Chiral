@@ -45,6 +45,12 @@
     display: none;
 }
 
+.str-chat__message-simple--me .str-chat__message-data,
+.str-chat__message-simple-data {
+    white-space: normal;
+    width: 80vw;
+}
+
 @media screen and (max-width: 1023px) {
     .container {
         height: calc(100vh - 140px);
