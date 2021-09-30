@@ -9,8 +9,6 @@ const Web3Context = React.createContext({
     handleDelivered: () => {},
     handleReceived: () => {},
     handleCancelled: () => {},
-    handleGetRequests: () => {},
-    web3Setup: () => {},
 });
 
 export default Web3Context;

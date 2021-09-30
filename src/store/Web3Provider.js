@@ -32,9 +32,7 @@ const Web3Provider = (props) => {
             });
         } catch (error) {
             // Catch any errors for any of the above operations.
-            alert(
-                `Please restart the app and login with Portis/Metamask.`
-            );
+            alert(`Please restart the app and login with Portis/Metamask.`);
             console.error(error);
             web3Setup();
         }
@@ -82,29 +80,24 @@ const Web3Provider = (props) => {
     const handleSubmitRequest = async (data) => {
         await submitRequest(data, web3State, dispatch);
         await updateUserTokens();
-        await handleGetRequests();
     };
 
     const handleAcceptRequest = async (data) => {
         await acceptRequest(data, web3State, dispatch);
         await updateUserTokens();
-        await handleGetRequests();
     };
 
     const handleDelivered = async (data) => {
         await delivered(data, web3State, dispatch);
-        await handleGetRequests();
     };
 
     const handleReceived = async (data) => {
         await received(data, web3State, dispatch);
-        await handleGetRequests();
     };
 
     const handleCancelled = async (data) => {
         await cancelled(data, web3State, dispatch);
         await updateUserTokens();
-        await handleGetRequests();
     };
 
     const web3Context = {
@@ -116,9 +109,13 @@ const Web3Provider = (props) => {
         handleDelivered,
         handleReceived,
         handleCancelled,
-        handleGetRequests,
-        web3Setup,
     };
+
+    if (web3State.requestManagerInstance.events) {
+        web3State.requestManagerInstance.events
+            .allEvents()
+            .on("data", handleGetRequests);
+    }
 
     return (
         <Web3Context.Provider value={web3Context}>

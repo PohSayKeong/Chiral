@@ -74,7 +74,7 @@ const getRequests = async (
                 (request) =>
                     (request.pickupAddress === account ||
                         request.courierAddress === account) &&
-                    request.step !== "3"
+                    (request.step === "1" || request.step === "2")
             )
             .map(async (request) => {
                 const pickup = fetchAddress(
