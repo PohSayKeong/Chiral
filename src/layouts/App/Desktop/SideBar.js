@@ -13,9 +13,11 @@ const SideBar = () => {
                 {
                     tabButton: "New Request",
                     tabContent: (
-                        <Card>
-                            <RequestForm />
-                        </Card>
+                        <div style={{ overflow: "auto", height: "95%" }}>
+                            <Card>
+                                <RequestForm />
+                            </Card>
+                        </div>
                     ),
                 },
                 {

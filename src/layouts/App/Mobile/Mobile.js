@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import Map from "components/Map/MapContainer";
+import Explore from "./Explore/Explore";
 import GridContainer from "UI/Grid/GridContainer";
 import Header from "UI/Header/Header";
 import HeaderLinks from "UI/Custom/HeaderLinks/HeaderLinksApp";
@@ -37,9 +38,11 @@ const Mobile = () => {
                 brand="Chiral"
                 icon={<Icon />}
             />
-            <div className={classes.contentBlock}>
+            <div className={classes.contentBlock} id="content-block">
                 {chat && <Chatbox info={chat} />}
-                {tab !== "explore" && (
+                {tab === "explore" ? (
+                    <Explore setTab={setTab} />
+                ) : (
                     <div className={classes.content}>
                         {tab === "form" && <RequestForm />}
                         {tab === "requests" && <RequestsContainer />}

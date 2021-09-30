@@ -17,6 +17,10 @@ const uiSlice = createSlice({
                 state.form = action.payload;
             }
         },
+        resetForm(state, action) {
+            state.form = null;
+            state.query = null;
+        },
     },
 });
 

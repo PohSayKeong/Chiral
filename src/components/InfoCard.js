@@ -8,11 +8,17 @@ import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 // core components
 import InfoAreaRequests from "UI/Custom/InfoAreaRequests/InfoAreaRequests";
 
+const validUnitDetail = (detail) => {
+    if (detail !== "0" && detail !== "") {
+        return true;
+    } else return false;
+};
+
 const InfoCard = (props) => {
     const {
         pickup,
         destination,
-        _weight,
+        weight,
         pickup_floor,
         pickup_unit,
         destination_floor,
@@ -24,7 +30,7 @@ const InfoCard = (props) => {
     } = props.data;
 
     let icon;
-    switch (_weight) {
+    switch (weight) {
         case "0":
             icon = DirectionsWalkIcon;
             break;
@@ -38,13 +44,13 @@ const InfoCard = (props) => {
             icon = LocalShippingIcon;
     }
 
-    const pickupDetails = `${pickup_floor !== "0" ? `#${pickup_floor}` : ""}${
-        pickup_unit !== "0" ? `-${pickup_unit}` : ""
-    }`;
+    const pickupDetails = `${
+        validUnitDetail(pickup_floor) ? `#${pickup_floor}` : ""
+    }${validUnitDetail(pickup_unit) ? `-${pickup_unit}` : ""}`;
 
     const destinationDetails = `${
-        destination_floor !== "0" ? `#${destination_floor}` : ""
-    }${destination_unit !== "0" ? `-${destination_unit}` : ""}`;
+        validUnitDetail(destination_floor) ? `#${destination_floor}` : ""
+    }${validUnitDetail(destination_unit) ? `-${destination_unit}` : ""}`;
 
     let description = {
         pickup: pickup,

@@ -39,7 +39,7 @@ export default function RequestForm() {
     const formQuery = useSelector((state) => state.ui.query);
     const viewData = useSelector((state) => state.request.viewData);
     const [clicked, setClicked] = useState(false);
-    const nameProps = useInput(notEmpty, formData ? formData.name : "");
+    const nameProps = useInput(notEmpty, formData ? formData.identifier : "");
     const pickupProps = useInput(notEmpty, formData ? formData.pickup : "");
     const destinationProps = useInput(
         notEmpty,
@@ -55,19 +55,19 @@ export default function RequestForm() {
     );
     const pickupFloorProps = useInput(
         validateUnitDetails,
-        formData ? formData.pickupFloor : ""
+        formData ? formData.pickup_floor : ""
     );
     const pickupUnitProps = useInput(
         validateUnitDetails,
-        formData ? formData.pickupUnit : ""
+        formData ? formData.pickup_unit : ""
     );
     const destinationFloorProps = useInput(
         validateUnitDetails,
-        formData ? formData.destinationFloor : ""
+        formData ? formData.destination_floor : ""
     );
     const destinationUnitProps = useInput(
         validateUnitDetails,
-        formData ? formData.destinationUnit : ""
+        formData ? formData.destination_unit : ""
     );
     const [selectedWeight, setSelectedWeight] = useState(
         formData && formData.weight ? formData.weight : ""
@@ -96,22 +96,22 @@ export default function RequestForm() {
     }
 
     const data = {
-        name: nameProps.value,
+        identifier: nameProps.value,
         pickup: pickupProps.value,
         destination: destinationProps.value,
         value: valueProps.value,
         fees: feesProps.value,
-        pickupFloor: pickupFloorProps.value,
-        pickupUnit: pickupUnitProps.value,
-        destinationFloor: destinationFloorProps.value,
-        destinationUnit: destinationUnitProps.value,
+        pickup_floor: pickupFloorProps.value,
+        pickup_unit: pickupUnitProps.value,
+        destination_floor: destinationFloorProps.value,
+        destination_unit: destinationUnitProps.value,
         estimatedFees: estimatedFees,
         weight: selectedWeight,
     };
     const dataRef = useRef(data);
     if (
         formQuery &&
-        viewData === formQuery &&
+        viewData.query === formQuery &&
         data.pickup === formData.pickup &&
         data.destination === formData.destination &&
         clicked === false
@@ -130,7 +130,14 @@ export default function RequestForm() {
         };
         const distance = await fetchRequestDistance(query);
         setEstimatedFees(calculateFees(distance));
-        dispatch(requestActions.setViewData(query));
+        dispatch(
+            requestActions.setViewData({
+                ...dataRef.current,
+                requestDistance: distance,
+                ...query,
+                query,
+            })
+        );
         dispatch(uiActions.saveForm({ data, query }));
         if (clicked) {
             const processCoord = (coord) =>
@@ -161,18 +168,8 @@ export default function RequestForm() {
     };
 
     const clearForm = () => {
-        nameProps.reset();
-        pickupProps.reset();
-        destinationProps.reset();
-        valueProps.reset();
-        feesProps.reset();
-        pickupFloorProps.reset();
-        pickupUnitProps.reset();
-        destinationUnitProps.reset();
-        destinationFloorProps.reset();
-        setSelectedWeight("");
-        setClicked(false);
-        setEstimatedFees(0);
+        dispatch(uiActions.resetForm());
+        dispatch(requestActions.setViewData(null));
     };
 
     useEffect(() => {

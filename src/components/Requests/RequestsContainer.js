@@ -8,6 +8,7 @@ import {
     distanceToDestination,
     distanceToRoute,
 } from "./sorting";
+import Card from "../../UI/Card/Card";
 
 const RequestsContainer = () => {
     const availableRequests = useSelector(
@@ -67,7 +68,9 @@ const RequestsContainer = () => {
         >
             <RequestsSearchBox />
             {sortedItems.map((item) => (
-                <Request data={item} key={uuidv4()} />
+                <Card key={uuidv4()}>
+                    <Request data={item} />
+                </Card>
             ))}
         </div>
     );

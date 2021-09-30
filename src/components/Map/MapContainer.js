@@ -52,7 +52,6 @@ function Map() {
                 lng: data.coords.longitude,
             })
         );
-        zoomToFitView();
     };
 
     const zoomToFitView = useCallback(async () => {
