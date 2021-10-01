@@ -119,6 +119,7 @@ const RequestsSearchBox = () => {
                             type="button"
                             color="primary"
                             onClick={handleClear}
+                            fullWidth
                         >
                             Clear
                         </Button>
@@ -127,6 +128,7 @@ const RequestsSearchBox = () => {
                             type="button"
                             color="primary"
                             onClick={handleFilter}
+                            fullWidth
                         >
                             Filter
                         </Button>

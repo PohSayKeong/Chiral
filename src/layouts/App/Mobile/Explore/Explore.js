@@ -25,7 +25,7 @@ const Explore = (props) => {
                 <SwipeableEdgeDrawer>
                     <InfoCard data={view} details />
                     <Button color="primary" onClick={handleFormConfirm}>
-                        Looks Good!
+                        Enter Fees
                     </Button>
                 </SwipeableEdgeDrawer>
             );

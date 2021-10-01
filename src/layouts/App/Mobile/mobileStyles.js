@@ -20,7 +20,6 @@ const mobileStyles = {
         width: "100%",
     },
     content: {
-        paddingTop: "1rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

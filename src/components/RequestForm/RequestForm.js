@@ -85,12 +85,14 @@ export default function RequestForm() {
         pickupProps.isValid &&
         destinationProps.isValid &&
         valueProps.isValid &&
-        feesProps.isValid &&
         pickupFloorProps.isValid &&
         pickupUnitProps.isValid &&
         destinationFloorProps.isValid &&
         destinationUnitProps.isValid &&
-        selectedWeight !== ""
+        selectedWeight !== "" &&
+        clicked
+            ? feesProps.isValid
+            : true
     ) {
         formIsValid = true;
     }
@@ -239,9 +241,11 @@ export default function RequestForm() {
                 <GridItem xs={10} md={8}>
                     <Value {...valueProps} />
                 </GridItem>
-                <GridItem xs={10} md={8}>
-                    <Fees {...feesProps} estimatedFees={estimatedFees} />
-                </GridItem>
+                {clicked && (
+                    <GridItem xs={10} md={8}>
+                        <Fees {...feesProps} estimatedFees={estimatedFees} />
+                    </GridItem>
+                )}
                 <GridItem xs={10} md={8} style={{ textAlign: "center" }}>
                     <Submit
                         handleSubmit={handleSubmit}

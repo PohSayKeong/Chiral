@@ -7,7 +7,7 @@ const Fees = (props) => {
     return (
         <Fragment>
             <CustomInput
-                labelText="Fees"
+                labelText={`Suggested Fees: ${props.estimatedFees} Tokens`}
                 formControlProps={{
                     fullWidth: true,
                 }}
@@ -29,12 +29,6 @@ const Fees = (props) => {
             ) : (
                 <FormHelperText>Amount paid to courier</FormHelperText>
             )}
-            {props.estimatedFees !== 0 && (
-                <FormHelperText>
-                    Suggested Fees: {props.estimatedFees} tokens
-                </FormHelperText>
-            )}
-            <FormHelperText>1 Token → 1SGD</FormHelperText>
         </Fragment>
     );
 };
