@@ -22,7 +22,7 @@ export default function SectionCarousel() {
     };
     return (
         <div className="section">
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
                 <GridItem xs={12} sm={12} md={8}>
                     <Carousel {...settings}>
                         <img

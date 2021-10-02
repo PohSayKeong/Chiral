@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // core components
 import GridContainer from "../../UI/Grid/GridContainer.js";
@@ -97,19 +97,34 @@ export default function RequestForm() {
         formIsValid = true;
     }
 
-    const data = {
-        identifier: nameProps.value,
-        pickup: pickupProps.value,
-        destination: destinationProps.value,
-        value: valueProps.value,
-        fees: feesProps.value,
-        pickup_floor: pickupFloorProps.value,
-        pickup_unit: pickupUnitProps.value,
-        destination_floor: destinationFloorProps.value,
-        destination_unit: destinationUnitProps.value,
-        estimatedFees: estimatedFees,
-        weight: selectedWeight,
-    };
+    const data = useMemo(
+        () => ({
+            identifier: nameProps.value,
+            pickup: pickupProps.value,
+            destination: destinationProps.value,
+            value: valueProps.value,
+            fees: feesProps.value,
+            pickup_floor: pickupFloorProps.value,
+            pickup_unit: pickupUnitProps.value,
+            destination_floor: destinationFloorProps.value,
+            destination_unit: destinationUnitProps.value,
+            estimatedFees: estimatedFees,
+            weight: selectedWeight,
+        }),
+        [
+            nameProps,
+            pickupProps,
+            destinationProps,
+            valueProps,
+            feesProps,
+            pickupFloorProps,
+            pickupUnitProps,
+            destinationFloorProps,
+            destinationUnitProps,
+            estimatedFees,
+            selectedWeight,
+        ]
+    );
     const dataRef = useRef(data);
     if (
         formQuery &&

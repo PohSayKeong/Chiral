@@ -15,7 +15,7 @@ const Delivery = (props) => {
         <Card>
             <GridContainer alignItems="center" direction="column">
                 <InfoCard data={props.data} details={true} />
-                <GridContainer justify="center">
+                <GridContainer justifyContent="center">
                     <DeliveriesButton data={props.data} />
                     {(!chat || chat.index !== props.data.index) && (
                         <OpenChatButton data={props.data} />

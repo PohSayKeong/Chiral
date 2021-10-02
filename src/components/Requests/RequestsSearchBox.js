@@ -87,7 +87,7 @@ const RequestsSearchBox = () => {
         <Card>
             <GridContainer
                 alignItems="center"
-                justify="space-evenly"
+                justifyContent="space-evenly"
                 spacing={2}
             >
                 <GridItem xs={7} style={{ paddingBottom: "2rem" }}>

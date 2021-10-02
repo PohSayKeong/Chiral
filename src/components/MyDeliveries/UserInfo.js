@@ -20,7 +20,7 @@ const UserInfo = () => {
                     <GridItem xs={6}>
                         <h3>{web3Ctx.userTokens} Chiral Tokens</h3>
                     </GridItem>
-                    <GridItem xs={6} justify="flex-end" container>
+                    <GridItem xs={6} justifyContent="flex-end" container>
                         <Button
                             onClick={handleButtonClick}
                             color="primary"

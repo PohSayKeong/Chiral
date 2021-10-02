@@ -13,7 +13,7 @@ const Request = (props) => {
     return (
         <GridContainer alignItems="center" direction="column">
             <InfoCard data={props.data} details={false} />
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
                 <RequestButton data={props.data} />
                 {(!chat || chat.index !== props.data.index) && (
                     <OpenChatButton data={props.data} />

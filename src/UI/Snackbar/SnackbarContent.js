@@ -11,15 +11,19 @@ import Close from "@material-ui/icons/Close";
 // core components
 
 import styles from "../../assets/jss/material-kit-react/components/snackbarContentStyle";
+import { useDispatch } from "react-redux";
+import { uiActions } from "store/ui-slice.js";
 
 const useStyles = makeStyles(styles);
 
 export default function SnackbarContent(props) {
     const { message, color, close, icon } = props;
     const classes = useStyles();
+    const dispatch = useDispatch();
     var action = [];
     const closeAlert = () => {
         setAlert(null);
+        dispatch(uiActions.showNotification({ status: null }));
     };
     if (close !== undefined) {
         action = [
