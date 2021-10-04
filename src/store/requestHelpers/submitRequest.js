@@ -13,7 +13,7 @@ const handleSubmitRequest = async (data, web3State, dispatch) => {
                 data.weight
             )
             .send({
-                from: web3State.accounts[0],
+                from: web3State.account,
                 gas: 1000000,
             });
         dispatch(uiActions.showNotification({ status: "success" }));

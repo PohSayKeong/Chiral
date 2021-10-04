@@ -13,7 +13,7 @@ import getRequests from "./requestHelpers/getRequests";
 const Web3Provider = (props) => {
     const [web3State, setWeb3State] = useState({
         web3: {},
-        accounts: [],
+        account: "",
         tokenInstance: {},
         requestManagerInstance: {},
         userTokens: 0,
@@ -24,12 +24,8 @@ const Web3Provider = (props) => {
     const web3Setup = useCallback(async () => {
         try {
             const web3Values = await initWeb3Provider();
-            setWeb3State((prevState) => {
-                return {
-                    ...prevState,
-                    ...web3Values,
-                };
-            });
+            web3Values.web3.currentProvider.on("accountsChanged", web3Setup);
+            setWeb3State(web3Values);
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(`Please restart the app and login with Portis/Metamask.`);
@@ -38,44 +34,46 @@ const Web3Provider = (props) => {
         }
     }, []);
 
+    // Run web3Setup when app launches
     useEffect(() => {
         web3Setup();
     }, [web3Setup]);
 
     const updateUserTokens = useCallback(async () => {
         const newUserTokens = await web3State.tokenInstance.methods
-            .balanceOf(web3State.accounts[0])
+            .balanceOf(web3State.account)
             .call();
         setWeb3State((prevState) => {
             return { ...prevState, userTokens: newUserTokens };
         });
-    }, [web3State.accounts, web3State.tokenInstance.methods]);
-
-    const handleBuyTokens = async (amount) => {
-        await buyTokens(amount, web3State, dispatch);
-        await updateUserTokens();
-    };
+    }, [web3State.account, web3State.tokenInstance.methods]);
 
     const handleGetRequests = useCallback(async () => {
         await getRequests(
             web3State.requestManagerInstance,
-            web3State.accounts[0],
+            web3State.account,
             userCoord,
             dispatch
         );
     }, [
         web3State.requestManagerInstance,
-        web3State.accounts,
+        web3State.account,
         userCoord,
         dispatch,
     ]);
 
+    // get user tokens and request when app launches
     useEffect(() => {
-        if (web3State.accounts[0]) {
+        if (web3State.account) {
             updateUserTokens();
             handleGetRequests();
         }
-    }, [web3State.accounts, updateUserTokens, handleGetRequests]);
+    }, [web3State.account, updateUserTokens, handleGetRequests]);
+
+    const handleBuyTokens = async (amount) => {
+        await buyTokens(amount, web3State, dispatch);
+        await updateUserTokens();
+    };
 
     const handleSubmitRequest = async (data) => {
         await submitRequest(data, web3State, dispatch);
@@ -101,7 +99,7 @@ const Web3Provider = (props) => {
     };
 
     const web3Context = {
-        userAccount: web3State.accounts[0],
+        userAccount: web3State.account,
         userTokens: web3State.userTokens,
         handleBuyTokens,
         handleSubmitRequest,

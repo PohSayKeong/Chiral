@@ -31,11 +31,11 @@ export default async function initWeb3Provider() {
         loggerUrl: "https://gsn-logger.netlify.app",
     };
 
-    const relayProvider = await RelayProvider.newProvider({
-        provider: provider,
+    const gsnProvider = await RelayProvider.newProvider({
+        provider,
         config,
     }).init();
-    const GSNWeb3 = new Web3(relayProvider);
+    const GSNWeb3 = new Web3(gsnProvider);
 
     // Use web3 to get the user's accounts.
     const newAccounts = await GSNWeb3.eth.getAccounts();
@@ -55,7 +55,7 @@ export default async function initWeb3Provider() {
 
     return {
         web3: GSNWeb3,
-        accounts: newAccounts,
+        account: newAccounts[0],
         tokenInstance: newTokenInstance,
         requestManagerInstance: newRequestManagerInstance,
     };

@@ -7,7 +7,7 @@ const handleAcceptRequest = async (data, web3State, dispatch) => {
         await web3State.requestManagerInstance.methods
             .triggerAccepted(data.index)
             .send({
-                from: web3State.accounts[0],
+                from: web3State.account,
                 gas: 150000,
             });
         dispatch(uiActions.showNotification({ status: "success" }));

@@ -7,7 +7,7 @@ const delivered = async (data, web3State, dispatch) => {
         await web3State.requestManagerInstance.methods
             .triggerDelivery(data.index)
             .send({
-                from: web3State.accounts[0],
+                from: web3State.account,
                 gas: 80000,
             });
         dispatch(uiActions.showNotification({ status: "success" }));

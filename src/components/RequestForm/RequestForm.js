@@ -185,6 +185,18 @@ export default function RequestForm() {
     };
 
     const clearForm = () => {
+        nameProps.reset();
+        pickupProps.reset();
+        destinationProps.reset();
+        valueProps.reset();
+        feesProps.reset();
+        pickupFloorProps.reset();
+        pickupUnitProps.reset();
+        destinationUnitProps.reset();
+        destinationFloorProps.reset();
+        setSelectedWeight("");
+        setClicked(false);
+        setEstimatedFees(0);
         dispatch(uiActions.resetForm());
         dispatch(requestActions.setViewData(null));
     };
