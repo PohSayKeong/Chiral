@@ -137,39 +137,21 @@ export default function RequestForm() {
     }
 
     const handleSubmit = async () => {
-        const pickupData = await fetchLatLng(pickupProps.value);
-        const destinationData = await fetchLatLng(destinationProps.value);
-        let query = {
-            pickup_lat: pickupData.features[0].center[1],
-            pickup_lng: pickupData.features[0].center[0],
-            destination_lat: destinationData.features[0].center[1],
-            destination_lng: destinationData.features[0].center[0],
-        };
-        const distance = await fetchRequestDistance(query);
-        setEstimatedFees(calculateFees(distance));
-        dispatch(
-            requestActions.setViewData({
-                ...dataRef.current,
-                requestDistance: distance,
-                ...query,
-                query,
-            })
-        );
-        dispatch(uiActions.saveForm({ data, query }));
+        dispatch(uiActions.saveForm({ data, formQuery }));
         if (clicked) {
             const processCoord = (coord) =>
                 Math.trunc(coord * Math.pow(10, 15)).toString();
             let output = {
                 name: nameProps.value,
                 pickup: [
-                    processCoord(query.pickup_lat),
-                    processCoord(query.pickup_lng),
+                    processCoord(formQuery.pickup_lat),
+                    processCoord(formQuery.pickup_lng),
                     pickupFloorProps.value ? pickupFloorProps.value : 0,
                     pickupUnitProps.value ? pickupUnitProps.value : 0,
                 ],
                 destination: [
-                    processCoord(query.destination_lat),
-                    processCoord(query.destination_lng),
+                    processCoord(formQuery.destination_lat),
+                    processCoord(formQuery.destination_lng),
                     destinationFloorProps.value
                         ? destinationFloorProps.value
                         : 0,
@@ -181,6 +163,25 @@ export default function RequestForm() {
             };
             web3Ctx.handleSubmitRequest(output);
             clearForm();
+        } else {
+            const pickupData = await fetchLatLng(pickupProps.value);
+            const destinationData = await fetchLatLng(destinationProps.value);
+            let query = {
+                pickup_lat: pickupData.features[0].center[1],
+                pickup_lng: pickupData.features[0].center[0],
+                destination_lat: destinationData.features[0].center[1],
+                destination_lng: destinationData.features[0].center[0],
+            };
+            const distance = await fetchRequestDistance(query);
+            setEstimatedFees(calculateFees(distance));
+            dispatch(
+                requestActions.setViewData({
+                    ...dataRef.current,
+                    requestDistance: distance,
+                    ...query,
+                    query,
+                })
+            );
         }
     };
 

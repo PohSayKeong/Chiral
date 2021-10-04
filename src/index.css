@@ -13,6 +13,6 @@ code {
         monospace;
 }
 
-a span {
-    color: #fff;
+a {
+    color: inherit;
 }

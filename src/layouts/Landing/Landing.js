@@ -22,6 +22,7 @@ import ProductSection from "./Sections/ProductSection.js";
 import Carousel from "UI/Carousel/Carousel";
 
 import { ReactComponent as Icon } from "assets/images/chiralIcon.svg";
+import { NavLink } from "react-router-dom";
 
 const dashboardRoutes = [];
 
@@ -73,15 +74,15 @@ export default function LandingPage(props) {
                 <div className={classes.container}>
                     <ProductSection />
                     <Carousel />
-                    <Button
-                        color="primary"
-                        size="lg"
-                        href="/app"
-                        rel="noopener noreferrer"
-                        className={classes.appButton}
-                    >
-                        try chiral today!
-                    </Button>
+                    <NavLink to="/app" style={{ textDecoration: "none" }}>
+                        <Button
+                            color="primary"
+                            size="lg"
+                            className={classes.appButton}
+                        >
+                            try chiral today!
+                        </Button>
+                    </NavLink>
                 </div>
             </div>
             <Footer />
