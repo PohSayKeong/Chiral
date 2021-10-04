@@ -137,7 +137,6 @@ export default function RequestForm() {
     }
 
     const handleSubmit = async () => {
-        dispatch(uiActions.saveForm({ data, formQuery }));
         if (clicked) {
             const processCoord = (coord) =>
                 Math.trunc(coord * Math.pow(10, 15)).toString();
@@ -174,6 +173,7 @@ export default function RequestForm() {
             };
             const distance = await fetchRequestDistance(query);
             setEstimatedFees(calculateFees(distance));
+            dispatch(uiActions.saveForm({ data, query }));
             dispatch(
                 requestActions.setViewData({
                     ...dataRef.current,

@@ -8,7 +8,10 @@ const buyTokens = async (amount, web3State, dispatch) => {
             gas: 80000,
         });
         await web3State.tokenInstance.methods
-            .approve(web3State.requestManagerInstance._address, amount)
+            .approve(
+                web3State.requestManagerInstance._address,
+                parseInt(web3State.userTokens) + parseInt(amount)
+            )
             .send({
                 from: web3State.account,
                 gas: 50000,
