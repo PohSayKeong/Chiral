@@ -64,8 +64,7 @@ const RequestsContainer = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                paddingTop: "1rem",
-                paddingRight: "20px",
+                paddingTop: "1rem 20px",
             }}
         >
             <RequestsSearchBox />

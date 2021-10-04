@@ -1,10 +1,11 @@
-import React, { useContext, Fragment } from "react";
+import React, { useContext, lazy, Suspense } from "react";
 import { useMediaQuery } from "react-responsive";
-import Desktop from "layouts/App/Desktop/Desktop";
-import Mobile from "layouts/App/Mobile/Mobile";
 import Web3Context from "store/Web3-context";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+
+const Desktop = lazy(() => import("layouts/App/Desktop/Desktop"));
+const Mobile = lazy(() => import("layouts/App/Mobile/Mobile"));
 
 const RequestApp = () => {
     const isDesktopOrLaptop = useMediaQuery({
@@ -12,7 +13,7 @@ const RequestApp = () => {
     });
     const web3Ctx = useContext(Web3Context);
     return (
-        <Fragment>
+        <Suspense fallback={<div></div>}>
             {!web3Ctx.userAccount && (
                 <Backdrop style={{ zIndex: "1" }} open={true}>
                     <CircularProgress />
@@ -20,7 +21,7 @@ const RequestApp = () => {
             )}
             {isDesktopOrLaptop && <Desktop />}
             {!isDesktopOrLaptop && <Mobile />}
-        </Fragment>
+        </Suspense>
     );
 };
 

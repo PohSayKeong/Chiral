@@ -4,10 +4,11 @@ Chiral is a peer-to-peer courier service built on the Ethereum blockchain. Chira
 
 ## Running the project locally
 
-- Clone the repository
-- `npm install`
-- `npm start`
+-   Clone the repository
+-   `npm install`
+-   `npm start`
 
-## Live version
+## Environment Variables
 
-A live version of the main branch can be found at [https://chiral.herokuapp.com/](https://chiral.herokuapp.com/)
+-   REACT_APP_MAPBOX_ACCESS_TOKEN
+-   REACT_APP_GETSTREAM_KEY
