@@ -1,16 +1,16 @@
 {
   "name": "chiral",
   "version": "0.1.0",
-  "engines" : { 
-    "node" : "14.x", 
-    "npm":"7.x" 
+  "engines": {
+    "node": "14.x",
+    "npm": "7.x"
   },
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@opengsn/provider": "^2.2.2",
-    "@portis/web3": "^4.0.5",
+    "@portis/web3": "^2.0.0-beta.59",
     "@reduxjs/toolkit": "^1.6.1",
     "classnames": "^2.3.1",
     "d3-ease": "^3.0.1",
