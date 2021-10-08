@@ -15,6 +15,7 @@ import RouteMarkers from "./RouteMarkers";
 import ParcelMarkers from "./ParcelMarkers";
 import { v4 as uuidv4 } from "uuid";
 import { userActions } from "store/user-slice";
+import "./MapContainer.css";
 
 function Map() {
     const [route, setRoute] = useState();

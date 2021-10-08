@@ -6,9 +6,9 @@ import Carousel from "react-slick";
 import GridContainer from "UI/Grid/GridContainer.js";
 import GridItem from "UI/Grid/GridItem.js";
 
-import image1 from "assets/images/carousel1.gif";
-import image2 from "assets/images/carousel2.gif";
-import image3 from "assets/images/carousel3.gif";
+import image1 from "assets/images/carousel1.mp4";
+import image2 from "assets/images/carousel2.mp4";
+import image3 from "assets/images/carousel3.mp4";
 
 import "assets/jss/carousel.scss";
 
@@ -25,21 +25,33 @@ export default function SectionCarousel() {
             <GridContainer justifyContent="center">
                 <GridItem xs={12} sm={12} md={8}>
                     <Carousel {...settings}>
-                        <img
-                            src={image1}
-                            alt="First slide"
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            alt="Uses of Chiral Tokens"
                             className="slick-image"
-                        />
-                        <img
-                            src={image2}
-                            alt="Second slide"
+                        >
+                            <source src={image1} type="video/mp4" />
+                        </video>
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            alt="Pay for delivery"
                             className="slick-image"
-                        />
-                        <img
-                            src={image3}
-                            alt="Third slide"
+                        >
+                            <source src={image2} type="video/mp4" />
+                        </video>
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            alt="Use as collateral"
                             className="slick-image"
-                        />
+                        >
+                            <source src={image3} type="video/mp4" />
+                        </video>
                     </Carousel>
                 </GridItem>
             </GridContainer>

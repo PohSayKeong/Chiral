@@ -33,6 +33,7 @@ export default function Footer(props) {
                                 href="https://www.instagram.com/chiralcouriers/"
                                 className={classes.block}
                                 target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 Instagram
                             </a>
@@ -42,6 +43,7 @@ export default function Footer(props) {
                                 href="https://discord.gg/yez8zAvvC2"
                                 className={classes.block}
                                 target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 Contact us
                             </a>

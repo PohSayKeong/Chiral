@@ -10,8 +10,7 @@ const RouteLine = (props) => {
                     type: "line",
                     paint: {
                         "line-color": "#A032CD",
-                        "line-width": 3,
-                        "line-opacity": 0.75,
+                        "line-width": 5,
                     },
                 }}
             />

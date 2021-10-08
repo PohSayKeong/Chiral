@@ -1,11 +1,17 @@
 {
   "short_name": "Chiral",
-  "name": "Chiral Couriers",
+  "name": "Chiral",
   "icons": [
     {
       "src": "chiralIcon192.png",
       "type": "image/png",
       "sizes": "192x192"
+    },
+    {
+      "src": "maskable_icon.png",
+      "type": "image/png",
+      "sizes": "384x384",
+      "purpose": "any maskable"
     },
     {
       "src": "chiralIcon512.png",

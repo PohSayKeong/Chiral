@@ -14,7 +14,7 @@ import GridItem from "UI/Grid/GridItem.js";
 import Button from "UI/CustomButtons/Button.js";
 import HeaderLinks from "UI/Custom/HeaderLinks/HeaderLinksLanding.js";
 import Parallax from "UI/Parallax/Parallax.js";
-import parallaxImg from "assets/images/landing-bg.jpg";
+import parallaxImg from "assets/images/landing-bg.webp";
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
 // Sections for this page
@@ -48,7 +48,7 @@ export default function LandingPage(props) {
             />
             <Parallax filter image={parallaxImg}>
                 <GridContainer className={classes.container}>
-                    <GridItem xs={12} sm={12} md={6} className={classes.intro}>
+                    <GridItem xs={12} md={8} className={classes.intro}>
                         <h1 className={classes.title}>
                             The Future of Deliveries
                         </h1>

@@ -18,8 +18,6 @@ const useStyles = makeStyles({
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
-        padding: "1rem",
-        height: "calc(100% - 48px - 1rem)",
     },
     filterBox: {
         display: "flex",
