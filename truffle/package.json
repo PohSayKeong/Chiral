@@ -1,5 +1,5 @@
 {
-  "name": "chiral",
+  "name": "chiralcontracts",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",
@@ -9,7 +9,7 @@
   "dependencies": {
     "@opengsn/contracts": "2.2.2",
     "@openzeppelin/contracts": "^4.3.2",
-    "@truffle/hdwallet-provider": "^1.5.0",
+    "@truffle/hdwallet-provider": "^1.5.1",
     "dotenv": "^10.0.0",
     "pify": "^5.0.0"
   },

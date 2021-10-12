@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.7;
+pragma solidity 0.8.9;
 
 import "./Request.sol";
 import "./ChiralToken.sol";
@@ -45,7 +45,7 @@ contract RequestManager is ERC2771Context {
     }
 
     event Created(
-        uint32 index,
+        uint32 indexed index,
         string identifier,
         address indexed pickupAddress,
         uint32 value,
@@ -53,18 +53,22 @@ contract RequestManager is ERC2771Context {
         uint8 weight,
         S_pickup pickup,
         S_destination destination,
-        uint8 indexed step
+        uint8 step
     );
 
     event Accepted(
-        uint32 index,
+        uint32 indexed index,
         address indexed courierAddress,
-        uint8 indexed step
+        uint8 step
     );
 
-    event Verdict(uint32 index, address winner);
+    event Verdict(
+        uint32 indexed index,
+        address indexed winner,
+        address indexed loser
+    );
 
-    event Step(uint32 index, uint8 indexed step);
+    event Step(uint32 indexed index, uint8 step);
 
     function createRequest(
         string memory identifier,
@@ -187,7 +191,11 @@ contract RequestManager is ERC2771Context {
             _msgSender(),
             requests[_index].fees()
         );
-        emit Verdict(_index, requests[_index].pickupAddress());
+        emit Verdict(
+            _index,
+            requests[_index].pickupAddress(),
+            requests[_index].courierAddress()
+        );
     }
 
     function awardToCourier(uint32 _index) public {
@@ -210,6 +218,10 @@ contract RequestManager is ERC2771Context {
             _msgSender(),
             requests[_index].fees()
         );
-        emit Verdict(_index, requests[_index].courierAddress());
+        emit Verdict(
+            _index,
+            requests[_index].courierAddress(),
+            requests[_index].pickupAddress()
+        );
     }
 }

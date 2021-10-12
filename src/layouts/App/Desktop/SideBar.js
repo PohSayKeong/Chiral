@@ -5,6 +5,17 @@ import RequestsContainer from "components/Requests/RequestsContainer";
 import DeliveriesContainer from "components/MyDeliveries/DeliveriesContainer";
 import Card from "UI/Card/Card";
 
+const ContentWrapper = (props) => (
+    <div
+        style={{
+            overflow: "auto",
+            height: "95%",
+            padding: "1rem",
+        }}
+    >
+        {props.children}
+    </div>
+);
 const SideBar = () => {
     return (
         <NavPills
@@ -13,17 +24,11 @@ const SideBar = () => {
                 {
                     tabButton: "New Request",
                     tabContent: (
-                        <div
-                            style={{
-                                overflow: "auto",
-                                height: "95%",
-                                padding: "1rem",
-                            }}
-                        >
+                        <ContentWrapper>
                             <Card>
                                 <RequestForm />
                             </Card>
-                        </div>
+                        </ContentWrapper>
                     ),
                 },
                 {
@@ -32,7 +37,11 @@ const SideBar = () => {
                 },
                 {
                     tabButton: "My Deliveries",
-                    tabContent: <DeliveriesContainer />,
+                    tabContent: (
+                        <ContentWrapper>
+                            <DeliveriesContainer />
+                        </ContentWrapper>
+                    ),
                 },
             ]}
             horizontal={{}}

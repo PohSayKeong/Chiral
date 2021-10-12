@@ -16,7 +16,7 @@ module.exports = {
             provider: function () {
                 return new HDWalletProvider(
                     process.env.MNEMONIC,
-                    "https://rinkeby.infura.io/v3/7576cd7905134616b987c3e370c7b2f2",
+                    `https://rinkeby.infura.io/v3/${process.env.INFURA_KEY}`,
                     0
                 );
             },
@@ -26,7 +26,7 @@ module.exports = {
     },
     compilers: {
         solc: {
-            version: "0.8.7",
+            version: "0.8.9",
             optimizer: {
                 enabled: true,
                 runs: 200
