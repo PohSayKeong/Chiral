@@ -128,6 +128,7 @@ export default function RequestForm() {
     const dataRef = useRef(data);
     if (
         formQuery &&
+        viewData &&
         viewData.query === formQuery &&
         data.pickup === formData.pickup &&
         data.destination === formData.destination &&
