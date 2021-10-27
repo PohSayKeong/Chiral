@@ -8,8 +8,8 @@ contract Request {
     string public identifier;
     address public pickupAddress;
     address public courierAddress;
-    uint32 public value;
-    uint32 public fees;
+    uint256 public value;
+    uint256 public fees;
     RequestManager.weights public weight;
     RequestManager.S_pickup public pickup;
     RequestManager.S_destination public destination;
@@ -18,8 +18,8 @@ contract Request {
     constructor(
         string memory _identifier,
         address _pickupAddress,
-        uint32 _value,
-        uint32 _fees,
+        uint256 _value,
+        uint256 _fees,
         RequestManager.weights _weight,
         RequestManager.S_pickup memory _pickup,
         RequestManager.S_destination memory _destination,

@@ -48,8 +48,8 @@ contract RequestManager is ERC2771Context {
         uint32 indexed index,
         string identifier,
         address indexed pickupAddress,
-        uint32 value,
-        uint32 fees,
+        uint256 value,
+        uint256 fees,
         uint8 weight,
         S_pickup pickup,
         S_destination destination,
@@ -74,16 +74,16 @@ contract RequestManager is ERC2771Context {
         string memory identifier,
         S_pickup memory pickup,
         S_destination memory destination,
-        uint32 value,
-        uint32 fees,
+        uint256 value,
+        uint256 fees,
         weights weight
     ) public {
-        require(tokenContract.balanceOf(_msgSender()) > fees);
+        require(tokenContract.balanceOf(_msgSender()) > fees * 10**18);
         Request request = new Request(
             identifier,
             _msgSender(),
-            value,
-            fees,
+            value * 10**18,
+            fees * 10**18,
             weight,
             pickup,
             destination,
@@ -91,7 +91,11 @@ contract RequestManager is ERC2771Context {
             this
         );
         requests[nextIndex] = request;
-        tokenContract.transferFrom(_msgSender(), address(request), fees);
+        tokenContract.transferFrom(
+            _msgSender(),
+            address(request),
+            fees * 10**18
+        );
         emit Created(
             nextIndex,
             identifier,

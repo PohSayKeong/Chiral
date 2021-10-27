@@ -7,13 +7,17 @@ import Web3 from "web3";
 
 export default async function initWeb3Provider() {
     const web3Modal = new Web3Modal({
-        network: "rinkeby", // optional
         cacheProvider: true, // optional
         providerOptions: {
             portis: {
                 package: Portis, // required
                 options: {
                     id: "c10b0c49-7c84-4360-a6c4-1574cad79d9d", // required
+                    network: {
+                        nodeUrl:
+                            "https://matic-testnet-archive-rpc.bwarelabs.com/",
+                        chainId: 80001,
+                    },
                 },
             },
         },
@@ -22,13 +26,10 @@ export default async function initWeb3Provider() {
     const provider = await web3Modal.connect();
 
     const config = {
-        paymasterAddress: "0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016",
+        paymasterAddress: "0xcA94aBEdcC18A10521aB7273B3F3D5ED28Cf7B8A",
         methodSuffix: "_v3",
         jsonStringifyRequest: true,
-        //log everything (0=debug, 5=error)
-        logLevel: 0,
-        // send all log to central log server, for possible troubleshooting
-        loggerUrl: "https://gsn-logger.netlify.app",
+        relayRegistrationLookupBlocks: 1000000,
     };
 
     const gsnProvider = await RelayProvider.newProvider({

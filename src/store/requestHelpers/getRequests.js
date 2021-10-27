@@ -6,6 +6,7 @@ const getRequests = async (
     requestManagerInstance,
     account,
     targetCoord,
+    prevResult,
     dispatch
 ) => {
     if (requestManagerInstance.events) {
@@ -13,7 +14,7 @@ const getRequests = async (
         let result = [];
         await requestManagerInstance
             .getPastEvents("allEvents", {
-                fromBlock: 1,
+                fromBlock: 20565821,
             })
             .then((response) =>
                 response.map((item) => {
@@ -37,6 +38,14 @@ const getRequests = async (
                     return true;
                 })
             );
+        if (
+            result.length === prevResult.length &&
+            result.every((element, index) => {
+                return prevResult[index].step === element.step;
+            })
+        ) {
+            return;
+        }
         const availableRequests = result
             .filter(
                 (request) =>
@@ -106,13 +115,16 @@ const getRequests = async (
                     request.step === "3"
             )
             .reverse();
-        dispatch(
-            requestActions.setRequests({
-                availableRequests: await Promise.all(availableRequests),
-                myCurrentRequests: await Promise.all(myCurrentRequests),
-                myPastRequests: myPastRequests,
-            })
-        );
+        if (result.length > 0) {
+            dispatch(
+                requestActions.setRequests({
+                    availableRequests: await Promise.all(availableRequests),
+                    myCurrentRequests: await Promise.all(myCurrentRequests),
+                    myPastRequests: myPastRequests,
+                    result: result.length > 0 ? result : prevResult,
+                })
+            );
+        }
     }
 };
 
