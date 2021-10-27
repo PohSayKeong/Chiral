@@ -32,7 +32,6 @@ const RequestButton = (props) => {
         ) {
             setButtonProps({
                 ...buttonProps,
-                text: props.data.fees + " Tokens",
                 color: "primary",
                 clicked: false,
             });
@@ -45,7 +44,6 @@ const RequestButton = (props) => {
         ) {
             setButtonProps({
                 ...buttonProps,
-                text: "Accept",
                 color: "warning",
                 clicked: true,
             });
@@ -57,7 +55,7 @@ const RequestButton = (props) => {
             type="button"
             color={buttonProps.color}
             onClick={viewHandler}
-            disabled={parseInt(web3Ctx.userTokens) < parseInt(props.data.value) ? true : false}
+            disabled={parseInt(web3Ctx.userTokens) < parseInt(props.data.value)}
         >
             {buttonProps.text}
         </Button>

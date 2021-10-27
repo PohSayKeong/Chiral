@@ -41,7 +41,11 @@ export default function InfoAreaRequests(props) {
                             ""
                         )}
                         {props.value && (
-                            <Badge color="primary">{props.value} Tokens</Badge>
+                            <Badge color="primary">
+                                {props.value === "0"
+                                    ? "Purchase"
+                                    : `${props.value} Tokens`}
+                            </Badge>
                         )}
                     </div>
                 </div>
