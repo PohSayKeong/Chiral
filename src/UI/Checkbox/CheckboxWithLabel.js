@@ -15,6 +15,7 @@ const CheckboxWithLabel = (props) => {
             control={
                 <Checkbox
                     tabIndex={-1}
+                    checked={props.isChecked}
                     onClick={handleToggle}
                     checkedIcon={<Check className={classes.checkedIcon} />}
                     icon={<Check className={classes.uncheckedIcon} />}

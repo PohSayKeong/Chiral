@@ -33,11 +33,7 @@ const SideBar = () => {
                 },
                 {
                     tabButton: "Deliver",
-                    tabContent: (
-                        <ContentWrapper>
-                            <RequestsContainer />
-                        </ContentWrapper>
-                    ),
+                    tabContent: <RequestsContainer />,
                 },
                 {
                     tabButton: "My Deliveries",

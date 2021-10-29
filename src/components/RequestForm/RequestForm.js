@@ -39,6 +39,9 @@ export default function RequestForm() {
     const formQuery = useSelector((state) => state.ui.query);
     const viewData = useSelector((state) => state.request.viewData);
     const [clicked, setClicked] = useState(false);
+    const [sendingItem, setSendingItem] = useState(
+        formData ? formData.sendingItem : false
+    );
     const nameProps = useInput(notEmpty, formData ? formData.identifier : "");
     const pickupProps = useInput(notEmpty, formData ? formData.pickup : "");
     const destinationProps = useInput(
@@ -89,7 +92,9 @@ export default function RequestForm() {
         destinationFloorProps.isValid &&
         destinationUnitProps.isValid &&
         selectedWeight !== "" &&
-        (clicked ? feesProps.isValid : true)
+        (clicked
+            ? feesProps.isValid && (sendingItem ? valueProps.isValid : true)
+            : true)
     ) {
         formIsValid = true;
     }
@@ -107,6 +112,7 @@ export default function RequestForm() {
             destination_unit: destinationUnitProps.value,
             estimatedFees: estimatedFees,
             weight: selectedWeight,
+            sendingItem: sendingItem,
         }),
         [
             nameProps,
@@ -120,6 +126,7 @@ export default function RequestForm() {
             destinationUnitProps,
             estimatedFees,
             selectedWeight,
+            sendingItem,
         ]
     );
     const dataRef = useRef(data);
@@ -196,6 +203,7 @@ export default function RequestForm() {
         setSelectedWeight("");
         setClicked(false);
         setEstimatedFees(0);
+        setSendingItem(false);
         dispatch(uiActions.resetForm());
         dispatch(requestActions.setViewData(null));
     };
@@ -211,7 +219,7 @@ export default function RequestForm() {
     }, [dispatch]);
 
     return (
-        <form>
+        <form style={{ width: "100%" }}>
             <GridContainer alignItems="center" direction="column">
                 <GridItem xs={10} md={8}>
                     <Name {...nameProps} />
@@ -267,7 +275,11 @@ export default function RequestForm() {
                 {clicked && (
                     <>
                         <GridItem xs={10} md={8}>
-                            <Value {...valueProps} />
+                            <Value
+                                {...valueProps}
+                                sendingItem={sendingItem}
+                                setSendingItem={setSendingItem}
+                            />
                         </GridItem>
                         <GridItem xs={10} md={8}>
                             <Fees

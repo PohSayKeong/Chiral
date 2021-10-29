@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import CustomInput from "UI/CustomInput/CustomInput";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -14,10 +14,10 @@ const checkboxStyles = {
 };
 
 const Value = (props) => {
-    const [sendingItem, setSendingItem] = useState(false);
+    const { sendingItem, setSendingItem, reset } = props;
     const toggleSendingItem = () => {
         if (sendingItem) {
-            props.reset();
+            reset();
         }
         setSendingItem(!sendingItem);
     };
@@ -26,6 +26,7 @@ const Value = (props) => {
             <CheckboxWithLabel
                 classes={checkboxStyles}
                 label="I am sending an item"
+                isChecked={sendingItem}
                 toggle={toggleSendingItem}
             />
             {sendingItem && (
