@@ -228,7 +228,8 @@ export default function RequestForm() {
                     <Location
                         {...pickupProps}
                         resetClicked={setClicked}
-                        type={"Pickup"}
+                        pickup={true}
+                        sendingItem={sendingItem}
                     />
                 </GridItem>
                 <GridItem xs={10} md={8}>

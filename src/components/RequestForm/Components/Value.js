@@ -25,7 +25,7 @@ const Value = (props) => {
         <Fragment>
             <CheckboxWithLabel
                 classes={checkboxStyles}
-                label="I am sending an item"
+                label="This request is for a package I own"
                 isChecked={sendingItem}
                 toggle={toggleSendingItem}
             />

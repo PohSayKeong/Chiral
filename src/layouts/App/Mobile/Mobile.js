@@ -16,6 +16,8 @@ import mobileStyles from "./mobileStyles";
 import { makeStyles } from "@material-ui/core/styles";
 import MobileBar from "./MobileBar";
 import Chatbox from "components/Chat/Chatbox";
+import { useMediaQuery } from "react-responsive";
+import classNames from "classnames";
 
 const useStyles = makeStyles(mobileStyles);
 
@@ -28,6 +30,9 @@ const Mobile = () => {
     useEffect(() => {
         setTab("explore");
     }, [view]);
+    const showBar = useMediaQuery({
+        query: "(min-height: 600px)",
+    });
 
     return (
         <GridContainer direction="column" style={{ height: "100vh" }}>
@@ -38,7 +43,13 @@ const Mobile = () => {
                 brand="Chiral"
                 icon={<Icon />}
             />
-            <div className={classes.contentBlock} id="content-block">
+            <div
+                className={classNames(
+                    classes.contentBlock,
+                    !showBar ? classes.noBar : ""
+                )}
+                id="content-block"
+            >
                 {chat && <Chatbox info={chat} />}
                 {tab === "explore" ? (
                     <Explore setTab={setTab} />
@@ -51,7 +62,7 @@ const Mobile = () => {
                 )}
                 <Map />
             </div>
-            <MobileBar tab={tab} setTab={setTab} />
+            {showBar && <MobileBar tab={tab} setTab={setTab} />}
         </GridContainer>
     );
 };

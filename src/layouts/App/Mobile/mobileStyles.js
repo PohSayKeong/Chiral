@@ -17,7 +17,9 @@ const mobileStyles = {
     contentBlock: {
         height: `calc(100vh - 140px)`,
         overflow: "hidden",
-        width: "100%",
+    },
+    noBar: {
+        height: `calc(100vh - 70px)`,
     },
     content: {
         display: "flex",

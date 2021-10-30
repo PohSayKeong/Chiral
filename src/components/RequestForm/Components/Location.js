@@ -3,7 +3,16 @@ import AutocompletePlace from "components/AutoComplete";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
 const Location = (props) => {
-    const text = props.type === "Pickup" ? "Deliver From" : "Deliver To";
+    let text;
+    if (props.pickup) {
+        if (props.sendingItem) {
+            text = "Pickup Package From";
+        } else {
+            text = "Purchase Item From";
+        }
+    } else {
+        text = "Deliver To";
+    }
     return (
         <Fragment>
             <AutocompletePlace
