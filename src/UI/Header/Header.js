@@ -34,6 +34,9 @@ export default function Header(props) {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+    if (props.notification === "pending" && mobileOpen === true) {
+        setMobileOpen(false);
+    }
     const headerColorChange = () => {
         const { color, changeColorOnScroll } = props;
         const windowsScrollTop = window.pageYOffset;

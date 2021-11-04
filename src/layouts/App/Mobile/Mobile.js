@@ -42,6 +42,7 @@ const Mobile = () => {
                 rightLinks={<HeaderLinks />}
                 brand="Chiral"
                 icon={<Icon />}
+                notification={notification.status}
             />
             <div
                 className={classNames(
