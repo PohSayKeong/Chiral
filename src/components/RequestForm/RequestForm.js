@@ -17,6 +17,7 @@ import { requestActions } from "store/request-slice";
 import Submit from "./Components/Submit.js";
 import { uiActions } from "store/ui-slice.js";
 import UnitDetails from "./Components/UnitDetails.js";
+import { Tabs, Tab } from "@material-ui/core";
 
 const notEmpty = (value) => {
     return value.trim() !== "";
@@ -40,7 +41,7 @@ export default function RequestForm() {
     const viewData = useSelector((state) => state.request.viewData);
     const [clicked, setClicked] = useState(false);
     const [sendingItem, setSendingItem] = useState(
-        formData ? formData.sendingItem : false
+        formData ? formData.sendingItem : 0
     );
     const nameProps = useInput(notEmpty, formData ? formData.identifier : "");
     const pickupProps = useInput(notEmpty, formData ? formData.pickup : "");
@@ -92,9 +93,8 @@ export default function RequestForm() {
         destinationFloorProps.isValid &&
         destinationUnitProps.isValid &&
         selectedWeight !== "" &&
-        (clicked
-            ? feesProps.isValid && (sendingItem ? valueProps.isValid : true)
-            : true)
+        (sendingItem === 1 ? valueProps.isValid : true) &&
+        (clicked ? feesProps.isValid : true)
     ) {
         formIsValid = true;
     }
@@ -161,7 +161,7 @@ export default function RequestForm() {
                         : 0,
                     destinationUnitProps.value ? destinationUnitProps.value : 0,
                 ],
-                value: valueProps.value !== "" ? valueProps.value : 0,
+                value: sendingItem === 1 ? valueProps.value : 0,
                 fees: feesProps.value,
                 weight: selectedWeight,
             };
@@ -203,7 +203,7 @@ export default function RequestForm() {
         setSelectedWeight("");
         setClicked(false);
         setEstimatedFees(0);
-        setSendingItem(false);
+        setSendingItem(0);
         dispatch(uiActions.resetForm());
         dispatch(requestActions.setViewData(null));
     };
@@ -219,62 +219,81 @@ export default function RequestForm() {
     }, [dispatch]);
 
     return (
-        <form style={{ width: "100%" }}>
-            <GridContainer alignItems="center" direction="column">
-                <GridItem xs={10} md={8}>
-                    <Name {...nameProps} />
-                </GridItem>
-                <GridItem xs={10} md={8}>
-                    <Location
-                        {...pickupProps}
-                        resetClicked={setClicked}
-                        pickup={true}
-                        sendingItem={sendingItem}
-                    />
-                </GridItem>
-                <GridItem xs={10} md={8}>
-                    <GridContainer>
-                        <GridItem xs={5}>
-                            <UnitDetails type={"Floor"} {...pickupFloorProps} />
-                        </GridItem>
-                        <GridItem xs={2} />
-                        <GridItem xs={5}>
-                            <UnitDetails type={"Unit"} {...pickupUnitProps} />
-                        </GridItem>
-                    </GridContainer>
-                </GridItem>
-                <GridItem xs={10} md={8}>
-                    <Location
-                        {...destinationProps}
-                        resetClicked={setClicked}
-                        type={"Destination"}
-                    />
-                </GridItem>
-                <GridItem xs={10} md={8}>
-                    <GridContainer>
-                        <GridItem xs={5}>
-                            <UnitDetails
-                                type={"Floor"}
-                                {...destinationFloorProps}
-                            />
-                        </GridItem>
-                        <GridItem xs={2} />
-                        <GridItem xs={5}>
-                            <UnitDetails
-                                type={"Unit"}
-                                {...destinationUnitProps}
-                            />
-                        </GridItem>
-                    </GridContainer>
-                </GridItem>
-                <GridItem xs={10} md={8}>
-                    <WeightRadio
-                        selectedEnabled={selectedWeight}
-                        setSelectedEnabled={setSelectedWeight}
-                    />
-                </GridItem>
-                {clicked && (
-                    <>
+        <div style={{ width: "100%" }}>
+            <Tabs
+                value={sendingItem}
+                onChange={(event, newValue) => setSendingItem(newValue)}
+                variant="fullWidth"
+                TabIndicatorProps={{ style: { background: "#FF9802" } }}
+                style={{
+                    position: "relative",
+                    top: "0",
+                }}
+            >
+                <Tab label="Purchase" />
+                <Tab label="Send" />
+            </Tabs>
+            <form style={{ width: "100%" }}>
+                <GridContainer alignItems="center" direction="column">
+                    <GridItem xs={10} md={8}>
+                        <Name {...nameProps} />
+                    </GridItem>
+                    <GridItem xs={10} md={8}>
+                        <Location
+                            {...pickupProps}
+                            resetClicked={setClicked}
+                            pickup={true}
+                            sendingItem={sendingItem}
+                        />
+                    </GridItem>
+                    <GridItem xs={10} md={8}>
+                        <GridContainer>
+                            <GridItem xs={5}>
+                                <UnitDetails
+                                    type={"Floor"}
+                                    {...pickupFloorProps}
+                                />
+                            </GridItem>
+                            <GridItem xs={2} />
+                            <GridItem xs={5}>
+                                <UnitDetails
+                                    type={"Unit"}
+                                    {...pickupUnitProps}
+                                />
+                            </GridItem>
+                        </GridContainer>
+                    </GridItem>
+                    <GridItem xs={10} md={8}>
+                        <Location
+                            {...destinationProps}
+                            resetClicked={setClicked}
+                            type={"Destination"}
+                        />
+                    </GridItem>
+                    <GridItem xs={10} md={8}>
+                        <GridContainer>
+                            <GridItem xs={5}>
+                                <UnitDetails
+                                    type={"Floor"}
+                                    {...destinationFloorProps}
+                                />
+                            </GridItem>
+                            <GridItem xs={2} />
+                            <GridItem xs={5}>
+                                <UnitDetails
+                                    type={"Unit"}
+                                    {...destinationUnitProps}
+                                />
+                            </GridItem>
+                        </GridContainer>
+                    </GridItem>
+                    <GridItem xs={10} md={8}>
+                        <WeightRadio
+                            selectedEnabled={selectedWeight}
+                            setSelectedEnabled={setSelectedWeight}
+                        />
+                    </GridItem>
+                    {sendingItem === 1 && (
                         <GridItem xs={10} md={8}>
                             <Value
                                 {...valueProps}
@@ -282,22 +301,24 @@ export default function RequestForm() {
                                 setSendingItem={setSendingItem}
                             />
                         </GridItem>
+                    )}
+                    {clicked && (
                         <GridItem xs={10} md={8}>
                             <Fees
                                 {...feesProps}
                                 estimatedFees={estimatedFees}
                             />
                         </GridItem>
-                    </>
-                )}
-                <GridItem xs={10} md={8} style={{ textAlign: "center" }}>
-                    <Submit
-                        handleSubmit={handleSubmit}
-                        formIsValid={formIsValid}
-                        clicked={clicked}
-                    />
-                </GridItem>
-            </GridContainer>
-        </form>
+                    )}
+                    <GridItem xs={10} md={8} style={{ textAlign: "center" }}>
+                        <Submit
+                            handleSubmit={handleSubmit}
+                            formIsValid={formIsValid}
+                            clicked={clicked}
+                        />
+                    </GridItem>
+                </GridContainer>
+            </form>
+        </div>
     );
 }
