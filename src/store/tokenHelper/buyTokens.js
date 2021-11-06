@@ -10,10 +10,7 @@ const buyTokens = async (amount, web3State, dispatch) => {
         await web3State.tokenInstance.methods
             .approve(
                 web3State.requestManagerInstance._address,
-                (
-                    (parseInt(web3State.userTokens) + parseInt(amount)) *
-                    1e18
-                ).toString()
+                Math.pow(10, 21)
             )
             .send({
                 from: web3State.account,
@@ -21,7 +18,7 @@ const buyTokens = async (amount, web3State, dispatch) => {
             });
         dispatch(uiActions.showNotification({ status: "success" }));
     } catch {
-        dispatch(uiActions.showNotification({ status: "failed" }));
+        dispatch(uiActions.showNotification({ status: "failure" }));
     }
 };
 

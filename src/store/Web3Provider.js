@@ -16,7 +16,6 @@ const Web3Provider = (props) => {
         account: "",
         tokenInstance: {},
         requestManagerInstance: {},
-        userTokens: 0,
     });
     const userCoord = useSelector((state) => state.user.location);
     const prevResult = useSelector((state) => state.request.result);
@@ -78,9 +77,11 @@ const Web3Provider = (props) => {
         };
     }, [web3State.account, updateUserTokens, handleGetRequests]);
 
-    const handleBuyTokens = async (amount) => {
-        await buyTokens(amount, web3State, dispatch);
-        await updateUserTokens();
+    const handleBuyTokens = async () => {
+        if (web3State.newUser) {
+            await buyTokens(1000, web3State, dispatch);
+            await updateUserTokens();
+        }
     };
 
     const handleSubmitRequest = async (data) => {
@@ -120,6 +121,7 @@ const Web3Provider = (props) => {
         handleDelivered,
         handleReceived,
         handleCancelled,
+        newUser: web3State.newUser,
     };
 
     return (

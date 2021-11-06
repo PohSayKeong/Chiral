@@ -54,10 +54,16 @@ export default async function initWeb3Provider() {
             RequestManager.networks[networkId].address
     );
 
+    const requestManagerAllowance = await newTokenInstance.methods
+        .allowance(newAccounts[0], newRequestManagerInstance._address)
+        .call();
+
     return {
         web3: GSNWeb3,
         account: newAccounts[0],
         tokenInstance: newTokenInstance,
         requestManagerInstance: newRequestManagerInstance,
+        newUser: requestManagerAllowance === "0",
+        userTokens: 0,
     };
 }

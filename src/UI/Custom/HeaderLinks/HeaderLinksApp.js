@@ -5,7 +5,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 // core components
 import Button from "../../CustomButtons/Button.js";
-import Modal from "../../Modal/Modal";
 import styles from "../../../assets/jss/material-kit-react/components/headerLinksStyle.js";
 import Web3Context from "store/Web3-context";
 import { NavLink } from "react-router-dom";
@@ -33,11 +32,15 @@ export default function HeaderLinksApp() {
             </ListItem>
             {web3Ctx.userAccount && (
                 <ListItem className={classes.listItem}>
-                    <Modal
-                        btnClass={classes.navLink}
-                        tokens={web3Ctx.userTokens}
-                        confirmClick={web3Ctx.handleBuyTokens}
-                    />
+                    <Button
+                        color="transparent"
+                        className={classes.navLink}
+                        onClick={web3Ctx.handleBuyTokens}
+                    >
+                        {web3Ctx.newUser
+                            ? "Claim Tokens"
+                            : `${web3Ctx.userTokens} Tokens`}
+                    </Button>
                 </ListItem>
             )}
         </List>
