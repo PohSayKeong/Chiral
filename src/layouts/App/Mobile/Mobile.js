@@ -6,7 +6,7 @@ import Map from "components/Map/MapContainer";
 import Explore from "./Explore/Explore";
 import GridContainer from "UI/Grid/GridContainer";
 import Header from "UI/Header/Header";
-import HeaderLinks from "UI/Custom/HeaderLinks/HeaderLinksApp";
+import HeaderLinks from "UI/Custom/HeaderLinks/HeaderLinks";
 import Notification from "UI/Notification/Notification";
 import { ReactComponent as Icon } from "assets/images/chiralIcon.svg";
 import RequestForm from "components/RequestForm/RequestForm";

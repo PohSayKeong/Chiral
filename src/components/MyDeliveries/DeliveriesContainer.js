@@ -79,7 +79,7 @@ const DeliveriesContainer = () => {
                         dropdownList={["All", "Courier", "Sender"]}
                         onClick={setFilter}
                         buttonProps={{
-                            color: "primary",
+                            color: "info",
                         }}
                     />
                 </div>

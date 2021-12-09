@@ -23,7 +23,7 @@ const RouteMarkers = (props) => {
                 offsetLeft={-20}
                 offsetTop={-10}
             >
-                <div style={{ color: "#FFA726" }}>
+                <div style={{ color: "#0175AD" }}>
                     <FlagIcon fontSize="large" />
                 </div>
             </Marker>

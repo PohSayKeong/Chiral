@@ -16,7 +16,7 @@ const OpenChatButton = (props) => {
 
     return (
         <Fragment>
-            <Button type="button" color="primary" onClick={openChat}>
+            <Button type="button" color="info" onClick={openChat}>
                 Open Chat
             </Button>
         </Fragment>

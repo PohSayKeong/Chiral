@@ -4,7 +4,7 @@ const mobileStyles = {
         position: "fixed",
         bottom: "0",
         width: "100%",
-        backgroundColor: "#9c27b0",
+        backgroundColor: "#d77d21",
     },
     mobileBarButton: {
         height: "100%",

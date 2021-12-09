@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useLocation } from "react-router";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -12,25 +13,40 @@ import { NavLink } from "react-router-dom";
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinksApp() {
+    const location = useLocation();
     const classes = useStyles();
     const web3Ctx = useContext(Web3Context);
     return (
         <List className={classes.list}>
+            {location.pathname !== "/app" && (
+                <ListItem className={classes.listItem}>
+                    <NavLink to="/app" style={{ textDecoration: "none" }}>
+                        <Button color="transparent" className={classes.navLink}>
+                            App
+                        </Button>
+                    </NavLink>
+                </ListItem>
+            )}
+            {location.pathname !== "/about" && (
+                <ListItem className={classes.listItem}>
+                    <NavLink to="/about" style={{ textDecoration: "none" }}>
+                        <Button color="transparent" className={classes.navLink}>
+                            About
+                        </Button>
+                    </NavLink>
+                </ListItem>
+            )}
             <ListItem className={classes.listItem}>
-                <NavLink to="/" style={{ textDecoration: "none" }}>
-                    <Button color="transparent" className={classes.navLink}>
-                        About
-                    </Button>
-                </NavLink>
+                <Button
+                    color="transparent"
+                    className={classes.navLink}
+                    href="https://docs.chiral.sg"
+                    target="_blank"
+                >
+                    Whitepaper
+                </Button>
             </ListItem>
-            <ListItem className={classes.listItem}>
-                <NavLink to="/" style={{ textDecoration: "none" }}>
-                    <Button color="transparent" className={classes.navLink}>
-                        Whitepaper
-                    </Button>
-                </NavLink>
-            </ListItem>
-            {web3Ctx.userAccount && (
+            {location.pathname === "/app" && web3Ctx.userAccount && (
                 <ListItem className={classes.listItem}>
                     <Button
                         color="transparent"

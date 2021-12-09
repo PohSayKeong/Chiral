@@ -23,7 +23,7 @@ const UserInfo = () => {
                     <GridItem xs={6} justifyContent="flex-end" container>
                         <Button
                             onClick={handleButtonClick}
-                            color="primary"
+                            color="info"
                             size="sm"
                         >
                             {buttonText}

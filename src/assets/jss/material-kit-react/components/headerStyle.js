@@ -16,7 +16,7 @@ const headerStyle = {
     appBar: {
         display: "flex",
         border: "0",
-        padding: "0.625rem 0",
+        height: "70px",
         marginBottom: "20px",
         color: "#555",
         width: "100%",

@@ -7,6 +7,7 @@ const RequestAppContainer = lazy(() =>
     import("layouts/App/RequestAppContainer")
 );
 const Landing = lazy(() => import("layouts/Landing/Landing"));
+const About = lazy(() => import("layouts/About/About"));
 
 const App = () => {
     return (
@@ -15,6 +16,9 @@ const App = () => {
                 <Switch>
                     <Route path="/app">
                         <RequestAppContainer />
+                    </Route>
+                    <Route path="/about">
+                        <About />
                     </Route>
                     <Route path="/">
                         <Landing />

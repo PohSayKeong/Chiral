@@ -8,7 +8,7 @@ import { requestActions } from "store/request-slice";
 const RequestButton = (props) => {
     const [buttonProps, setButtonProps] = useState({
         text: props.data.fees + " Tokens",
-        color: "primary",
+        color: "info",
         clicked: false,
     });
     const web3Ctx = useContext(Web3Context);
@@ -32,7 +32,7 @@ const RequestButton = (props) => {
         ) {
             setButtonProps({
                 ...buttonProps,
-                color: "primary",
+                color: "info",
                 clicked: false,
             });
         }
@@ -44,7 +44,7 @@ const RequestButton = (props) => {
         ) {
             setButtonProps({
                 ...buttonProps,
-                color: "warning",
+                color: "primary",
                 clicked: true,
             });
         }
