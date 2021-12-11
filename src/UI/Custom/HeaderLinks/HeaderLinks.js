@@ -46,6 +46,16 @@ export default function HeaderLinksApp() {
                     Whitepaper
                 </Button>
             </ListItem>
+            <ListItem className={classes.listItem}>
+                <Button
+                    color="transparent"
+                    className={classes.navLink}
+                    href="https://forms.gle/ghdkUkFYU9axDHRs6"
+                    target="_blank"
+                >
+                    Sign Up
+                </Button>
+            </ListItem>
             {location.pathname === "/app" && web3Ctx.userAccount && (
                 <ListItem className={classes.listItem}>
                     <Button
