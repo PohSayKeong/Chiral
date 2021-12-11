@@ -8,6 +8,7 @@ import acceptRequest from "./requestHelpers/acceptRequest";
 import delivered from "./requestHelpers/delivered";
 import received from "./requestHelpers/received";
 import cancelled from "./requestHelpers/cancelled";
+import reported from "./requestHelpers/reported";
 import getRequests from "./requestHelpers/getRequests";
 
 const Web3Provider = (props) => {
@@ -112,6 +113,11 @@ const Web3Provider = (props) => {
         await handleGetRequests();
     };
 
+    const handleReported = async (data) => {
+        await reported(data, web3State, dispatch);
+        await handleGetRequests();
+    }
+
     const web3Context = {
         userAccount: web3State.account,
         userTokens: web3State.userTokens,
@@ -121,6 +127,7 @@ const Web3Provider = (props) => {
         handleDelivered,
         handleReceived,
         handleCancelled,
+        handleReported,
         newUser: web3State.newUser,
     };
 

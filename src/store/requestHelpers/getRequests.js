@@ -107,6 +107,33 @@ const getRequests = async (
                 return request;
             })
             .reverse();
+        const myReportedRequests = result
+            .filter(
+                (request) =>
+                    (request.pickupAddress === account ||
+                        request.courierAddress === account) &&
+                    request.step === "5"
+            )
+            .map(async (request) => {
+                const pickup = fetchAddress(
+                    request.pickup_lng,
+                    request.pickup_lat
+                );
+                const destination = fetchAddress(
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                const requestDistance = fetchDistance(
+                    request.pickup_lng,
+                    request.pickup_lat,
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                [request.pickup, request.destination, request.requestDistance] =
+                    await Promise.all([pickup, destination, requestDistance]);
+                return request;
+            })
+            .reverse();
         const myPastRequests = result
             .filter(
                 (request) =>
@@ -120,6 +147,7 @@ const getRequests = async (
                 requestActions.setRequests({
                     availableRequests: await Promise.all(availableRequests),
                     myCurrentRequests: await Promise.all(myCurrentRequests),
+                    myReportedRequests: await Promise.all(myReportedRequests),
                     myPastRequests: myPastRequests,
                     result: result.length > 0 ? result : prevResult,
                 })
