@@ -19,7 +19,6 @@ const ContentWrapper = (props) => (
 const SideBar = () => {
     return (
         <NavPills
-            color="warning"
             tabs={[
                 {
                     tabButton: "New Request",

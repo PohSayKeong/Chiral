@@ -12,7 +12,7 @@ import Footer from "UI/Footer/Footer.js";
 import GridContainer from "UI/Grid/GridContainer.js";
 import GridItem from "UI/Grid/GridItem.js";
 import Button from "UI/CustomButtons/Button.js";
-import HeaderLinks from "UI/Custom/HeaderLinks/HeaderLinksLanding.js";
+import HeaderLinks from "UI/Custom/HeaderLinks/HeaderLinks.js";
 import Parallax from "UI/Parallax/Parallax.js";
 import parallaxImg from "assets/images/landing-bg.webp";
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
@@ -36,7 +36,6 @@ export default function LandingPage(props) {
             <Header
                 color="transparent"
                 routes={dashboardRoutes}
-                brand="Chiral"
                 icon={<Icon />}
                 rightLinks={<HeaderLinks />}
                 fixed
@@ -58,15 +57,6 @@ export default function LandingPage(props) {
                             want and what you want.
                         </h4>
                         <br />
-                        <Button
-                            color="danger"
-                            size="lg"
-                            href="https://www.instagram.com/tv/CRtBCadHDat/?utm_source=ig_web_copy_link"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Watch video
-                        </Button>
                     </GridItem>
                 </GridContainer>
             </Parallax>

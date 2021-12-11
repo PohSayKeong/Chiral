@@ -52,7 +52,7 @@ export default function CheckboxRadioSwitch(props) {
                 />
                 <DirectionsWalkIcon
                     fontSize="large"
-                    style={{ color: "9C27B0" }}
+                    style={{ color: "d77d21" }}
                     onClick={() => setSelectedEnabled("0")}
                 />
             </GridItem>
@@ -84,7 +84,7 @@ export default function CheckboxRadioSwitch(props) {
                 />
                 <MotorcycleIcon
                     fontSize="large"
-                    style={{ color: "9C27B0" }}
+                    style={{ color: "d77d21" }}
                     onClick={() => setSelectedEnabled("1")}
                 />
             </GridItem>
@@ -116,7 +116,7 @@ export default function CheckboxRadioSwitch(props) {
                 />
                 <LocalShippingIcon
                     fontSize="large"
-                    style={{ color: "9C27B0" }}
+                    style={{ color: "d77d21" }}
                     onClick={() => setSelectedEnabled("2")}
                 />
             </GridItem>

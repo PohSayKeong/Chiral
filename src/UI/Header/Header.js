@@ -15,6 +15,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Menu from "@material-ui/icons/Menu";
 // core components
 import styles from "assets/jss/material-kit-react/components/headerStyle.js";
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles(styles);
 
@@ -56,8 +57,7 @@ export default function Header(props) {
                 .classList.remove(classes[changeColorOnScroll.color]);
         }
     };
-    const { color, rightLinks, leftLinks, brand, fixed, absolute, icon } =
-        props;
+    const { color, rightLinks, leftLinks, fixed, absolute, icon } = props;
     const appBarClasses = classNames({
         [classes.appBar]: true,
         [classes[color]]: color,
@@ -65,10 +65,11 @@ export default function Header(props) {
         [classes.fixed]: fixed,
     });
     const brandComponent = (
-        <Button className={classes.title} disableRipple>
-            {icon}
-            {brand}
-        </Button>
+        <NavLink to="/" style={{ textDecoration: "none" }}>
+            <Button className={classes.title} disableRipple>
+                {icon}
+            </Button>
+        </NavLink>
     );
     return (
         <AppBar className={appBarClasses}>

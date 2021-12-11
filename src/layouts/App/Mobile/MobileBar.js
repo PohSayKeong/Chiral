@@ -8,7 +8,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import ExploreIcon from "@material-ui/icons/Explore";
 import mobileStyles from "./mobileStyles";
 import { makeStyles } from "@material-ui/core/styles";
-import Warning from "UI/Typography/Warning";
+import Info from "UI/Typography/Info";
 
 const useStyles = makeStyles(mobileStyles);
 
@@ -53,7 +53,7 @@ const MobileBar = (props) => {
                         color="primary"
                     >
                         {tab === "explore" ? (
-                            <Warning>{explore}</Warning>
+                            <Info>{explore}</Info>
                         ) : (
                             <p>{explore}</p>
                         )}
@@ -65,11 +65,7 @@ const MobileBar = (props) => {
                         className={classes.mobileBarButton}
                         color="primary"
                     >
-                        {tab === "form" ? (
-                            <Warning>{form}</Warning>
-                        ) : (
-                            <p>{form}</p>
-                        )}
+                        {tab === "form" ? <Info>{form}</Info> : <p>{form}</p>}
                     </Button>
                 </GridItem>
                 <GridItem xs={3}>
@@ -79,7 +75,7 @@ const MobileBar = (props) => {
                         color="primary"
                     >
                         {tab === "requests" ? (
-                            <Warning>{requests}</Warning>
+                            <Info>{requests}</Info>
                         ) : (
                             <p>{requests}</p>
                         )}
@@ -92,7 +88,7 @@ const MobileBar = (props) => {
                         color="primary"
                     >
                         {tab === "deliveries" ? (
-                            <Warning>{deliveries}</Warning>
+                            <Info>{deliveries}</Info>
                         ) : (
                             <p>{deliveries}</p>
                         )}

@@ -45,7 +45,7 @@ export default function Footer(props) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Contact us
+                                Discord
                             </a>
                         </ListItem>
                     </List>

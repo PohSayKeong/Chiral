@@ -9,7 +9,7 @@ const RouteLine = (props) => {
                     id: "directions",
                     type: "line",
                     paint: {
-                        "line-color": "#A032CD",
+                        "line-color": "#d77d21",
                         "line-width": 5,
                     },
                 }}
