@@ -6,9 +6,9 @@ Chiral is a peer-to-peer courier service built on the Ethereum blockchain. Chira
 
 -   Clone the repository
 -   `yarn install`
--   `yarn start`
+-   `yarn dev`
 
 ## Environment Variables
 
--   REACT_APP_MAPBOX_ACCESS_TOKEN
--   REACT_APP_GETSTREAM_KEY
+-   NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+-   NEXT_PUBLIC_GETSTREAM_KEY
