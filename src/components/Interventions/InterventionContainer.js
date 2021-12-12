@@ -7,7 +7,7 @@ const InterventionContainer = () => {
     // Retrieve reported Requests
     // TODO: Retrieve all reported requests
     const myReportedRequests = useSelector(
-        (state) => state.request.myReportedRequests
+        (state) => state.request.reportedRequests
     );
 
     // Convert to mutable variables

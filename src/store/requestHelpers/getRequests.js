@@ -142,6 +142,28 @@ const getRequests = async (
                     request.step === "3"
             )
             .reverse();
+        const reportedRequests = result
+            .filter((request) => request.step === "5")
+            .map(async (request) => {
+                const pickup = fetchAddress(
+                    request.pickup_lng,
+                    request.pickup_lat
+                );
+                const destination = fetchAddress(
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                const requestDistance = fetchDistance(
+                    request.pickup_lng,
+                    request.pickup_lat,
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                [request.pickup, request.destination, request.requestDistance] =
+                    await Promise.all([pickup, destination, requestDistance]);
+                return request;
+            })
+            .reverse();
         if (result.length > 0) {
             dispatch(
                 requestActions.setRequests({
@@ -149,6 +171,7 @@ const getRequests = async (
                     myCurrentRequests: await Promise.all(myCurrentRequests),
                     myReportedRequests: await Promise.all(myReportedRequests),
                     myPastRequests: myPastRequests,
+                    reportedRequests: await Promise.all(reportedRequests),
                     result: result.length > 0 ? result : prevResult,
                 })
             );

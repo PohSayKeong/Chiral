@@ -15,7 +15,7 @@ const Intervention = (props) => {
             <GridContainer alignItems="center" direction="column">
                 <InfoCard data={props.data} details={true} />
                 <GridContainer justifyContent="center">
-                    <p>{props.data.step}</p>
+                    <p>Reported (placeholder)</p>
                     {(!chat || chat.index !== props.data.index) && (
                         <OpenChatButton data={props.data} />
                     )}
