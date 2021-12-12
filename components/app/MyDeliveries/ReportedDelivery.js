@@ -2,10 +2,10 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 // core components
-import Card from "../../UI/Card/Card";
-import GridContainer from "../../UI/Grid/GridContainer";
-import OpenChatButton from "components/Chat/OpenChatButton";
-import InfoCard from "components/InfoCard";
+import Card from "UI/Card/Card";
+import GridContainer from "UI/Grid/GridContainer";
+import OpenChatButton from "components/app/Chat/OpenChatButton";
+import InfoCard from "components/app/InfoCard";
 
 const ReportedDelivery = (props) => {
     const chat = useSelector((state) => state.chat.chatInfo);

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import Button from "../../UI/CustomButtons/Button";
-import Web3Context from "../../store/Web3-context";
+import Button from "UI/CustomButtons/Button";
+import Web3Context from "store/Web3-context";
 import { chatActions } from "store/chat-slice";
 import { requestActions } from "store/request-slice";
 import { useDispatch } from "react-redux";

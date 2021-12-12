@@ -5,9 +5,9 @@ import { useSelector } from "react-redux";
 import Card from "UI/Card/Card";
 import GridContainer from "UI/Grid/GridContainer";
 import DeliveriesButton from "./DeliveriesButton";
-import InfoCard from "components/InfoCard";
 import OpenChatButton from "components/app/Chat/OpenChatButton";
 import InfoCard from "components/app/InfoCard";
+import ReportButton from "./ReportButton";
 
 const Delivery = (props) => {
     const chat = useSelector((state) => state.chat.chatInfo);

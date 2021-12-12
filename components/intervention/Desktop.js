@@ -5,9 +5,9 @@ import GridItem from "UI/Grid/GridItem";
 import Header from "UI/Header/Header";
 import HeaderLinks from "UI/Custom/HeaderLinks/HeaderLinks";
 import Notification from "UI/Notification/Notification";
-import { ReactComponent as Icon } from "assets/images/chiralIcon.svg";
-import Chatbox from "components/Chat/Chatbox";
-import InterventionContainer from "components/Interventions/InterventionContainer";
+import Chatbox from "components/app/Chat/Chatbox";
+import InterventionContainer from "./InterventionContainer";
+import Image from "next/image";
 
 const Desktop = () => {
     const notification = useSelector((state) => state.ui.notification);
@@ -20,7 +20,13 @@ const Desktop = () => {
                 color="primary"
                 rightLinks={<HeaderLinks />}
                 brand="Chiral"
-                icon={<Icon />}
+                icon={
+                    <Image
+                        src="/images/chiralIcon.png"
+                        height={50}
+                        width={80}
+                    />
+                }
             />
             <GridContainer spacing={1}>
                 <GridItem md={6}>

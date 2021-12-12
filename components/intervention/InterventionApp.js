@@ -3,9 +3,10 @@ import { useMediaQuery } from "react-responsive";
 import Web3Context from "store/Web3-context";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import dynamic from "next/dynamic";
 
-const Desktop = lazy(() => import("layouts/Intervention/Desktop/Desktop"));
-// const Mobile = lazy(() => import("layouts/Intervention/Mobile/Mobile"));
+const Desktop = dynamic(() => import("components/intervention/Desktop"));
+// const Mobile = dynamic(() => import("layouts/Intervention/Mobile/Mobile"));
 
 const InterventionApp = () => {
     const isDesktopOrLaptop = useMediaQuery({
