@@ -15,7 +15,7 @@ const InterventionContainer = () => {
     console.log(reportedRequests);
 
     return (
-        <div>
+        <div style={{ padding: "12px" }}>
             {reportedRequests.map((item) => {
                 return <Intervention data={item} key={uuidv4()} />;
             })}
