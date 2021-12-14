@@ -25,6 +25,7 @@ const Web3Provider = (props) => {
     const web3Setup = useCallback(async () => {
         try {
             const web3Values = await initWeb3Provider();
+            ga.event({ action: "wallet_connected" });
             web3Values.web3.currentProvider.on("accountsChanged", web3Setup);
             setWeb3State(web3Values);
         } catch (error) {
