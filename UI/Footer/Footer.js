@@ -9,6 +9,7 @@ import { List, ListItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import styles from "styles/jss/material-kit-react/components/footerStyle.js";
+import * as ga from "/lib/ga";
 
 const useStyles = makeStyles(styles);
 
@@ -28,7 +29,14 @@ export default function Footer(props) {
             <div className={classes.container}>
                 <div className={classes.left}>
                     <List className={classes.list}>
-                        <ListItem className={classes.inlineBlock}>
+                        <ListItem
+                            className={classes.inlineBlock}
+                            onClick={() =>
+                                ga.event({
+                                    action: "enter_instagram",
+                                })
+                            }
+                        >
                             <a
                                 href="https://www.instagram.com/chiralcouriers/"
                                 className={classes.block}
@@ -38,7 +46,14 @@ export default function Footer(props) {
                                 Instagram
                             </a>
                         </ListItem>
-                        <ListItem className={classes.inlineBlock}>
+                        <ListItem
+                            className={classes.inlineBlock}
+                            onClick={() =>
+                                ga.event({
+                                    action: "enter_discord",
+                                })
+                            }
+                        >
                             <a
                                 href="https://discord.gg/yez8zAvvC2"
                                 className={classes.block}

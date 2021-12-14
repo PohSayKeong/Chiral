@@ -5,11 +5,13 @@ import Button from "UI/CustomButtons/Button";
 import Web3Context from "store/Web3-context";
 import GridContainer from "UI/Grid/GridContainer";
 import GridItem from "UI/Grid/GridItem";
+import * as ga from "/lib/ga";
 
 const UserInfo = () => {
     const web3Ctx = useContext(Web3Context);
     const [buttonText, setButtonText] = useState("Wallet Address");
     const handleButtonClick = () => {
+        ga.event({ action: "copy_address" });
         navigator.clipboard.writeText(web3Ctx.userAccount);
         setButtonText("Copied");
     };

@@ -10,6 +10,7 @@ import { requestActions } from "store/request-slice";
 import { useDispatch, useSelector } from "react-redux";
 import MyLocationIcon from "@material-ui/icons/MyLocation";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import * as ga from "/lib/ga";
 
 const RequestsSearchBox = () => {
     const filterData = useSelector((state) => state.request.filterData);
@@ -43,6 +44,7 @@ const RequestsSearchBox = () => {
     );
 
     const handleFilter = async () => {
+        ga.event({ action: "filter" });
         let pickupData;
         if (pickupProps.value === "Current Location") {
             pickupData = [userCoord.lng, userCoord.lat];

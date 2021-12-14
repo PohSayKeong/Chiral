@@ -9,6 +9,7 @@ import delivered from "./requestHelpers/delivered";
 import received from "./requestHelpers/received";
 import cancelled from "./requestHelpers/cancelled";
 import getRequests from "./requestHelpers/getRequests";
+import * as ga from "/lib/ga";
 
 const Web3Provider = (props) => {
     const [web3State, setWeb3State] = useState({
@@ -79,34 +80,40 @@ const Web3Provider = (props) => {
 
     const handleBuyTokens = async () => {
         if (web3State.newUser) {
+            ga.event({ action: "claim_token" });
             await buyTokens(1000, web3State, dispatch);
             await updateUserTokens();
         }
     };
 
     const handleSubmitRequest = async (data) => {
+        ga.event({ action: "submit_request" });
         await submitRequest(data, web3State, dispatch);
         await updateUserTokens();
         await handleGetRequests();
     };
 
     const handleAcceptRequest = async (data) => {
+        ga.event({ action: "accept_request" });
         await acceptRequest(data, web3State, dispatch);
         await updateUserTokens();
         await handleGetRequests();
     };
 
     const handleDelivered = async (data) => {
+        ga.event({ action: "delivered" });
         await delivered(data, web3State, dispatch);
         await handleGetRequests();
     };
 
     const handleReceived = async (data) => {
+        ga.event({ action: "received" });
         await received(data, web3State, dispatch);
         await handleGetRequests();
     };
 
     const handleCancelled = async (data) => {
+        ga.event({ action: "cancelled" });
         await cancelled(data, web3State, dispatch);
         await updateUserTokens();
         await handleGetRequests();

@@ -4,6 +4,7 @@ import Button from "UI/CustomButtons/Button";
 import Web3Context from "store/Web3-context";
 import { chatActions } from "store/chat-slice";
 import { requestActions } from "store/request-slice";
+import * as ga from "/lib/ga";
 
 const RequestButton = (props) => {
     const [buttonProps, setButtonProps] = useState({
@@ -21,6 +22,8 @@ const RequestButton = (props) => {
         // confirm button has been clicked
         if (viewData && viewData.index === props.data.index) {
             web3Ctx.handleAcceptRequest(props.data);
+        } else {
+            ga.event({ action: "show_available_request" });
         }
     };
 

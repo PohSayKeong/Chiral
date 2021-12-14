@@ -2,6 +2,8 @@ import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export default class MyDocument extends Document {
     render() {
         return (
@@ -14,12 +16,12 @@ export default class MyDocument extends Document {
                     ></link>
                     <meta
                         name="description"
-                        content="P2P courier service on the blockchain"
+                        content="P2P courier platform on the blockchain. Anyone can be a courier and earn extra income!"
                     />
                     <meta property="og:title" content="Chiral" />
                     <meta
                         property="og:description"
-                        content="P2P courier service on the blockchain"
+                        content="P2P courier platform on the blockchain. Anyone can be a courier and earn extra income!"
                     />
                     <meta property="og:url" content="https://chiral.sg/" />
                     <meta property="og:type" content="website" />
@@ -34,13 +36,15 @@ export default class MyDocument extends Document {
                         content="black"
                     />
                     {/* Global Site Tag (gtag.js) - Google Analytics */}
-                    <script
-                        async
-                        src={`https://www.googletagmanager.com/gtag/js?id=G-SGY008JHGX`}
-                    />
-                    <script
-                        dangerouslySetInnerHTML={{
-                            __html: `
+                    {isProduction && (
+                        <>
+                            <script
+                                async
+                                src={`https://www.googletagmanager.com/gtag/js?id=G-SGY008JHGX`}
+                            />
+                            <script
+                                dangerouslySetInnerHTML={{
+                                    __html: `
                         window.dataLayer = window.dataLayer || [];
                         function gtag(){dataLayer.push(arguments);}
                         gtag('js', new Date());
@@ -48,8 +52,10 @@ export default class MyDocument extends Document {
                         page_path: window.location.pathname,
                         });
                     `,
-                        }}
-                    />
+                                }}
+                            />
+                        </>
+                    )}
                 </Head>
                 <body>
                     <Main />

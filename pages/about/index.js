@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
+import Head from "next/head";
 // @material-ui/icons
 
 // core components
@@ -36,6 +36,9 @@ export default function AboutPage() {
     }, []);
     return (
         <>
+            <Head>
+                <title>Chiral | P2P Courier Platform | About</title>
+            </Head>
             <Header
                 color="transparent"
                 brand="Chiral"
@@ -55,7 +58,7 @@ export default function AboutPage() {
             />
             <Parallax
                 filter
-                image={"images/landing-bg.webp"}
+                image={"/images/landing-bg.webp"}
                 className={classes.parallax}
             >
                 <GridContainer

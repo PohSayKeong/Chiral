@@ -9,6 +9,7 @@ import Button from "../../CustomButtons/Button.js";
 import styles from "../../../styles/jss/material-kit-react/components/headerLinksStyle.js";
 import Web3Context from "store/Web3-context";
 import Link from "next/link";
+import * as ga from "/lib/ga";
 
 const useStyles = makeStyles(styles);
 
@@ -19,7 +20,14 @@ export default function HeaderLinksApp() {
     return (
         <List className={classes.list}>
             {location.pathname !== "/app" && (
-                <ListItem className={classes.listItem}>
+                <ListItem
+                    className={classes.listItem}
+                    onClick={() =>
+                        ga.event({
+                            action: "enter_app",
+                        })
+                    }
+                >
                     <Link href="/app" style={{ textDecoration: "none" }}>
                         <Button color="transparent" className={classes.navLink}>
                             App
@@ -28,7 +36,14 @@ export default function HeaderLinksApp() {
                 </ListItem>
             )}
             {location.pathname !== "/about" && (
-                <ListItem className={classes.listItem}>
+                <ListItem
+                    className={classes.listItem}
+                    onClick={() =>
+                        ga.event({
+                            action: "enter_about",
+                        })
+                    }
+                >
                     <Link href="/about" style={{ textDecoration: "none" }}>
                         <Button color="transparent" className={classes.navLink}>
                             About
@@ -43,6 +58,11 @@ export default function HeaderLinksApp() {
                     href="https://docs.chiral.sg"
                     target="_blank"
                     rel="noopener"
+                    onClick={() =>
+                        ga.event({
+                            action: "enter_whitepaper",
+                        })
+                    }
                 >
                     Whitepaper
                 </Button>
@@ -54,6 +74,11 @@ export default function HeaderLinksApp() {
                     href="https://forms.gle/ghdkUkFYU9axDHRs6"
                     target="_blank"
                     rel="noopener"
+                    onClick={() =>
+                        ga.event({
+                            action: "signup",
+                        })
+                    }
                 >
                     Sign Up
                 </Button>

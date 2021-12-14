@@ -7,7 +7,6 @@ import "styles/css/autoComplete.css";
 import "styles/css/chatbox.css";
 import "styles/css/mapContainer.css";
 import PropTypes from "prop-types";
-import Head from "next/head";
 import * as ga from "lib/ga";
 
 export default function MyApp(props) {
@@ -20,7 +19,6 @@ export default function MyApp(props) {
             jssStyles.parentElement.removeChild(jssStyles);
         }
         const handleRouteChange = (url) => {
-            console.log(url)
             ga.pageview(url);
         };
         //When the component is mounted, subscribe to router changes
@@ -36,9 +34,6 @@ export default function MyApp(props) {
 
     return (
         <ClientOnly>
-            <Head>
-                <title>Chiral</title>
-            </Head>
             <Component {...pageProps} />
         </ClientOnly>
     );

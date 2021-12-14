@@ -18,6 +18,7 @@ import Submit from "./Components/Submit.js";
 import { uiActions } from "store/ui-slice.js";
 import UnitDetails from "./Components/UnitDetails.js";
 import { Tabs, Tab } from "@material-ui/core";
+import * as ga from "/lib/ga";
 
 const notEmpty = (value) => {
     return value.trim() !== "";
@@ -168,6 +169,7 @@ export default function RequestForm() {
             web3Ctx.handleSubmitRequest(output);
             clearForm();
         } else {
+            ga.event({ action: "show_new_request" });
             const pickupData = await fetchLatLng(pickupProps.value);
             const destinationData = await fetchLatLng(destinationProps.value);
             let query = {
