@@ -10,6 +10,8 @@ const Web3Context = React.createContext({
     handleReceived: () => {},
     handleCancelled: () => {},
     handleReported: () => {},
+    handleAwardSender: () => {},
+    handleAwardCourier: () => {},
     newUser: true,
 });
 

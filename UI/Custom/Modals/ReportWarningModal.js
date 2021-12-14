@@ -13,7 +13,7 @@ import Close from "@material-ui/icons/Close";
 import Button from "../../CustomButtons/Button";
 import ReportConfirmationModal from "./ReportConfirmationModal";
 
-import styles from "../../../styles/jss/material-kit-react/modalStyle";
+import styles from "styles/jss/material-kit-react/modalStyle";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;

@@ -11,6 +11,9 @@ import cancelled from "./requestHelpers/cancelled";
 import reported from "./requestHelpers/reported";
 import getRequests from "./requestHelpers/getRequests";
 
+import awardSender from "./interventionHelpers/awardSender";
+import awardCourier from "./interventionHelpers/awardCourier";
+
 const Web3Provider = (props) => {
     const [web3State, setWeb3State] = useState({
         web3: {},
@@ -118,6 +121,18 @@ const Web3Provider = (props) => {
         await handleGetRequests();
     };
 
+    const handleAwardSender = async (data) => {
+        await awardSender(data, web3State, dispatch);
+        await updateUserTokens();
+        await handleGetRequests();
+    };
+
+    const handleAwardCourier = async (data) => {
+        await awardCourier(data, web3State, dispatch);
+        await updateUserTokens();
+        await handleGetRequests();
+    };
+
     const web3Context = {
         userAccount: web3State.account,
         userTokens: web3State.userTokens,
@@ -128,6 +143,8 @@ const Web3Provider = (props) => {
         handleReceived,
         handleCancelled,
         handleReported,
+        handleAwardSender,
+        handleAwardCourier,
         newUser: web3State.newUser,
     };
 

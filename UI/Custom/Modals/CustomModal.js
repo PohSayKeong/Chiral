@@ -11,7 +11,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Close from "@material-ui/icons/Close";
 // core components
 import Button from "../../CustomButtons/Button";
-import Input from "@material-ui/core/Input";
 
 import styles from "styles/jss/material-kit-react/modalStyle";
 
@@ -21,24 +20,34 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const useStyles = makeStyles(styles);
 
-export default function RportConfirmationModal(props) {
+export default function CustomModal({
+    children = "Modal",
+    color = "primary",
+    round = "true",
+    title = "Modal Title",
+    content = "Modal content",
+    cancelClickContent = "Cancel",
+    confirmClickContent = "Confirm",
+    cancelClickHandler = () => {},
+    confirmClickHandler = () => {},
+}) {
     const [modal, setModal] = useState(false);
     const classes = useStyles();
 
+    const handleCancelClick = () => {
+        setModal(false);
+        cancelClickHandler();
+    };
+
     const handleConfirmClick = () => {
         setModal(false);
-        props.setParentModal(false);
-        props.clickHandler();
+        confirmClickHandler();
     };
 
     return (
         <div>
-            <Button
-                color="success"
-                onClick={() => setModal(true)}
-                className={props.btnClass}
-            >
-                Yes, I understand
+            <Button color={color} round={round} onClick={() => setModal(true)}>
+                {children}
             </Button>
             <Dialog
                 classes={{
@@ -66,25 +75,24 @@ export default function RportConfirmationModal(props) {
                     >
                         <Close className={classes.modalClose} />
                     </IconButton>
-                    <h2 className={classes.modalTitle}>Final Confirmation</h2>
+                    <h2 className={classes.modalTitle}>{title}</h2>
                 </DialogTitle>
                 <DialogContent
                     id="modal-slide-description"
                     className={classes.modalBody}
                 >
-                    <p>
-                        You <strong>will not</strong> be able to undo this
-                        action, proceed?
-                    </p>
+                    <p>{content}</p>
                 </DialogContent>
                 <DialogActions
                     className={
                         classes.modalFooter + " " + classes.modalFooterCenter
                     }
                 >
-                    <Button onClick={() => setModal(false)}>Cancel</Button>
+                    <Button onClick={handleCancelClick}>
+                        {cancelClickContent}
+                    </Button>
                     <Button onClick={handleConfirmClick} color="success">
-                        Yes
+                        {confirmClickContent}
                     </Button>
                 </DialogActions>
             </Dialog>
