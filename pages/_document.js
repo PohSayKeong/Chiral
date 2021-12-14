@@ -33,6 +33,23 @@ export default class MyDocument extends Document {
                         media="(prefers-color-scheme: dark)"
                         content="black"
                     />
+                    {/* Global Site Tag (gtag.js) - Google Analytics */}
+                    <script
+                        async
+                        src={`https://www.googletagmanager.com/gtag/js?id=G-SGY008JHGX`}
+                    />
+                    <script
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-SGY008JHGX', {
+                        page_path: window.location.pathname,
+                        });
+                    `,
+                        }}
+                    />
                 </Head>
                 <body>
                     <Main />
