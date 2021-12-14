@@ -116,7 +116,7 @@ const Web3Provider = (props) => {
     const handleReported = async (data) => {
         await reported(data, web3State, dispatch);
         await handleGetRequests();
-    }
+    };
 
     const web3Context = {
         userAccount: web3State.account,
