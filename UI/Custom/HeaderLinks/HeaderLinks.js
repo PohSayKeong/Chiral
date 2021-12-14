@@ -12,7 +12,7 @@ import Link from "next/link";
 
 const useStyles = makeStyles(styles);
 
-export default function HeaderLinksApp() {
+export default function HeaderLinks() {
     const location = useRouter();
     const classes = useStyles();
     const web3Ctx = useContext(Web3Context);
@@ -58,19 +58,21 @@ export default function HeaderLinksApp() {
                     Sign Up
                 </Button>
             </ListItem>
-            {location.pathname === "/app" && web3Ctx.userAccount && (
-                <ListItem className={classes.listItem}>
-                    <Button
-                        color="transparent"
-                        className={classes.navLink}
-                        onClick={web3Ctx.handleBuyTokens}
-                    >
-                        {web3Ctx.newUser
-                            ? "Claim Tokens"
-                            : `${web3Ctx.userTokens} Tokens`}
-                    </Button>
-                </ListItem>
-            )}
+            {(location.pathname === "/app" ||
+                location.pathname === "/intervention") &&
+                web3Ctx.userAccount && (
+                    <ListItem className={classes.listItem}>
+                        <Button
+                            color="transparent"
+                            className={classes.navLink}
+                            onClick={web3Ctx.handleBuyTokens}
+                        >
+                            {web3Ctx.newUser
+                                ? "Claim Tokens"
+                                : `${web3Ctx.userTokens} Tokens`}
+                        </Button>
+                    </ListItem>
+                )}
         </List>
     );
 }
