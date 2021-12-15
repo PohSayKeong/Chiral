@@ -63,7 +63,7 @@ export default async function initWeb3Provider() {
             account: newAccounts[0],
             tokenInstance: newTokenInstance,
             requestManagerInstance: newRequestManagerInstance,
-            newUser: requestManagerAllowance === "0",
+            newUser: requestManagerAllowance !== "1000000000000000000000",
             userTokens: 0,
         };
     }
