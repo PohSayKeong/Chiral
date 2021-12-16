@@ -20,7 +20,17 @@ const UserInfo = () => {
             <CardBody>
                 <GridContainer alignItems="center">
                     <GridItem xs={6}>
-                        <h3>{web3Ctx.userTokens} Chiral Tokens</h3>
+                        {web3Ctx.newUser ? (
+                            <Button
+                                onClick={web3Ctx.handleBuyTokens}
+                                color="primary"
+                                size="sm"
+                            >
+                                Claim Tokens
+                            </Button>
+                        ) : (
+                            <h3>{web3Ctx.userTokens} Chiral Tokens</h3>
+                        )}
                     </GridItem>
                     <GridItem xs={6} justifyContent="flex-end" container>
                         <Button

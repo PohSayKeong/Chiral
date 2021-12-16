@@ -13,6 +13,10 @@ const mobileStyles = {
         margin: "0",
         borderRadius: "0px",
         textTransform: "none",
+        boxShadow: "none",
+        "&:focus": {
+            boxShadow: "none",
+        },
     },
     contentBlock: {
         height: `calc(100vh - 140px)`,
