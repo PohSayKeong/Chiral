@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import "mapbox-gl/dist/mapbox-gl.css";
+import "stream-chat-react/dist/css/index.css";
 import "styles/css/index.css";
 import "styles/css/carousel.scss";
 import "styles/css/autoComplete.css";

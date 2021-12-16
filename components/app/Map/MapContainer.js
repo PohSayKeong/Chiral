@@ -16,17 +16,25 @@ import ParcelMarkers from "./ParcelMarkers";
 import { v4 as uuidv4 } from "uuid";
 import { userActions } from "store/user-slice";
 
+const defaultViewport = {
+    latitude: 1.352083,
+    longitude: 103.819839,
+    zoom: 10,
+};
+
 function Map() {
     const [route, setRoute] = useState();
     const [markers, setMarkers] = useState("");
     const [selectedMarkers, setSelectedMarkers] = useState("");
-    const [viewport, setViewport] = useState({
-        latitude: 1.352083,
-        longitude: 103.819839,
-        zoom: 10,
-    });
-    const viewportRef = useRef(viewport);
+    const [viewport, setViewport] = useState(defaultViewport);
+    const [userLocation, setUserLocation] = useState(defaultViewport);
     const mapRef = useRef();
+    const { offsetHeight: height, offsetWidth: width } = mapRef.current
+        ? mapRef.current.getMap().getContainer()
+        : { offsetHeight: 0, offsetWidth: 0 };
+    let padding = 100;
+    if (padding * 2 > height || padding * 2 > width) padding = 0;
+
     const availableRequests = useSelector(
         (state) => state.request.availableRequests
     );
@@ -44,8 +52,10 @@ function Map() {
     };
 
     const updateLocation = (data) => {
-        viewportRef.current.latitiude = data.coords.latitude;
-        viewportRef.current.longitude = data.coords.longitude;
+        setUserLocation({
+            latitude: data.coords.latitude,
+            longitude: data.coords.longitude,
+        });
         dispatch(
             userActions.setLocation({
                 lat: data.coords.latitude,
@@ -55,24 +65,21 @@ function Map() {
     };
 
     const zoomToFitView = useCallback(async () => {
-        if (viewData && viewportRef.current.latitude !== 1.352083) {
-            const { longitude, latitude, zoom } = new WebMercatorViewport(
-                viewportRef.current
-            ).fitBounds(
+        if (viewData) {
+            const newViewport = new WebMercatorViewport({
+                width,
+                height,
+            }).fitBounds(
                 [
                     [viewData.pickup_lng, viewData.pickup_lat],
                     [viewData.destination_lng, viewData.destination_lat],
                 ],
                 {
-                    padding: 100,
-                    offset: [0, -100],
+                    padding,
                 }
             );
             setViewport({
-                ...viewportRef.current,
-                longitude,
-                latitude,
-                zoom,
+                ...newViewport,
                 transitionDuration: 5000,
                 transitionInterpolator: new FlyToInterpolator(),
                 transitionEasing: easeCubic,
@@ -85,12 +92,16 @@ function Map() {
                     setRoute(<RouteLine data={data} />);
                 });
             setSelectedMarkers(<RouteMarkers viewData={viewData} />);
+        } else {
+            setViewport({
+                ...defaultViewport,
+                ...userLocation,
+            });
+            setRoute();
+            setSelectedMarkers();
         }
     }, [viewData]);
 
-    useEffect(() => {
-        viewportRef.current = viewport;
-    });
     //Place markers of available requests
     useEffect(() => {
         setMarkers(<ParcelMarkers data={availableRequests} key={uuidv4()} />);

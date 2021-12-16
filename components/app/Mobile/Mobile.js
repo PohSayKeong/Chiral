@@ -28,7 +28,9 @@ const Mobile = () => {
     const classes = useStyles();
     const [tab, setTab] = useState("explore");
     useEffect(() => {
-        setTab("explore");
+        if (view) {
+            setTab("explore");
+        }
     }, [view]);
     const showBar = useMediaQuery({
         query: "(min-height: 600px)",

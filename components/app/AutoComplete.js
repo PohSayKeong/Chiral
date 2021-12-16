@@ -76,6 +76,7 @@ export default class AutocompletePlace extends Component {
                         onChange: this.handleSearchChange,
                         type: "text",
                         value: this.props.value,
+                        multiline: true,
                     }}
                     formControlProps={{
                         fullWidth: true,
