@@ -9,14 +9,13 @@ export default async function initWeb3Provider() {
         const web3Modal = new Web3Modal({
             cacheProvider: true, // optional
             providerOptions: {
-                portis: {
-                    package: require("@portis/web3"), // required
+                torus: {
+                    package: require("@toruslabs/torus-embed"),
                     options: {
-                        id: "c10b0c49-7c84-4360-a6c4-1574cad79d9d", // required
-                        network: {
-                            nodeUrl:
-                                "https://matic-testnet-archive-rpc.bwarelabs.com/",
+                        networkParams: {
+                            host: "https://matic-testnet-archive-rpc.bwarelabs.com/",
                             chainId: 80001,
+                            networkId: 80001,
                         },
                     },
                 },
@@ -27,7 +26,7 @@ export default async function initWeb3Provider() {
 
         const config = {
             paymasterAddress: "0xcA94aBEdcC18A10521aB7273B3F3D5ED28Cf7B8A",
-            methodSuffix: "_v3",
+            methodSuffix: "_v4",
             jsonStringifyRequest: true,
             relayRegistrationLookupBlocks: 1000000,
         };
