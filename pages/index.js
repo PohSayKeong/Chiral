@@ -17,7 +17,7 @@ import Image from "next/image";
 
 // Sections for this page
 import ProductSection from "../components/landing/ProductSection";
-import Carousel from "UI/Carousel/Carousel";
+import Carousel from "components/landing/Carousel";
 import Link from "next/link";
 import Head from "next/head";
 import * as ga from "/lib/ga";

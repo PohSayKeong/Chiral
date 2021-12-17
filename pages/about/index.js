@@ -15,7 +15,7 @@ import styles from "../../components/about/aboutStyles";
 import Image from "next/image";
 
 // Sections for this page
-import Carousel from "UI/Carousel/Carousel";
+import Carousel from "components/about/Carousel";
 
 import SpeechBubble from "components/about/SpeechBubble";
 
@@ -96,8 +96,9 @@ export default function AboutPage() {
                         target={300}
                     />
                     <Grow in={scrollPosition > 400}>
-                        <h1 className={classes.section}>How Chiral Works</h1>
+                        <h1 className={classes.section}>Why Chiral</h1>
                     </Grow>
+                    {scrollPosition > 400 && <Carousel />}
                 </div>
             </div>
             <Footer />

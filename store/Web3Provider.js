@@ -31,7 +31,7 @@ const Web3Provider = (props) => {
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
-                `Please restart the app and login with Portis/Metamask. Ensure that you are on the Mumbai testnet`
+                `Please restart the app and login with Torus/Metamask. Ensure that you are on the Mumbai testnet`
             );
             console.error(error);
         }

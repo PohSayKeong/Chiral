@@ -7,7 +7,6 @@ import Web3 from "web3";
 export default async function initWeb3Provider() {
     if (typeof document !== "undefined") {
         const web3Modal = new Web3Modal({
-            cacheProvider: true, // optional
             providerOptions: {
                 torus: {
                     package: require("@toruslabs/torus-embed"),
