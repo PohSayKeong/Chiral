@@ -27,6 +27,22 @@ export default function HeaderLinks() {
                     </Link>
                 </ListItem>
             )}
+            {location.pathname !== "/about" &&
+                location.pathname !== "/intervention" && (
+                    <ListItem className={classes.listItem}>
+                        <Link
+                            href="/intervention"
+                            style={{ textDecoration: "none" }}
+                        >
+                            <Button
+                                color="transparent"
+                                className={classes.navLink}
+                            >
+                                Intervention
+                            </Button>
+                        </Link>
+                    </ListItem>
+                )}
             {location.pathname !== "/about" && (
                 <ListItem className={classes.listItem}>
                     <Link href="/about" style={{ textDecoration: "none" }}>

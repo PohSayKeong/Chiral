@@ -14,6 +14,7 @@ import Button from "../../CustomButtons/Button";
 import ReportConfirmationModal from "./ReportConfirmationModal";
 
 import styles from "styles/jss/material-kit-react/modalStyle";
+import { parseRelativeUrl } from "next/dist/shared/lib/router/utils/parse-relative-url";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -28,11 +29,13 @@ export default function RportConfirmationModal(props) {
     return (
         <div>
             <Button
-                color="danger"
+                {...props}
+                color="transparent"
                 onClick={() => setModal(true)}
                 className={props.btnClass}
+                style={{ position: "absolute", right: 0, top: 0, fontSize: 32 }}
             >
-                Report
+                ⚠
             </Button>
             <Dialog
                 classes={{
