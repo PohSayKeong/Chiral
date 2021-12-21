@@ -1,5 +1,6 @@
 import * as React from "react";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const drawerBleeding = 150;
 
@@ -51,14 +52,12 @@ export default function SwipeableEdgeDrawer(props) {
                     width: "100%",
                 }}
             >
-                <div
+                <KeyboardArrowUpIcon
                     style={{
-                        width: 30,
-                        height: 6,
-                        backgroundColor: "grey",
-                        borderRadius: "3px",
-                        margin: "1rem",
+                        transform: `${open ? "rotate(180deg)" : ""}`,
+                        transition: "transform 0.3s",
                     }}
+                    fontSize="large"
                 />
                 {props.children}
             </div>

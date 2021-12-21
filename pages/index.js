@@ -17,8 +17,10 @@ import Image from "next/image";
 
 // Sections for this page
 import ProductSection from "../components/landing/ProductSection";
-import Carousel from "UI/Carousel/Carousel";
+import Carousel from "components/landing/Carousel";
 import Link from "next/link";
+import Head from "next/head";
+import * as ga from "/lib/ga";
 
 const dashboardRoutes = [];
 
@@ -29,6 +31,9 @@ export default function LandingPage() {
 
     return (
         <>
+            <Head>
+                <title>Chiral | P2P Courier Platform</title>
+            </Head>
             <Header
                 color="transparent"
                 routes={dashboardRoutes}
@@ -70,6 +75,11 @@ export default function LandingPage() {
                             color="primary"
                             size="lg"
                             className={classes.appButton}
+                            onClick={() =>
+                                ga.event({
+                                    action: "try_chiral",
+                                })
+                            }
                         >
                             try chiral today!
                         </Button>

@@ -14,7 +14,6 @@ import CloseChatButton from "./CloseChatButton";
 import { CustomMessageInput } from "./CustomMessageInput";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import "stream-chat-react/dist/css/index.css";
 
 const Chatbox = (props) => {
     const [chatClient, setChatClient] = useState(null);

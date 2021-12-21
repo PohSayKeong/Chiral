@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/styles";
 import PastDelivery from "./PastDelivery";
 import CustomDropdown from "UI/CustomDropdown/CustomDropdown";
 import UserInfo from "./UserInfo";
+import * as ga from "/lib/ga";
 
 const useStyles = makeStyles({
     tabs: {
@@ -75,6 +76,12 @@ const DeliveriesContainer = () => {
             (request) => request.pickupAddress === web3Ctx.userAccount
         );
     }
+
+    const handleFilter = (param) => {
+        ga.event({ action: `filter_${param.toLowerCase()}` });
+        setFilter(param);
+    };
+
     return (
         <Fragment>
             <div className={classes.tabs}>
@@ -98,7 +105,7 @@ const DeliveriesContainer = () => {
                     <CustomDropdown
                         buttonText={filter}
                         dropdownList={["All", "Courier", "Sender"]}
-                        onClick={setFilter}
+                        onClick={handleFilter}
                         buttonProps={{
                             color: "info",
                         }}

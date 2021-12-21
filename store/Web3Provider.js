@@ -10,6 +10,7 @@ import received from "./requestHelpers/received";
 import cancelled from "./requestHelpers/cancelled";
 import reported from "./requestHelpers/reported";
 import getRequests from "./requestHelpers/getRequests";
+import * as ga from "/lib/ga";
 
 import awardSender from "./interventionHelpers/awardSender";
 import awardCourier from "./interventionHelpers/awardCourier";
@@ -28,12 +29,13 @@ const Web3Provider = (props) => {
     const web3Setup = useCallback(async () => {
         try {
             const web3Values = await initWeb3Provider();
+            ga.event({ action: "wallet_connected" });
             web3Values.web3.currentProvider.on("accountsChanged", web3Setup);
             setWeb3State(web3Values);
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
-                `Please restart the app and login with Portis/Metamask. Ensure that you are on the Mumbai testnet`
+                `Please restart the app and login with Torus/Metamask. Ensure that you are on the Mumbai testnet`
             );
             console.error(error);
         }
@@ -83,34 +85,43 @@ const Web3Provider = (props) => {
 
     const handleBuyTokens = async () => {
         if (web3State.newUser) {
+            ga.event({ action: "claim_token" });
             await buyTokens(1000, web3State, dispatch);
             await updateUserTokens();
+            setWeb3State((prevState) => {
+                return { ...prevState, newUser: false };
+            });
         }
     };
 
     const handleSubmitRequest = async (data) => {
+        ga.event({ action: "submit_request" });
         await submitRequest(data, web3State, dispatch);
         await updateUserTokens();
         await handleGetRequests();
     };
 
     const handleAcceptRequest = async (data) => {
+        ga.event({ action: "accept_request" });
         await acceptRequest(data, web3State, dispatch);
         await updateUserTokens();
         await handleGetRequests();
     };
 
     const handleDelivered = async (data) => {
+        ga.event({ action: "delivered" });
         await delivered(data, web3State, dispatch);
         await handleGetRequests();
     };
 
     const handleReceived = async (data) => {
+        ga.event({ action: "received" });
         await received(data, web3State, dispatch);
         await handleGetRequests();
     };
 
     const handleCancelled = async (data) => {
+        ga.event({ action: "cancelled" });
         await cancelled(data, web3State, dispatch);
         await updateUserTokens();
         await handleGetRequests();

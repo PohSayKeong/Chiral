@@ -8,9 +8,9 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
-    "@opengsn/provider": "^2.2.2",
-    "@portis/web3": "^2.0.0-beta.59",
+    "@opengsn/provider": "2.2.4",
     "@reduxjs/toolkit": "^1.6.1",
+    "@toruslabs/torus-embed": "1.12.1",
     "classnames": "^2.3.1",
     "d3-ease": "^3.0.1",
     "next": "^12.0.7",

@@ -44,58 +44,56 @@ const MobileBar = (props) => {
         </Fragment>
     );
     return (
-        <div className={classes.mobileBar}>
-            <GridContainer className="Grid">
-                <GridItem xs={3}>
-                    <Button
-                        onClick={() => setTab("explore")}
-                        className={classes.mobileBarButton}
-                        color="primary"
-                    >
-                        {tab === "explore" ? (
-                            <Info>{explore}</Info>
-                        ) : (
-                            <p>{explore}</p>
-                        )}
-                    </Button>
-                </GridItem>
-                <GridItem xs={3}>
-                    <Button
-                        onClick={() => setTab("form")}
-                        className={classes.mobileBarButton}
-                        color="primary"
-                    >
-                        {tab === "form" ? <Info>{form}</Info> : <p>{form}</p>}
-                    </Button>
-                </GridItem>
-                <GridItem xs={3}>
-                    <Button
-                        onClick={() => setTab("requests")}
-                        className={classes.mobileBarButton}
-                        color="primary"
-                    >
-                        {tab === "requests" ? (
-                            <Info>{requests}</Info>
-                        ) : (
-                            <p>{requests}</p>
-                        )}
-                    </Button>
-                </GridItem>
-                <GridItem xs={3}>
-                    <Button
-                        onClick={() => setTab("deliveries")}
-                        className={classes.mobileBarButton}
-                        color="primary"
-                    >
-                        {tab === "deliveries" ? (
-                            <Info>{deliveries}</Info>
-                        ) : (
-                            <p>{deliveries}</p>
-                        )}
-                    </Button>
-                </GridItem>
-            </GridContainer>
-        </div>
+        <GridContainer className={classes.mobileBar}>
+            <GridItem xs={3}>
+                <Button
+                    onClick={() => setTab("explore")}
+                    className={classes.mobileBarButton}
+                    color="primary"
+                >
+                    {tab === "explore" ? (
+                        <Info>{explore}</Info>
+                    ) : (
+                        <p>{explore}</p>
+                    )}
+                </Button>
+            </GridItem>
+            <GridItem xs={3}>
+                <Button
+                    onClick={() => setTab("form")}
+                    className={classes.mobileBarButton}
+                    color="primary"
+                >
+                    {tab === "form" ? <Info>{form}</Info> : <p>{form}</p>}
+                </Button>
+            </GridItem>
+            <GridItem xs={3}>
+                <Button
+                    onClick={() => setTab("requests")}
+                    className={classes.mobileBarButton}
+                    color="primary"
+                >
+                    {tab === "requests" ? (
+                        <Info>{requests}</Info>
+                    ) : (
+                        <p>{requests}</p>
+                    )}
+                </Button>
+            </GridItem>
+            <GridItem xs={3}>
+                <Button
+                    onClick={() => setTab("deliveries")}
+                    className={classes.mobileBarButton}
+                    color="primary"
+                >
+                    {tab === "deliveries" ? (
+                        <Info>{deliveries}</Info>
+                    ) : (
+                        <p>{deliveries}</p>
+                    )}
+                </Button>
+            </GridItem>
+        </GridContainer>
     );
 };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
+import Head from "next/head";
 // @material-ui/icons
 
 // core components
@@ -15,7 +15,7 @@ import styles from "../../components/about/aboutStyles";
 import Image from "next/image";
 
 // Sections for this page
-import Carousel from "UI/Carousel/Carousel";
+import Carousel from "components/about/Carousel";
 
 import SpeechBubble from "components/about/SpeechBubble";
 
@@ -36,6 +36,9 @@ export default function AboutPage() {
     }, []);
     return (
         <>
+            <Head>
+                <title>Chiral | P2P Courier Platform | About</title>
+            </Head>
             <Header
                 color="transparent"
                 brand="Chiral"
@@ -55,7 +58,7 @@ export default function AboutPage() {
             />
             <Parallax
                 filter
-                image={"images/landing-bg.webp"}
+                image={"/images/landing-bg.webp"}
                 className={classes.parallax}
             >
                 <GridContainer
@@ -93,8 +96,9 @@ export default function AboutPage() {
                         target={300}
                     />
                     <Grow in={scrollPosition > 400}>
-                        <h1 className={classes.section}>How Chiral Works</h1>
+                        <h1 className={classes.section}>Why Chiral</h1>
                     </Grow>
+                    {scrollPosition > 400 && <Carousel />}
                 </div>
             </div>
             <Footer />
