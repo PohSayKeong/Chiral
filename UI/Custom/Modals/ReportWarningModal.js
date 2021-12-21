@@ -14,7 +14,6 @@ import Button from "../../CustomButtons/Button";
 import ReportConfirmationModal from "./ReportConfirmationModal";
 
 import styles from "styles/jss/material-kit-react/modalStyle";
-import { parseRelativeUrl } from "next/dist/shared/lib/router/utils/parse-relative-url";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -78,11 +77,11 @@ export default function RportConfirmationModal(props) {
                         <br />
                         1. There is <strong>no way</strong> to cancel a report
                         <br />
-                        2. The conflict will be resolved by a neutral third
-                        party
+                        2. The outcome of the report will be resolved by a
+                        neutral third party and is irreversable
                         <br />
-                        3. Who the tokens are awarded to is up to the discretion
-                        of aforementioned third party
+                        3. Fees equal to the delivery fee will be incurred
+                        regardless of the outcome.
                         <br />
                         <br />
                         By proceeding, you agree to the terms stated above.

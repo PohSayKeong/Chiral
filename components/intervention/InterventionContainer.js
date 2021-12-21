@@ -21,7 +21,13 @@ const InterventionContainer = () => {
     Web3Context;
 
     return (
-        <div style={{ padding: "12px" }}>
+        <div
+            style={{
+                padding: "12px",
+                height: "800px",
+                overflow: "auto",
+            }}
+        >
             {reportedRequests.map((item) => {
                 return <Intervention data={item} key={uuidv4()} />;
             })}

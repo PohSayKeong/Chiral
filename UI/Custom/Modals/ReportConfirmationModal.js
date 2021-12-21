@@ -11,7 +11,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Close from "@material-ui/icons/Close";
 // core components
 import Button from "../../CustomButtons/Button";
-import Input from "@material-ui/core/Input";
 
 import styles from "styles/jss/material-kit-react/modalStyle";
 
@@ -34,11 +33,11 @@ export default function RportConfirmationModal(props) {
     return (
         <div>
             <Button
-                color="success"
+                color="primary"
                 onClick={() => setModal(true)}
                 className={props.btnClass}
             >
-                Yes, I understand
+                I understand
             </Button>
             <Dialog
                 classes={{
@@ -74,7 +73,7 @@ export default function RportConfirmationModal(props) {
                 >
                     <p>
                         You <strong>will not</strong> be able to undo this
-                        action, proceed?
+                        action. Proceed?
                     </p>
                 </DialogContent>
                 <DialogActions
@@ -83,7 +82,7 @@ export default function RportConfirmationModal(props) {
                     }
                 >
                     <Button onClick={() => setModal(false)}>Cancel</Button>
-                    <Button onClick={handleConfirmClick} color="success">
+                    <Button onClick={handleConfirmClick} color="primary">
                         Yes
                     </Button>
                 </DialogActions>
