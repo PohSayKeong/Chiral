@@ -33,7 +33,7 @@ const Mobile = () => {
         }
     }, [view]);
     const showBar = useMediaQuery({
-        query: "(min-height: 600px)",
+        query: "(min-height: 530px)",
     });
 
     return (
