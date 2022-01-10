@@ -95,7 +95,9 @@ export default function RequestForm() {
         destinationUnitProps.isValid &&
         selectedWeight !== "" &&
         (sendingItem === 1 ? valueProps.isValid : true) &&
-        (clicked ? feesProps.isValid : true)
+        (clicked
+            ? feesProps.isValid && web3Ctx.userTokens >= feesProps.value
+            : true)
     ) {
         formIsValid = true;
     }
@@ -317,6 +319,7 @@ export default function RequestForm() {
                             handleSubmit={handleSubmit}
                             formIsValid={formIsValid}
                             clicked={clicked}
+                            enoughTokens={web3Ctx.userTokens >= feesProps.value}
                         />
                     </GridItem>
                 </GridContainer>

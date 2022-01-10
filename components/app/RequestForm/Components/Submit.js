@@ -3,7 +3,11 @@ import Button from "UI/CustomButtons/Button";
 
 const Submit = (props) => {
     const buttonProps = {
-        text: props.clicked ? "Confirm" : "Show on map",
+        text: props.clicked
+            ? props.enoughTokens
+                ? "Confirm"
+                : "Not enough tokens"
+            : "Show on map",
         color: props.clicked ? "primary" : "info",
     };
     return (
