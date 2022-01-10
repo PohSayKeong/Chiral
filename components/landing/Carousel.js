@@ -19,42 +19,21 @@ export default function SectionCarousel() {
             <GridContainer justifyContent="center">
                 <GridItem xs={12} sm={12} md={8}>
                     <Carousel {...settings}>
-                        <video
-                            autoPlay
-                            loop
-                            muted
+                        <img
+                            src="images/carousel1.gif"
                             alt="Uses of Chiral Tokens"
                             className="slick-image"
-                        >
-                            <source
-                                src={"images/carousel1.mp4"}
-                                type="video/mp4"
-                            />
-                        </video>
-                        <video
-                            autoPlay
-                            loop
-                            muted
+                        />
+                        <img
+                            src="images/carousel2.gif"
                             alt="Pay for delivery"
                             className="slick-image"
-                        >
-                            <source
-                                src={"images/carousel2.mp4"}
-                                type="video/mp4"
-                            />
-                        </video>
-                        <video
-                            autoPlay
-                            loop
-                            muted
+                        />
+                        <img
+                            src="images/carousel3.gif"
                             alt="Use as collateral"
                             className="slick-image"
-                        >
-                            <source
-                                src={"images/carousel3.mp4"}
-                                type="video/mp4"
-                            />
-                        </video>
+                        />
                     </Carousel>
                 </GridItem>
             </GridContainer>
