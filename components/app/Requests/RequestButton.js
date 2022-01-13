@@ -7,11 +7,7 @@ import { requestActions } from "store/request-slice";
 import * as ga from "/lib/ga";
 
 const RequestButton = (props) => {
-    const [buttonProps, setButtonProps] = useState({
-        text: props.data.fees + " Tokens",
-        color: "info",
-        clicked: false,
-    });
+    const [clicked, setClicked] = useState(false);
     const web3Ctx = useContext(Web3Context);
     const dispatch = useDispatch();
     const viewData = useSelector((state) => state.request.viewData);
@@ -29,38 +25,24 @@ const RequestButton = (props) => {
 
     if (viewData) {
         // Another item is selected, reset current button
-        if (
-            viewData.index !== props.data.index &&
-            buttonProps.clicked === true
-        ) {
-            setButtonProps({
-                ...buttonProps,
-                color: "info",
-                clicked: false,
-            });
+        if (viewData.index !== props.data.index && clicked === true) {
+            setClicked(false);
         }
 
         // This item is selected, change button to selected state
-        if (
-            viewData.index === props.data.index &&
-            buttonProps.clicked === false
-        ) {
-            setButtonProps({
-                ...buttonProps,
-                color: "primary",
-                clicked: true,
-            });
+        if (viewData.index === props.data.index && clicked === false) {
+            setClicked(true);
         }
     }
 
     return (
         <Button
             type="button"
-            color={buttonProps.color}
+            color={clicked ? "primary" : "info"}
             onClick={viewHandler}
             disabled={parseInt(web3Ctx.userTokens) < parseInt(props.data.value)}
         >
-            {buttonProps.text}
+            {clicked ? "confirm" : `${props.data.fees} Tokens`}
         </Button>
     );
 };

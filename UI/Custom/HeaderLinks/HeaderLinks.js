@@ -80,7 +80,7 @@ export default function HeaderLinksApp() {
                         })
                     }
                 >
-                    Sign Up
+                    Alpha
                 </Button>
             </ListItem>
             {location.pathname === "/app" && web3Ctx.userAccount && (

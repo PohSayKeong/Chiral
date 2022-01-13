@@ -239,6 +239,13 @@ export default function RequestForm() {
             </Tabs>
             <form style={{ width: "100%" }}>
                 <GridContainer alignItems="center" direction="column">
+                    <GridItem xs={10} md={8} style={{ marginTop: "2rem" }}>
+                        <b>
+                            {sendingItem
+                                ? "The courier will collect a package from you and send it to the designated location"
+                                : "The courier will purchase the item(s) on your behalf and deliver to the designated location"}
+                        </b>
+                    </GridItem>
                     <GridItem xs={10} md={8}>
                         <Name {...nameProps} />
                     </GridItem>

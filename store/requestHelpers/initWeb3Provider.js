@@ -20,6 +20,7 @@ export default async function initWeb3Provider() {
                 },
             },
         });
+        web3Modal.clearCachedProvider();
 
         const provider = await web3Modal.connect();
 
