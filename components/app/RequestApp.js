@@ -1,6 +1,6 @@
 import React, { useContext, Suspense } from "react";
 import { useMediaQuery } from "react-responsive";
-import Web3Context from "store/Web3-context";
+import Web3Context from "store/web3/Web3-context";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import dynamic from "next/dynamic";

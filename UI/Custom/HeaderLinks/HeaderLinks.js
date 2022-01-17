@@ -7,7 +7,7 @@ import ListItem from "@material-ui/core/ListItem";
 // core components
 import Button from "../../CustomButtons/Button.js";
 import styles from "../../../styles/jss/material-kit-react/components/headerLinksStyle.js";
-import Web3Context from "store/Web3-context";
+import Web3Context from "store/web3/Web3-context";
 import Link from "next/link";
 import * as ga from "/lib/ga";
 

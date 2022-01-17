@@ -2,7 +2,7 @@ import React, { useContext, Fragment } from "react";
 import Button from "UI/CustomButtons/Button";
 import { chatActions } from "store/chat-slice";
 import { useDispatch } from "react-redux";
-import Web3Context from "store/Web3-context";
+import Web3Context from "store/web3/Web3-context";
 import * as ga from "/lib/ga";
 
 const OpenChatButton = (props) => {

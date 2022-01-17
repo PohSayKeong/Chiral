@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 // core components
 import GridContainer from "UI/Grid/GridContainer.js";
 import GridItem from "UI/Grid/GridItem.js";
-import Web3Context from "store/Web3-context";
+import Web3Context from "store/web3/Web3-context";
 import useInput from "hooks/use-input.js";
 import WeightRadio from "./Components/WeightRadio";
 import fetchLatLng from "helpers/fetchLatLng.js";

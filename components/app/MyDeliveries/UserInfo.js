@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import Card from "UI/Card/Card";
 import CardBody from "UI/Card/CardBody";
 import Button from "UI/CustomButtons/Button";
-import Web3Context from "store/Web3-context";
+import Web3Context from "store/web3/Web3-context";
 import GridContainer from "UI/Grid/GridContainer";
 import GridItem from "UI/Grid/GridItem";
 import * as ga from "/lib/ga";

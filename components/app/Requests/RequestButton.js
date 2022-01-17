@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "UI/CustomButtons/Button";
-import Web3Context from "store/Web3-context";
+import Web3Context from "store/web3/Web3-context";
 import { chatActions } from "store/chat-slice";
 import { requestActions } from "store/request-slice";
 import * as ga from "/lib/ga";

@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useContext } from "react";
 import { useSelector } from "react-redux";
-import Web3Context from "store/Web3-context";
+import Web3Context from "store/web3/Web3-context";
 import Delivery from "./Delivery";
 import { v4 as uuidv4 } from "uuid";
 import { Tabs, Tab } from "@material-ui/core";
