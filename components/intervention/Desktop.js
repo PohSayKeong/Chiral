@@ -18,6 +18,8 @@ const Desktop = () => {
             {notification && <Notification status={notification.status} />}
             <Header
                 color="primary"
+                rightLinks={<HeaderLinks />}
+                brand="Chiral"
                 icon={
                     <Image
                         src="/images/chiralIcon.png"
@@ -25,8 +27,6 @@ const Desktop = () => {
                         width={80}
                     />
                 }
-                rightLinks={<HeaderLinks />}
-                fixed
             />
             <GridContainer spacing={1} style={{ marginTop: "70px" }}>
                 <GridItem md={6}>
