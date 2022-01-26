@@ -28,37 +28,24 @@ export default async function initWeb3Provider() {
         if (window.ethereum) {
             try {
                 await window.ethereum.request({
-                    method: "wallet_switchEthereumChain",
-                    params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
-                });
-            } catch (error) {
-                if (error.code === 4902) {
-                    try {
-                        await window.ethereum.request({
-                            method: "wallet_addEthereumChain",
-                            params: [
-                                {
-                                    chainId: "0x13881",
-                                    chainName: "Polygon Testnet Mumbai",
-                                    rpcUrls: [
-                                        "https://matic-testnet-archive-rpc.bwarelabs.com/",
-                                    ],
-                                    nativeCurrency: {
-                                        name: "MATIC",
-                                        symbol: "MATIC",
-                                        decimals: 18,
-                                    },
-                                    blockExplorerUrls: [
-                                        "https://mumbai.polygonscan.com/",
-                                    ],
-                                },
+                    method: "wallet_addEthereumChain",
+                    params: [
+                        {
+                            chainId: "0x13881",
+                            chainName: "Polygon Testnet Mumbai",
+                            rpcUrls: [
+                                "https://matic-testnet-archive-rpc.bwarelabs.com/",
                             ],
-                        });
-                    } catch (addError) {
-                        console.error(addError);
-                    }
-                }
-                console.error(error);
+                            nativeCurrency: {
+                                name: "MATIC",
+                                symbol: "MATIC",
+                                decimals: 18,
+                            },
+                        },
+                    ],
+                });
+            } catch (addError) {
+                console.error(addError);
             }
         }
 
