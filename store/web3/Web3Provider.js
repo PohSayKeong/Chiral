@@ -1,19 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Web3Context from "./Web3-context";
 import { useDispatch, useSelector } from "react-redux";
-import initWeb3Provider from "./requestHelpers/initWeb3Provider";
-import buyTokens from "./tokenHelper/buyTokens";
-import submitRequest from "./requestHelpers/submitRequest";
-import acceptRequest from "./requestHelpers/acceptRequest";
-import delivered from "./requestHelpers/delivered";
-import received from "./requestHelpers/received";
-import cancelled from "./requestHelpers/cancelled";
-import reported from "./requestHelpers/reported";
-import getRequests from "./requestHelpers/getRequests";
+import initWeb3Provider from "./initWeb3Provider";
+import buyTokens from "../tokenHelper/buyTokens";
+import submitRequest from "../requestHelpers/submitRequest";
+import acceptRequest from "../requestHelpers/acceptRequest";
+import delivered from "../requestHelpers/delivered";
+import received from "../requestHelpers/received";
+import cancelled from "../requestHelpers/cancelled";
+import reported from "../requestHelpers/reported";
+import getRequests from "../requestHelpers/getRequests";
 import * as ga from "/lib/ga";
 
-import awardSender from "./interventionHelpers/awardSender";
-import awardCourier from "./interventionHelpers/awardCourier";
+import awardSender from "../interventionHelpers/awardSender";
+import awardCourier from "../interventionHelpers/awardCourier";
 
 const Web3Provider = (props) => {
     const [web3State, setWeb3State] = useState({
