@@ -63,6 +63,20 @@ export default function LandingPage() {
                             want and what you want.
                         </h4>
                         <br />
+                        <Link href="/app" style={{ textDecoration: "none" }}>
+                            <Button
+                                color="primary"
+                                size="lg"
+                                className={classes.appButton}
+                                onClick={() =>
+                                    ga.event({
+                                        action: "try_chiral",
+                                    })
+                                }
+                            >
+                                try chiral today!
+                            </Button>
+                        </Link>
                     </GridItem>
                 </GridContainer>
             </Parallax>
