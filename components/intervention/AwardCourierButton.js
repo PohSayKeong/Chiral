@@ -1,5 +1,5 @@
 import React, { Fragment, useContext } from "react";
-import Web3Context from "store/Web3-context";
+import Web3Context from "store/web3/Web3-context";
 import { chatActions } from "store/chat-slice";
 import { requestActions } from "store/request-slice";
 import { useDispatch } from "react-redux";

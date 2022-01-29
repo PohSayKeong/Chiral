@@ -1,5 +1,5 @@
 import React from "react";
-import Web3Provider from "store/Web3Provider";
+import Web3Provider from "store/web3/Web3Provider";
 import { Provider } from "react-redux";
 import store from "store/index";
 import InterventionApp from "components/intervention/InterventionApp";
