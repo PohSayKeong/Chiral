@@ -14,7 +14,7 @@ const getRequests = async (
         let result = [];
         await requestManagerInstance
             .getPastEvents("allEvents", {
-                fromBlock: 20565821,
+                fromBlock: 23649207,
             })
             .then((response) =>
                 response.map((item) => {

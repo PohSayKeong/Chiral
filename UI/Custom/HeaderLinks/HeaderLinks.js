@@ -35,7 +35,7 @@ export default function HeaderLinks() {
                     </Link>
                 </ListItem>
             )}
-            {location.pathname !== "/about" &&
+            {/* {location.pathname !== "/about" &&
                 location.pathname !== "/intervention" && (
                     <ListItem className={classes.listItem}>
                         <Link
@@ -50,7 +50,7 @@ export default function HeaderLinks() {
                             </Button>
                         </Link>
                     </ListItem>
-                )}
+                )} */}
             {location.pathname !== "/about" && (
                 <ListItem
                     className={classes.listItem}

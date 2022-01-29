@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 // material-ui components
 import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
@@ -21,14 +21,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const useStyles = makeStyles(styles);
 
-export default function RportConfirmationModal(props) {
+const ReportWarningModal = (props) => {
     const [modal, setModal] = useState(false);
     const classes = useStyles();
 
     return (
         <div>
             <Button
-                {...props}
                 color="transparent"
                 onClick={() => setModal(true)}
                 className={props.btnClass}
@@ -101,4 +100,8 @@ export default function RportConfirmationModal(props) {
             </Dialog>
         </div>
     );
-}
+};
+
+export default forwardRef((props, ref) => (
+    <ReportWarningModal {...props} forwardedRef={ref} />
+));
