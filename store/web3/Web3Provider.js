@@ -82,11 +82,14 @@ const Web3Provider = (props) => {
     const handleBuyTokens = async () => {
         if (web3State.newUser) {
             ga.event({ action: "claim_token" });
-            await buyTokens(1000, web3State, dispatch);
-            await updateUserTokens();
-            setWeb3State((prevState) => {
-                return { ...prevState, newUser: false };
+            await buyTokens(1000, web3State, dispatch).then((res) => {
+                if (res.success) {
+                    setWeb3State((prevState) => {
+                        return { ...prevState, newUser: false };
+                    });
+                }
             });
+            await updateUserTokens();
         }
     };
 

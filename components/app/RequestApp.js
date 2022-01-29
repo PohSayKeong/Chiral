@@ -4,6 +4,7 @@ import Web3Context from "store/web3/Web3-context";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import dynamic from "next/dynamic";
+import ClaimTokenModal from "./ClaimTokenModal";
 
 const Desktop = dynamic(() => import("./Desktop/Desktop"));
 const Mobile = dynamic(() => import("./Mobile/Mobile"));
@@ -19,6 +20,9 @@ const RequestApp = () => {
                 <Backdrop style={{ zIndex: "1" }} open={true}>
                     <CircularProgress />
                 </Backdrop>
+            )}
+            {web3Ctx.newUser && (
+                <ClaimTokenModal handleClaimTokens={web3Ctx.handleBuyTokens} />
             )}
             {isDesktopOrLaptop && <Desktop />}
             {!isDesktopOrLaptop && <Mobile />}

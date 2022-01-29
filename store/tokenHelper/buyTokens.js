@@ -17,8 +17,14 @@ const buyTokens = async (amount, web3State, dispatch) => {
                 gas: 50000,
             });
         dispatch(uiActions.showNotification({ status: "success" }));
+        return {
+            success: true,
+        };
     } catch {
         dispatch(uiActions.showNotification({ status: "failure" }));
+        return {
+            success: false,
+        };
     }
 };
 

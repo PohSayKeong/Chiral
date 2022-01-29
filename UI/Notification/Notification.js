@@ -11,7 +11,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 
 export default function Notification(props) {
     return (
-        <div style={{ zIndex: "1", position: "absolute", width: "100%" }}>
+        <div style={{ zIndex: "10000", position: "absolute", width: "100%" }}>
             {props.status === "pending" && (
                 <Fragment>
                     <SnackbarContent
