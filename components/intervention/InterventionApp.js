@@ -1,17 +1,16 @@
 import React, { useContext, Suspense, useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
-import Web3Context from "store/web3/Web3-context";
+import Web3Context from "store/Web3-context";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import dynamic from "next/dynamic";
-import ClaimTokenModal from "./ClaimTokenModal";
 import Button from "UI/CustomButtons/Button";
 import Card from "UI/Card/Card";
 
-const Desktop = dynamic(() => import("./Desktop/Desktop"));
-const Mobile = dynamic(() => import("./Mobile/Mobile"));
+const Desktop = dynamic(() => import("components/intervention/Desktop"));
+// const Mobile = dynamic(() => import("layouts/Intervention/Mobile/Mobile"));
 
-const RequestApp = () => {
+const InterventionApp = () => {
     const isDesktopOrLaptop = useMediaQuery({
         query: "(min-width: 1024px)",
     });
@@ -54,13 +53,11 @@ const RequestApp = () => {
                     )}
                 </Backdrop>
             )}
-            {web3Ctx.newUser && (
-                <ClaimTokenModal handleClaimTokens={web3Ctx.handleBuyTokens} />
-            )}
-            {isDesktopOrLaptop && <Desktop />}
-            {!isDesktopOrLaptop && <Mobile />}
+            <Desktop />
+            {/* {isDesktopOrLaptop && <Desktop />} */}
+            {/* {!isDesktopOrLaptop && <Mobile />} */}
         </Suspense>
     );
 };
 
-export default RequestApp;
+export default InterventionApp;

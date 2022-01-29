@@ -1,15 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Web3Context from "./Web3-context";
 import { useDispatch, useSelector } from "react-redux";
-import initWeb3Provider from "./initWeb3Provider";
-import buyTokens from "store/tokenHelper/buyTokens";
-import submitRequest from "store/requestHelpers/submitRequest";
-import acceptRequest from "store/requestHelpers/acceptRequest";
-import delivered from "store/requestHelpers/delivered";
-import received from "store/requestHelpers/received";
-import cancelled from "store/requestHelpers/cancelled";
-import getRequests from "store/requestHelpers/getRequests";
+import initWeb3Provider from "./requestHelpers/initWeb3Provider";
+import buyTokens from "./tokenHelper/buyTokens";
+import submitRequest from "./requestHelpers/submitRequest";
+import acceptRequest from "./requestHelpers/acceptRequest";
+import delivered from "./requestHelpers/delivered";
+import received from "./requestHelpers/received";
+import cancelled from "./requestHelpers/cancelled";
+import reported from "./requestHelpers/reported";
+import getRequests from "./requestHelpers/getRequests";
 import * as ga from "/lib/ga";
+
+import awardSender from "./interventionHelpers/awardSender";
+import awardCourier from "./interventionHelpers/awardCourier";
 
 const Web3Provider = (props) => {
     const [web3State, setWeb3State] = useState({
@@ -126,6 +130,23 @@ const Web3Provider = (props) => {
         await handleGetRequests();
     };
 
+    const handleReported = async (data) => {
+        await reported(data, web3State, dispatch);
+        await handleGetRequests();
+    };
+
+    const handleAwardSender = async (data) => {
+        await awardSender(data, web3State, dispatch);
+        await updateUserTokens();
+        await handleGetRequests();
+    };
+
+    const handleAwardCourier = async (data) => {
+        await awardCourier(data, web3State, dispatch);
+        await updateUserTokens();
+        await handleGetRequests();
+    };
+
     const web3Context = {
         userAccount: web3State.account,
         userTokens: web3State.userTokens,
@@ -135,6 +156,9 @@ const Web3Provider = (props) => {
         handleDelivered,
         handleReceived,
         handleCancelled,
+        handleReported,
+        handleAwardSender,
+        handleAwardCourier,
         newUser: web3State.newUser,
     };
 

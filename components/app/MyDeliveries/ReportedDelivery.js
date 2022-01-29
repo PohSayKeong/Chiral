@@ -4,23 +4,20 @@ import { useSelector } from "react-redux";
 // core components
 import Card from "UI/Card/Card";
 import GridContainer from "UI/Grid/GridContainer";
-import DeliveriesButton from "./DeliveriesButton";
 import OpenChatButton from "components/app/Chat/OpenChatButton";
 import InfoCard from "components/app/InfoCard";
-import ReportButton from "./ReportButton";
 
-const Delivery = (props) => {
+const ReportedDelivery = (props) => {
     const chat = useSelector((state) => state.chat.chatInfo);
 
     return (
         <Card>
             <GridContainer alignItems="center" direction="column">
                 <InfoCard data={props.data} details={true} />
-                {props.data.step != "0" && props.data.value != "0" && (
-                    <ReportButton data={props.data} />
-                )}
                 <GridContainer justifyContent="center">
-                    <DeliveriesButton data={props.data} />
+                    <p style={{ padding: "0px 8px", fontWeight: "bold" }}>
+                        REPORTED
+                    </p>
                     {(!chat || chat.index !== props.data.index) && (
                         <OpenChatButton data={props.data} />
                     )}
@@ -29,4 +26,4 @@ const Delivery = (props) => {
         </Card>
     );
 };
-export default Delivery;
+export default ReportedDelivery;

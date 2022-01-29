@@ -14,7 +14,7 @@ const getRequests = async (
         let result = [];
         await requestManagerInstance
             .getPastEvents("allEvents", {
-                fromBlock: 20565821,
+                fromBlock: 23649207,
             })
             .then((response) =>
                 response.map((item) => {
@@ -107,6 +107,33 @@ const getRequests = async (
                 return request;
             })
             .reverse();
+        const myReportedRequests = result
+            .filter(
+                (request) =>
+                    (request.pickupAddress === account ||
+                        request.courierAddress === account) &&
+                    request.step === "5"
+            )
+            .map(async (request) => {
+                const pickup = fetchAddress(
+                    request.pickup_lng,
+                    request.pickup_lat
+                );
+                const destination = fetchAddress(
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                const requestDistance = fetchDistance(
+                    request.pickup_lng,
+                    request.pickup_lat,
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                [request.pickup, request.destination, request.requestDistance] =
+                    await Promise.all([pickup, destination, requestDistance]);
+                return request;
+            })
+            .reverse();
         const myPastRequests = result
             .filter(
                 (request) =>
@@ -115,12 +142,36 @@ const getRequests = async (
                     request.step === "3"
             )
             .reverse();
+        const reportedRequests = result
+            .filter((request) => request.step === "5")
+            .map(async (request) => {
+                const pickup = fetchAddress(
+                    request.pickup_lng,
+                    request.pickup_lat
+                );
+                const destination = fetchAddress(
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                const requestDistance = fetchDistance(
+                    request.pickup_lng,
+                    request.pickup_lat,
+                    request.destination_lng,
+                    request.destination_lat
+                );
+                [request.pickup, request.destination, request.requestDistance] =
+                    await Promise.all([pickup, destination, requestDistance]);
+                return request;
+            })
+            .reverse();
         if (result.length > 0) {
             dispatch(
                 requestActions.setRequests({
                     availableRequests: await Promise.all(availableRequests),
                     myCurrentRequests: await Promise.all(myCurrentRequests),
+                    myReportedRequests: await Promise.all(myReportedRequests),
                     myPastRequests: myPastRequests,
+                    reportedRequests: await Promise.all(reportedRequests),
                     result: result.length > 0 ? result : prevResult,
                 })
             );
