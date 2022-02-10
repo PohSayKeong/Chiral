@@ -2,6 +2,7 @@
   "name": "chiral",
   "version": "0.1.0",
   "engines": {
+    "node": "14",
     "yarn": "1.x"
   },
   "private": true,
