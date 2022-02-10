@@ -40,13 +40,11 @@ export default function InfoAreaRequests(props) {
                         ) : (
                             ""
                         )}
-                        {props.value && (
-                            <Badge color="info">
-                                {props.value === "0"
-                                    ? "Purchase"
-                                    : `${props.value} Tokens`}
-                            </Badge>
-                        )}
+                        <Badge color="info">
+                            {props.value === 0
+                                ? "Purchase"
+                                : `${props.value} Tokens`}
+                        </Badge>
                     </div>
                 </div>
                 <p className={classes.description}>

@@ -14,17 +14,17 @@ const DeliveriesButton = (props) => {
         dispatch(chatActions.setChat(null));
         if (
             web3Ctx.userAccount === props.data.pickupAddress &&
-            props.data.step === "2"
+            props.data.step === 2
         ) {
             web3Ctx.handleReceived(props.data);
         } else if (
             web3Ctx.userAccount === props.data.courierAddress &&
-            props.data.step === "1"
+            props.data.step === 1
         ) {
             web3Ctx.handleDelivered(props.data);
         } else if (
             web3Ctx.userAccount === props.data.pickupAddress &&
-            props.data.step === "0"
+            props.data.step === 0
         ) {
             web3Ctx.handleCancelled(props.data);
         }
@@ -33,19 +33,19 @@ const DeliveriesButton = (props) => {
     return (
         <Button type="button" color="primary" onClick={clickHandler}>
             {web3Ctx.userAccount === props.data.pickupAddress &&
-                props.data.step === "0" &&
+                props.data.step === 0 &&
                 "Cancel"}
             {web3Ctx.userAccount === props.data.pickupAddress &&
-                props.data.step === "1" &&
+                props.data.step === 1 &&
                 "Delivering"}
             {web3Ctx.userAccount === props.data.pickupAddress &&
-                props.data.step === "2" &&
+                props.data.step === 2 &&
                 "Received"}
             {web3Ctx.userAccount === props.data.courierAddress &&
-                props.data.step === "1" &&
+                props.data.step === 1 &&
                 "Delivered"}
             {web3Ctx.userAccount === props.data.courierAddress &&
-                props.data.step === "2" &&
+                props.data.step === 2 &&
                 "Confirming"}
         </Button>
     );

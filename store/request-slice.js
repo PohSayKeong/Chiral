@@ -8,7 +8,6 @@ const requestSlice = createSlice({
         myPastRequests: [],
         myReportedRequests: [],
         reportedRequests: [],
-        result: [],
         viewData: null,
         filterData: [],
     },
@@ -19,7 +18,6 @@ const requestSlice = createSlice({
             state.myReportedRequests = action.payload.myReportedRequests;
             state.myPastRequests = action.payload.myPastRequests;
             state.reportedRequests = action.payload.reportedRequests;
-            state.result = action.payload.result;
         },
         setViewData(state, action) {
             state.viewData = action.payload;

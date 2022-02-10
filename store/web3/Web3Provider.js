@@ -23,7 +23,6 @@ const Web3Provider = (props) => {
         requestManagerInstance: {},
     });
     const userCoord = useSelector((state) => state.user.location);
-    const prevResult = useSelector((state) => state.request.result);
     const dispatch = useDispatch();
 
     const web3Setup = useCallback(async () => {
@@ -56,20 +55,8 @@ const Web3Provider = (props) => {
     }, [web3State.account, web3State.tokenInstance.methods]);
 
     const handleGetRequests = useCallback(async () => {
-        await getRequests(
-            web3State.requestManagerInstance,
-            web3State.account,
-            userCoord,
-            prevResult,
-            dispatch
-        );
-    }, [
-        web3State.requestManagerInstance,
-        web3State.account,
-        userCoord,
-        prevResult,
-        dispatch,
-    ]);
+        await getRequests(web3State.account, userCoord, dispatch);
+    }, [web3State.account, userCoord, dispatch]);
 
     // get user tokens and request when app launches
     useEffect(() => {

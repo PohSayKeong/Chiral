@@ -1,182 +1,103 @@
-import fetchAddress from "helpers/fetchAddress";
-import { fetchDistance } from "helpers/fetchDistance";
 import { requestActions } from "store/request-slice";
+import { functions, db } from "../../firebase/app";
+import { httpsCallable } from "firebase/functions";
+import { collection, query, where, getDocs } from "firebase/firestore";
+const { fetchRequestDistance } = require("helpers/fetchDistance");
 
-const getRequests = async (
-    requestManagerInstance,
-    account,
-    targetCoord,
-    prevResult,
-    dispatch
-) => {
-    if (requestManagerInstance.events) {
-        const toCoord = Math.pow(10, 15).toFixed(10);
-        let result = [];
-        await requestManagerInstance
-            .getPastEvents("allEvents", {
-                fromBlock: 23649207,
-            })
-            .then((response) =>
-                response.map((item) => {
-                    if (item.returnValues.step === "0") {
-                        const temp = {
-                            ...item.returnValues,
-                            ...item.returnValues.pickup,
-                            ...item.returnValues.destination,
-                        };
-                        temp.pickup_lng /= toCoord;
-                        temp.pickup_lat /= toCoord;
-                        temp.destination_lng /= toCoord;
-                        temp.destination_lat /= toCoord;
-                        result.push(temp);
-                    } else {
-                        result[item.returnValues.index] = {
-                            ...result[item.returnValues.index],
-                            ...item.returnValues,
-                        };
-                    }
-                    return true;
-                })
-            );
-        if (
-            result.length === prevResult.length &&
-            result.every((element, index) => {
-                return prevResult[index].step === element.step;
-            })
-        ) {
-            return;
-        }
-        const availableRequests = result
-            .filter(
-                (request) =>
-                    request.step === "0" && request.pickupAddress !== account
-            )
-            .map(async (request) => {
-                const pickup = fetchAddress(
-                    request.pickup_lng,
-                    request.pickup_lat
-                );
-                const destination = fetchAddress(
-                    request.destination_lng,
-                    request.destination_lat
-                );
-                const requestDistance = fetchDistance(
-                    request.pickup_lng,
-                    request.pickup_lat,
-                    request.destination_lng,
-                    request.destination_lat
-                );
-                if (targetCoord) {
-                    request.distanceToUser = await fetchDistance(
-                        request.pickup_lng,
-                        request.pickup_lat,
-                        targetCoord.lng,
-                        targetCoord.lat
-                    );
-                }
-                [request.pickup, request.destination, request.requestDistance] =
-                    await Promise.all([pickup, destination, requestDistance]);
-                return request;
-            });
-        const myCurrentRequests = result
-            .filter(
-                (request) =>
-                    (request.pickupAddress === account ||
-                        request.courierAddress === account) &&
-                    (request.step === "0" ||
-                        request.step === "1" ||
-                        request.step === "2")
-            )
-            .map(async (request) => {
-                const pickup = fetchAddress(
-                    request.pickup_lng,
-                    request.pickup_lat
-                );
-                const destination = fetchAddress(
-                    request.destination_lng,
-                    request.destination_lat
-                );
-                const requestDistance = fetchDistance(
-                    request.pickup_lng,
-                    request.pickup_lat,
-                    request.destination_lng,
-                    request.destination_lat
-                );
-                [request.pickup, request.destination, request.requestDistance] =
-                    await Promise.all([pickup, destination, requestDistance]);
-                return request;
-            })
-            .reverse();
-        const myReportedRequests = result
-            .filter(
-                (request) =>
-                    (request.pickupAddress === account ||
-                        request.courierAddress === account) &&
-                    request.step === "5"
-            )
-            .map(async (request) => {
-                const pickup = fetchAddress(
-                    request.pickup_lng,
-                    request.pickup_lat
-                );
-                const destination = fetchAddress(
-                    request.destination_lng,
-                    request.destination_lat
-                );
-                const requestDistance = fetchDistance(
-                    request.pickup_lng,
-                    request.pickup_lat,
-                    request.destination_lng,
-                    request.destination_lat
-                );
-                [request.pickup, request.destination, request.requestDistance] =
-                    await Promise.all([pickup, destination, requestDistance]);
-                return request;
-            })
-            .reverse();
-        const myPastRequests = result
-            .filter(
-                (request) =>
-                    (request.pickupAddress === account ||
-                        request.courierAddress === account) &&
-                    request.step === "3"
-            )
-            .reverse();
-        const reportedRequests = result
-            .filter((request) => request.step === "5")
-            .map(async (request) => {
-                const pickup = fetchAddress(
-                    request.pickup_lng,
-                    request.pickup_lat
-                );
-                const destination = fetchAddress(
-                    request.destination_lng,
-                    request.destination_lat
-                );
-                const requestDistance = fetchDistance(
-                    request.pickup_lng,
-                    request.pickup_lat,
-                    request.destination_lng,
-                    request.destination_lat
-                );
-                [request.pickup, request.destination, request.requestDistance] =
-                    await Promise.all([pickup, destination, requestDistance]);
-                return request;
-            })
-            .reverse();
-        if (result.length > 0) {
-            dispatch(
-                requestActions.setRequests({
-                    availableRequests: await Promise.all(availableRequests),
-                    myCurrentRequests: await Promise.all(myCurrentRequests),
-                    myReportedRequests: await Promise.all(myReportedRequests),
-                    myPastRequests: myPastRequests,
-                    reportedRequests: await Promise.all(reportedRequests),
-                    result: result.length > 0 ? result : prevResult,
-                })
+const getRequests = async (account, targetCoord, dispatch) => {
+    const pollRequests = httpsCallable(functions, "pollRequests");
+    await pollRequests({});
+    const requestsRef = collection(db, "requests");
+
+    // available requests
+    const availableRequestsSnapshot = await getDocs(
+        query(
+            requestsRef,
+            where("step", "==", 0),
+            where("pickupAddress", "!=", account)
+        )
+    );
+    const availableRequests = [];
+    availableRequestsSnapshot.forEach(async (doc) => {
+        const temp = { ...doc.data() };
+        if (targetCoord) {
+            temp.distanceToUser = await fetchRequestDistance(
+                temp.pickup_lng,
+                temp.pickup_lat,
+                targetCoord.lng,
+                targetCoord.lat
             );
         }
-    }
+        availableRequests.push(temp);
+    });
+
+    // requests with user as courier
+    const myCourierRequestsSnapshot = await getDocs(
+        query(requestsRef, where("courierAddress", "==", account))
+    );
+    const myCourierRequests = [];
+    myCourierRequestsSnapshot.forEach((doc) => {
+        myCourierRequests.push(doc.data());
+    });
+
+    // requests with user as requester
+    const myRequesterRequestsSnapshot = await getDocs(
+        query(requestsRef, where("pickupAddress", "==", account))
+    );
+    const myRequesterRequests = [];
+    myRequesterRequestsSnapshot.forEach((doc) => {
+        myRequesterRequests.push(doc.data());
+    });
+
+    // requests with user
+    const myRequests = myCourierRequests.concat(myRequesterRequests);
+    myRequests.sort((a, b) => {
+        return b.index - a.index;
+    });
+
+    // requests with user that is still ongoing
+    const ongoingSteps = [0, 1, 2];
+    const myCurrentRequests = [];
+    myRequests.forEach((request) => {
+        if (request.step in ongoingSteps) {
+            myCurrentRequests.push(request);
+        }
+    });
+
+    // request with user that is complete
+    const myPastRequests = [];
+    myRequests.forEach((request) => {
+        if (!(request.step in ongoingSteps)) {
+            myPastRequests.push(request);
+        }
+    });
+
+    // requests that user reported
+    const myReportedRequests = [];
+    myRequests.forEach((request) => {
+        if (request.step == 5) {
+            myReportedRequests.push(request);
+        }
+    });
+
+    // reported requests
+    const reportedRequestsSnapshot = await getDocs(
+        query(requestsRef, where("step", "==", 5))
+    );
+    const reportedRequests = [];
+    reportedRequestsSnapshot.forEach((doc) => {
+        reportedRequests.push(doc.data());
+    });
+
+    dispatch(
+        requestActions.setRequests({
+            availableRequests: availableRequests,
+            myCurrentRequests: myCurrentRequests,
+            myReportedRequests: myReportedRequests,
+            myPastRequests: myPastRequests,
+            reportedRequests: reportedRequests,
+        })
+    );
 };
 
 export default getRequests;
