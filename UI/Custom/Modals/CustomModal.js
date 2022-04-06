@@ -23,7 +23,7 @@ const useStyles = makeStyles(styles);
 export default function CustomModal({
     children = "Modal",
     color = "primary",
-    round = "true",
+    round = false,
     title = "Modal Title",
     content = "Modal content",
     cancelClickContent = "Cancel",

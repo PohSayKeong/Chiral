@@ -55,6 +55,7 @@ export default function CheckboxRadioSwitch(props) {
                     style={{ color: "d77d21" }}
                     onClick={() => setSelectedEnabled("0")}
                 />
+                <p>{"<"}5kg</p>
             </GridItem>
             <GridItem xs={4} container={true}>
                 <FormControlLabel
@@ -87,6 +88,7 @@ export default function CheckboxRadioSwitch(props) {
                     style={{ color: "d77d21" }}
                     onClick={() => setSelectedEnabled("1")}
                 />
+                <p>{"<"}20kg</p>
             </GridItem>
             <GridItem xs={4} container={true}>
                 <FormControlLabel
@@ -119,6 +121,7 @@ export default function CheckboxRadioSwitch(props) {
                     style={{ color: "d77d21" }}
                     onClick={() => setSelectedEnabled("2")}
                 />
+                <p>{"<"}50kg</p>
             </GridItem>
         </GridContainer>
     );

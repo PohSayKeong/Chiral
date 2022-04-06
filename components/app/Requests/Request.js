@@ -6,6 +6,7 @@ import GridContainer from "UI/Grid/GridContainer";
 import OpenChatButton from "components/app/Chat/OpenChatButton";
 import RequestButton from "./RequestButton";
 import InfoCard from "components/app/InfoCard";
+import RequestConfirmationModal from "UI/Custom/Modals/RequestConfirmationModal";
 
 const Request = (props) => {
     const chat = useSelector((state) => state.chat.chatInfo);
@@ -14,6 +15,7 @@ const Request = (props) => {
         <GridContainer alignItems="center" direction="column">
             <InfoCard data={props.data} details={false} />
             <GridContainer justifyContent="center">
+                <RequestConfirmationModal data={props.data} />
                 <RequestButton data={props.data} />
                 {(!chat || chat.index !== props.data.index) && (
                     <OpenChatButton data={props.data} />

@@ -274,6 +274,9 @@ export default function RequestForm() {
                             </GridItem>
                         </GridContainer>
                     </GridItem>
+                    <GridItem xs={5}>
+                        <hr />
+                    </GridItem>
                     <GridItem xs={10} md={8}>
                         <Location
                             {...destinationProps}

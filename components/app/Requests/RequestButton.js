@@ -42,7 +42,11 @@ const RequestButton = (props) => {
             onClick={viewHandler}
             disabled={parseInt(web3Ctx.userTokens) < parseInt(props.data.value)}
         >
-            {clicked ? "confirm" : `${props.data.fees} Tokens`}
+            {clicked
+                ? "confirm"
+                : `${
+                      parseInt(props.data.fees) + parseInt(props.data.value)
+                  } Tokens`}
         </Button>
     );
 };
