@@ -55,7 +55,10 @@ const RequestApp = () => {
                 </Backdrop>
             )}
             {web3Ctx.newUser && (
-                <ClaimTokenModal handleClaimTokens={web3Ctx.handleBuyTokens} />
+                <ClaimTokenModal
+                    handleClaimTokens={web3Ctx.handleBuyTokens}
+                    user={web3Ctx.userAccount}
+                />
             )}
             {isDesktopOrLaptop && <Desktop />}
             {!isDesktopOrLaptop && <Mobile />}

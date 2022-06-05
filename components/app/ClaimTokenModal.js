@@ -1,6 +1,7 @@
 import Dialog from "@material-ui/core/Dialog";
 import Button from "UI/CustomButtons/Button";
 import { makeStyles } from "@material-ui/styles";
+import CopyAddress from "UI/CopyAddress/CopyAddress";
 
 const useStyles = makeStyles({
     content: {
@@ -31,6 +32,18 @@ const ClaimTokenModal = (props) => {
         <Dialog open maxWidth="md">
             <div className={classes.content}>
                 <div className={classes.welcomeText}>Welcome to Chiral!</div>
+                <div className={classes.helperText}>
+                    Ensure that your wallet is funded
+                    <br /> <CopyAddress user={props.user} />
+                    <br /> Get some test MATIC{" "}
+                    <a
+                        href="https://faucet.polygon.technology/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        here
+                    </a>
+                </div>
                 <div className={classes.helperText}>
                     Get some tokens to get started
                     <br />

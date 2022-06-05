@@ -10,7 +10,7 @@ const mapboxKey =
 
 const pollRequests = async (admin) => {
     // initialize web3
-    const web3 = new Web3("https://matic-testnet-archive-rpc.bwarelabs.com/");
+    const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
     const networkId = await web3.eth.net.getId();
     const requestManagerInstance = new web3.eth.Contract(
         RequestManager.abi,

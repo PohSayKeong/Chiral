@@ -12,7 +12,7 @@ export default async function initWeb3Provider() {
                     package: require("@toruslabs/torus-embed"),
                     options: {
                         networkParams: {
-                            host: "https://matic-testnet-archive-rpc.bwarelabs.com/",
+                            host: "https://matic-mumbai.chainstacklabs.com",
                             chainId: 80001,
                             networkId: 80001,
                         },
@@ -56,11 +56,12 @@ export default async function initWeb3Provider() {
             relayRegistrationLookupBlocks: 1000000,
         };
 
-        const gsnProvider = await RelayProvider.newProvider({
-            provider,
-            config,
-        }).init();
-        const GSNWeb3 = new Web3(gsnProvider);
+        // const gsnProvider = await RelayProvider.newProvider({
+        //     provider,
+        //     config,
+        // }).init();
+        // const GSNWeb3 = new Web3(gsnProvider);
+        const GSNWeb3 = new Web3(provider);
 
         // Use web3 to get the user's accounts.
         const newAccounts = await GSNWeb3.eth.getAccounts();
