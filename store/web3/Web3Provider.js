@@ -60,10 +60,13 @@ const Web3Provider = (props) => {
 
     // get user tokens and request when app launches
     useEffect(() => {
-        const updateInterval = setInterval(handleGetRequests, 30000);
-        if (web3State.account) {
+        const refreshData = () => {
             updateUserTokens();
             handleGetRequests();
+        };
+        const updateInterval = setInterval(refreshData, 30000);
+        if (web3State.account) {
+            refreshData();
         }
         return () => {
             clearInterval(updateInterval);
