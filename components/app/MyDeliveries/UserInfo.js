@@ -28,7 +28,7 @@ const UserInfo = () => {
                         )}
                     </GridItem>
                     <GridItem xs={6} justifyContent="flex-end" container>
-                        <CopyAddress />
+                        <CopyAddress user={web3Ctx.userAccount} />
                     </GridItem>
                 </GridContainer>
             </CardBody>
