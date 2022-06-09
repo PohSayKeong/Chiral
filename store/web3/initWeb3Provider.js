@@ -1,6 +1,7 @@
 import Web3Modal from "web3modal";
 import ChiralToken from "contracts/ChiralToken.json";
 import RequestManager from "contracts/RequestManager.json";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 import { RelayProvider } from "@opengsn/provider";
 import Web3 from "web3";
 
@@ -8,13 +9,11 @@ export default async function initWeb3Provider() {
     if (typeof document !== "undefined") {
         const web3Modal = new Web3Modal({
             providerOptions: {
-                torus: {
-                    package: require("@toruslabs/torus-embed"),
+                walletconnect: {
+                    package: WalletConnectProvider, // required
                     options: {
-                        networkParams: {
-                            host: "https://matic-mumbai.chainstacklabs.com",
-                            chainId: 80001,
-                            networkId: 80001,
+                        rpc: {
+                            80001: "https://matic-mumbai.chainstacklabs.com",
                         },
                     },
                 },

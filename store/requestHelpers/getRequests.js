@@ -17,19 +17,23 @@ const getRequests = async (account, targetCoord, dispatch) => {
             where("pickupAddress", "!=", account)
         )
     );
-    const availableRequests = [];
+    const availableRequestsPromises = [];
     availableRequestsSnapshot.forEach(async (doc) => {
-        const temp = { ...doc.data() };
-        if (targetCoord) {
-            temp.distanceToUser = await fetchRequestDistance(
-                temp.pickup_lng,
-                temp.pickup_lat,
-                targetCoord.lng,
-                targetCoord.lat
-            );
-        }
-        availableRequests.push(temp);
+        const getAvailableRequestInfo = async () => {
+            const temp = { ...doc.data() };
+            if (targetCoord) {
+                temp.distanceToUser = await fetchRequestDistance(
+                    temp.pickup_lng,
+                    temp.pickup_lat,
+                    targetCoord.lng,
+                    targetCoord.lat
+                );
+            }
+            return temp;
+        };
+        availableRequestsPromises.push(getAvailableRequestInfo());
     });
+    const availableRequests = await Promise.all(availableRequestsPromises);
 
     // requests with user as courier
     const myCourierRequestsSnapshot = await getDocs(
